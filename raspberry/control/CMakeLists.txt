@@ -38,7 +38,7 @@ add_library( GPIO
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME} src/control.cpp)
+add_executable(${PROJECT_NAME} control.cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(
