@@ -7,6 +7,7 @@ add_compile_options(-std=c++11)
 ## Specify additional locations of header files
 include_directories(
   include
+  ../shared
   ../../shared
 )
 
