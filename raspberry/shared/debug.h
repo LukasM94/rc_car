@@ -29,3 +29,4 @@ const size_t I2C         = Ansi_White   | OUTPUT_ENABLED;
 const size_t ATMEGA      = Ansi_Cyan    | OUTPUT_ENABLED;
 const size_t ERROR       = Ansi_Red     | OUTPUT_ENABLED;
 const size_t COM         = Ansi_Magenta | OUTPUT_ENABLED;
+const size_t CAM         = Ansi_Cyan    | OUTPUT_ENABLED;
