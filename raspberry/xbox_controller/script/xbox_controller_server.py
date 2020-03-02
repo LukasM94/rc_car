@@ -31,11 +31,11 @@ def main():
 
 def getXboxData(controller, client_socket):
   axis_l_name = controller.axis_l.name
-  axis_l_x    = controller.axis_l.x
-  axis_l_y    = controller.axis_l.y
+  axis_l_x    = math.floor(controller.axis_l.x * 256)
+  axis_l_y    = math.floor(controller.axis_l.y * 256)
   axis_r_name = controller.axis_r.name
-  axis_r_x    = controller.axis_r.x
-  axis_r_y    = controller.axis_r.y
+  axis_r_x    = math.floor(controller.axis_r.x * 256)
+  axis_r_y    = math.floor(controller.axis_r.y * 256)
 
   button_a_name    = controller.button_a.name
   button_a_pressed = controller.button_a.is_pressed
@@ -47,14 +47,14 @@ def getXboxData(controller, client_socket):
   button_y_pressed = controller.button_y.is_pressed
     
   data = { 
-    axis_l_name + "_x" : axis_l_x,
-    axis_l_name + "_y" : axis_l_y,
-    axis_r_name + "_x" : axis_r_x,
-    axis_r_name + "_y" : axis_r_y,
-    button_a_name      : button_a_pressed,
-    button_b_name      : button_b_pressed,
-    button_x_name      : button_x_pressed,
-    button_y_name      : button_y_pressed,
+    "lx" : axis_l_x,
+    "ly" : axis_l_y,
+    "rx" : axis_r_x,
+    "ry" : axis_r_y,
+    "a"  : button_a_pressed,
+    "b"  : button_b_pressed,
+    "x"  : button_x_pressed,
+    "y"  : button_y_pressed,
   }
 
   print(data)
