@@ -22,11 +22,11 @@ enum AnsiColor
 
 #define debug(flag, ...) do { if (flag & OUTPUT_ENABLED) { printf(DEBUG_FORMAT_STRING, COLOR_PARAM(flag)); printf(__VA_ARGS__); } } while (0)
 
-const size_t MAIN        = Ansi_Blue    | OUTPUT_ENABLED;
-const size_t CONTROL     = Ansi_Green   | OUTPUT_ENABLED;
+const size_t MAIN        = Ansi_Green   | OUTPUT_ENABLED;
+const size_t CONTROL     = Ansi_Blue    | OUTPUT_ENABLED;
 const size_t GPIO        = Ansi_Yellow  | OUTPUT_ENABLED;
 const size_t I2C         = Ansi_White   | OUTPUT_ENABLED;
 const size_t ATMEGA      = Ansi_Cyan    | OUTPUT_ENABLED;
 const size_t ERROR       = Ansi_Red     | OUTPUT_ENABLED;
 const size_t COM         = Ansi_Magenta | OUTPUT_ENABLED;
-const size_t CAM         = Ansi_Cyan    | OUTPUT_ENABLED;
+const size_t CAMERA      = Ansi_Cyan    | OUTPUT_ENABLED;
