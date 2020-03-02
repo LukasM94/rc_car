@@ -30,3 +30,4 @@ const size_t ATMEGA      = Ansi_Cyan    | OUTPUT_ENABLED;
 const size_t ERROR       = Ansi_Red     | OUTPUT_ENABLED;
 const size_t COM         = Ansi_Magenta | OUTPUT_ENABLED;
 const size_t CAMERA      = Ansi_Cyan    | OUTPUT_ENABLED;
+const size_t XBOX_CONTR  = Ansi_White   | OUTPUT_ENABLED;

@@ -5,7 +5,7 @@
 #include <debug.h>
 #include <camera.h>
 
-static char PYTHON[]   = "python";
+static char PYTHON[]   = "python3";
 static char CAM_FILE[] = "/home/pi/Documents/raspberry/camera/script/camera_client.py";
 
 int camera(int argc, char* argv[])

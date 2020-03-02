@@ -17,10 +17,12 @@ include_directories(
   ../shared
   control/include
   camera/include
+  xbox_controller/include
 )
 
 add_subdirectory(control) 
 add_subdirectory(camera)
+add_subdirectory(xbox_controller)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
@@ -28,6 +30,7 @@ target_link_libraries(
   ${PROJECT_NAME}
   communication
   control
+  xbox_controller
   camera
   gpio
   i2c

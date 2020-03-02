@@ -6,7 +6,7 @@ import picamera
 import sys
 
 def printUsage():
-  print("python camera_client.py <server_ip> <port_no>")
+  print("Usage: python camera_client.py <server_ip> <port_no>")
 
 def main():
   if len(sys.argv) != 3:
