@@ -35,7 +35,7 @@ int camera(int argc, char* argv[])
     return -1;
   }
 
-  sleep(10);
+  sleep(20);
 
   kill(pid, SIGKILL);
   debug(CAMERA, "camera: finish successful\n");

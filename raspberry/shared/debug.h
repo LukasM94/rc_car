@@ -25,7 +25,7 @@ enum AnsiColor
 const size_t MAIN        = Ansi_Green   | OUTPUT_ENABLED;
 const size_t CONTROL     = Ansi_Blue    | OUTPUT_ENABLED;
 const size_t GPIO        = Ansi_Yellow  | OUTPUT_ENABLED;
-const size_t I2C         = Ansi_White//   | OUTPUT_ENABLED;
+const size_t I2C         = Ansi_White;//   | OUTPUT_ENABLED;
 const size_t ATMEGA      = Ansi_Cyan    | OUTPUT_ENABLED;
 const size_t ERROR       = Ansi_Red     | OUTPUT_ENABLED;
 const size_t COM         = Ansi_Magenta | OUTPUT_ENABLED;

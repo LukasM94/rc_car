@@ -5,15 +5,21 @@
 #include <debug.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <csignal>
 
 pid_t pid_control;
 pid_t pid_camera;
+
+void signalHandler(int signal_num);
 
 int main(int argc, char* argv[])
 {
   debug(MAIN, "       ---------\n");
   debug(MAIN, "       | Start |\n");
   debug(MAIN, "       ---------\n");
+
+  debug(MAIN, "main: Catch the sigint signal\n");
+  signal(SIGINT, signalHandler);  
 
   if (argc != 3)
   {
@@ -56,10 +62,23 @@ int main(int argc, char* argv[])
 
   debug(MAIN, "main: Wait till all proesses are finished\n");
 
-  int status;
-  // waitpid(pid_camera, &status, 0);
-  waitpid(pid_control, &status, 0);
+  waitpid(pid_camera, 0, 0);
+  waitpid(pid_control, 0, 0);
 
   debug(MAIN, "main: Exits\n");
   return 0;
+}
+
+void signalHandler(int signal_num)
+{
+  debug(MAIN, "signalHandler: Got an signal %d\n", signal_num);
+
+  kill(pid_camera, SIGINT);
+  kill(pid_control, SIGINT);
+
+  waitpid(pid_camera, 0, 0);
+  waitpid(pid_control, 0, 0);
+
+  debug(MAIN, "signalHandler: Exits\n");
+  _exit(signal_num);
 }
