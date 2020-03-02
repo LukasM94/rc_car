@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     debug(MAIN, "main: Control process exited %d\n", ret);
     return ret;
   }
-/*
+
   pid_camera = fork();
   if (pid_camera < 0)
   {
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
   }
 
   debug(MAIN, "main: Wait till all proesses are finished\n");
-*/
+
   int status;
   // waitpid(pid_camera, &status, 0);
   waitpid(pid_control, &status, 0);
