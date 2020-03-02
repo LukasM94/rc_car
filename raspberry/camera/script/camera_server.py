@@ -15,29 +15,29 @@ def main():
     exit(-1)
   server_socket = socket.socket()
   server_socket.bind((sys.argv[1], int(sys.argv[2])))  
-  server_socket.listen(0)
-  print("Waiting for a client")
-  connection = server_socket.accept()[0].makefile('rb')
-  print("Start receiving camera pictures")
-  try:
-    img = None
-    while True:
-      image_len = struct.unpack('<L', connection.read(struct.calcsize('<L')))[0]
-      if not image_len:
-        break
-      image_stream = io.BytesIO()
-      image_stream.write(connection.read(image_len))
-      image_stream.seek(0)
-      image = Image.open(image_stream)
-      im = cv2.cvtColor(numpy.array(image), cv2.COLOR_RGB2BGR)
-      cv2.imshow('Video',im)
-      if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-    cv2.destroyAllWindows()
-  except:
-    connection.close()
-    server_socket.close()
-    print("Close connection")
+  while True:
+    try:
+      server_socket.listen(0)
+      print("Waiting for client")
+      connection = server_socket.accept()[0].makefile('rb')
+      print("Start receiving camera pictures")
+      img = None
+      while True:
+        image_len = struct.unpack('<L', connection.read(struct.calcsize('<L')))[0]
+        if not image_len:
+          break
+        image_stream = io.BytesIO()
+        image_stream.write(connection.read(image_len))
+        image_stream.seek(0)
+        image = Image.open(image_stream)
+        im = cv2.cvtColor(numpy.array(image), cv2.COLOR_RGB2BGR)
+        cv2.imshow('Video',im)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+          break
+      cv2.destroyAllWindows()
+    except (IOError, struct.error):
+      cv2.destroyAllWindows()
+      print("Close connection")
 
 if __name__ == "__main__":
   main()
