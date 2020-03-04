@@ -11,18 +11,21 @@ endif()
 add_compile_options(-std=c++11)
 
 set(warnings "-Wall -Wextra")
+add_definitions(-D__local)
 
 include_directories(
   shared
-  ../shared
+  ../shared/
+  ../shared/include
+  ../../shared
   control/include
   camera/include
-  xbox_controller/include
+  game_pad_client/include
 )
 
 add_subdirectory(control) 
 add_subdirectory(camera)
-add_subdirectory(xbox_controller)
+add_subdirectory(game_pad_client) 
 
 add_executable(${PROJECT_NAME} main.cpp)
 
@@ -30,8 +33,8 @@ target_link_libraries(
   ${PROJECT_NAME}
   communication
   control
-  xbox_controller
   camera
+  game_pad_client
   gpio
   i2c
   atmega
@@ -40,4 +43,5 @@ target_link_libraries(
   -pthread
   -lwiringPi
   -lrt
+  -ljsoncpp
 )

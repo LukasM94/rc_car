@@ -2,6 +2,13 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#define SERVER_PORT "8080"
+#if defined(__local)
+#define SERVER_IP   "127.0.0.1"
+#else
+#define SERVER_IP   "192.168.0.34"
+#endif
+
 #define RASPBERRY_PIN_COUNT 28
 
 #define RASPBERRY_I2C_SDA   2
