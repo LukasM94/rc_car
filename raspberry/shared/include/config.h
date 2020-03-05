@@ -5,7 +5,10 @@
 #define SERVER_PORT "8080"
 #if defined(__local)
 #define SERVER_IP   "127.0.0.1"
-#else
+#elif defined(__extern)
+// please change
+#define SERVER_IP   ""
+#elif
 #define SERVER_IP   "192.168.0.32"
 #endif
 

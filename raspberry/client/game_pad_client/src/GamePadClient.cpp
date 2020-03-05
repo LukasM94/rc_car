@@ -137,6 +137,7 @@ void GamePadClient::run()
     strncpy(buffer_, HELLO, BUFFER_SIZE - 1);
     buffer_[BUFFER_SIZE - 1] = 0;
     transmit();
+    debug(GP_CLIENT, "run: Connected\n");
     while (connected_)
     {
       ret = receive();
@@ -145,6 +146,7 @@ void GamePadClient::run()
       str.erase(std::remove(str.begin(), str.end(), '\t'), str.end());
       str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
       str.erase(std::remove(str.begin(), str.end(), 0), str.end());
+      debug(GP_CLIENT_D, "run: string is %s\n", str.c_str());
       game_pad_ = GamePad::getFromString(game_pad_, str.c_str());
     }
   }

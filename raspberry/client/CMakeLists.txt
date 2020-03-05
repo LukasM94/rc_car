@@ -12,6 +12,7 @@ add_compile_options(-std=c++11)
 
 set(warnings "-Wall -Wextra")
 # add_definitions(-D__local)
+# add_definitions(-D__extern)
 
 include_directories(
   shared
