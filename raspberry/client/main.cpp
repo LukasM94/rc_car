@@ -11,9 +11,12 @@
 #include <GamePadClient.h>
 #include <pthread.h>
 
-pid_t pid_control;
-pid_t pid_camera;
+// pid_t pid_control;
+// pid_t pid_camera;
 // pid_t pid_xbox_controller;
+
+pthread_t tid_gp_client;
+pthread_t tid_ucontroller;
 
 void signalHandler(int signal_num);
 
@@ -29,16 +32,17 @@ int main(int argc, char* argv[])
   const char* ip_addr = SERVER_IP;
   const char* port_no = SERVER_PORT;
 
-  pthread_t tid_gp_client;
-
   debug(MAIN, "main: Initialize the instances\n");
-  GamePadClient client(atoi(port_no), ip_addr);
+  GamePadClient gp_client(atoi(port_no), ip_addr);
+  Control control(gp_client.getGamePad());
 
   debug(MAIN, "main: Create threads\n");
-  pthread_create(&tid_gp_client, 0, GamePadClient::runWrapper, &client);
+  pthread_create(&tid_gp_client, 0, GamePadClient::runWrapper, &gp_client);
+  pthread_create(&tid_ucontroller, 0, Control::runWrapper, &control);
 
   debug(MAIN, "main: Goes to sleep\n");
   pthread_join(tid_gp_client, 0);
+  // pthread_join(tid_ucontroller, 0);
 
   debug(MAIN, "main: Exits\n");
   return 0;
@@ -106,8 +110,8 @@ void signalHandler(int signal_num)
 {
   debug(MAIN, "signalHandler: Got an signal %d\n", signal_num);
 
-  kill(pid_camera, SIGINT);
-  kill(pid_control, SIGINT);
+  // kill(pid_camera, SIGINT);
+  // kill(pid_control, SIGINT);
   // kill(pid_xbox_controller, SIGINT);
 
   debug(MAIN, "signalHandler: Exits\n");

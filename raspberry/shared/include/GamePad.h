@@ -21,6 +21,7 @@ namespace Json
 class GamePad
 {
   public:
+    GamePad();
     GamePad(uint8_t button_count);
     ~GamePad();
 
@@ -110,10 +111,9 @@ class GamePad
     }
 
   private:
-    GamePad();
-
     void getJson(Json::Value& root);
     void fromPackage(const char* package);
+    void allocateButtons(unsigned int button_ctn);
 
     struct axis_state left_;
     struct axis_state right_;

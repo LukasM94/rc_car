@@ -32,5 +32,13 @@ add_library(
   src/Gpio.cpp
 )
 add_library( control
+  src/ControlHandler.cpp
   src/Control.cpp
+  src/Atmega.cpp
+  src/I2c.cpp
+  src/Communication.cpp
+  src/I2c.cpp
+)
+add_library( control_handler
+  src/ControlHandler.cpp
 )

@@ -18,13 +18,24 @@
 #endif
 #include <iostream>
 
+GamePad::GamePad() :
+  lt_(0),
+  rt_(0),
+  buttons_count_(0),
+  buttons_(0)
+{
+  debug(GAME_PAD, "ctor\n");
+  pthread_mutex_init(&lock_, 0);
+}
+
+
 GamePad::GamePad(uint8_t button_count) :
   lt_(0),
   rt_(0),
   buttons_count_(button_count),
   buttons_(new std::atomic_bool[buttons_count_])
 {
-  debug(GAME_PAD, "ctor\n");
+  debug(GAME_PAD, "ctor: button_count <%d>\n", button_count);
   pthread_mutex_init(&lock_, 0);
 }
 
@@ -45,6 +56,7 @@ GamePad* GamePad::getFromString(GamePad* game_pad, const char* str)
 {
   debug(GAME_PAD, "getFromString\n");
 
+  game_pad->lock();
   Json::Value  root;
   Json::Reader reader;
   Json::Value  left;
@@ -55,7 +67,8 @@ GamePad* GamePad::getFromString(GamePad* game_pad, const char* str)
   if (ret == 0)
   {
     debug(ERROR, "GamePad::getMsg: parsing not successful\n");
-    return 0;
+    game_pad->unlock();
+    return game_pad;
   }
 
   buttons = root[STRING_BTN];
@@ -64,14 +77,9 @@ GamePad* GamePad::getFromString(GamePad* game_pad, const char* str)
 
   unsigned int button_cnt = buttons.size();
 
-  if (game_pad == 0)
-  {
-    game_pad = new GamePad(button_cnt);
-  }
   if (game_pad->getButtonCnt() != button_cnt)
   {
-    delete game_pad;
-    game_pad = new GamePad(button_cnt);
+    game_pad->allocateButtons(button_cnt);
   }
 
   game_pad->left_.x_  = left[0].asBool();  
@@ -87,6 +95,7 @@ GamePad* GamePad::getFromString(GamePad* game_pad, const char* str)
     game_pad->buttons_[i] = buttons[i].asBool();
   }
 
+  game_pad->unlock();
   return game_pad;
 }
 
@@ -149,4 +158,14 @@ void GamePad::getMsg(char** msg, unsigned int* length)
     temp.erase(std::remove(temp.begin(), temp.end(), '\t'), temp.end());
     debug(GAME_PAD, "%s\n", temp.c_str());
   }
+}
+
+void GamePad::allocateButtons(unsigned int button_ctn)
+{
+  if (buttons_ != 0)
+  {
+    delete buttons_;
+  }
+  buttons_ = new std::atomic_bool[button_ctn]; 
+  buttons_count_ = button_ctn;
 }

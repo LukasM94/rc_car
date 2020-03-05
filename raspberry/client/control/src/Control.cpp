@@ -8,6 +8,14 @@ const char Control::I2C[]  = "i2c";
 const char Control::GPIO[] = "gpio";
 
 //--------------------------------------------------------------------
+Control::Control() :
+  control_handler_(0),
+  tids_(),
+  running_(1)
+{
+  debug(CONTROL, "ctor\n");
+}
+//--------------------------------------------------------------------
 Control::Control(GamePad* game_pad) :
   control_handler_(game_pad),
   tids_(),
@@ -34,6 +42,8 @@ void Control::init()
 void Control::run()
 {
   pthread_t tid;
+
+  init();
 
   debug(CONTROL, "run: Create threads\n");
   pthread_create(&tid, 0, ControlHandler::gpioFunction, &control_handler_);

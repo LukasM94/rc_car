@@ -32,8 +32,8 @@ void ControlHandler::gpioInit()
 //--------------------------------------------------------------------
 void ControlHandler::i2cInit()
 {
-  debug(CTL_HANLER, "i2cInit\n");
   atmega_ = new Atmega();
+  debug(CTL_HANLER, "i2cInit: atmega_ <%p>\n", atmega_);
 }
 
 //--------------------------------------------------------------------
@@ -48,7 +48,7 @@ void* ControlHandler::gpioFunction(void* arg)
   ControlHandler* ch = (ControlHandler*)arg;
 
   debug(CTL_HANLER, "gpioFunction: Start\n");
-  while (running)
+  while (1)
   {
     Gpio::instance()->heartBeat();
   }
@@ -62,7 +62,7 @@ void* ControlHandler::i2cFunction(void* arg)
   ControlHandler* ch = (ControlHandler*)arg;
 
   debug(CTL_HANLER, "i2cFunction: Start\n");
-  while (running)
+  while (1)
   {
     int      reg   = I2C_MOTOR;
     uint16_t speed = 0x1234;
