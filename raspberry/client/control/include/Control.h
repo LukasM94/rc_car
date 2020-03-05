@@ -34,11 +34,13 @@ class Control
     Control(const Control&);
 
     ControlHandler control_handler_;
-    std::map<char*, int> tids_;
+    std::map<const char*, int> tids_;
 
     std::atomic_bool running_;
 
     static const int LED_PIN = 0;
+    static const char I2C[];
+    static const char GPIO[];
 };
 
 #endif

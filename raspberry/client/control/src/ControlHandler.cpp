@@ -12,18 +12,19 @@ ControlHandler::ControlHandler(GamePad* game_pad) :
   atmega_(0),
   game_pad_(game_pad)
 {
-
+  debug(CTL_HANLER, "ctor: game_pad <%p>\n", game_pad_);
 }
 
 //--------------------------------------------------------------------
 ControlHandler::~ControlHandler()
 {
-
+  debug(CTL_HANLER, "dtor\n");
 }
 
 //--------------------------------------------------------------------
 void ControlHandler::gpioInit()
 {
+  debug(CTL_HANLER, "gpioInit\n");
   Gpio::instance()->initLed();
   Gpio::instance()->initButton(&buttonCallback);
 }
@@ -31,25 +32,27 @@ void ControlHandler::gpioInit()
 //--------------------------------------------------------------------
 void ControlHandler::i2cInit()
 {
+  debug(CTL_HANLER, "i2cInit\n");
   atmega_ = new Atmega();
 }
 
 //--------------------------------------------------------------------
 void ControlHandler::buttonCallback()
 {
-  debug(CONTROL, "buttonCallback: Button pressed\n");
+  debug(CTL_HANLER, "buttonCallback: Button pressed\n");
 }
 
 //--------------------------------------------------------------------
 void* ControlHandler::gpioFunction(void* arg)
 {
   ControlHandler* ch = (ControlHandler*)arg;
-  debug(CONTROL, "gpioFunction: Start\n");
+
+  debug(CTL_HANLER, "gpioFunction: Start\n");
   while (running)
   {
     Gpio::instance()->heartBeat();
   }
-  debug(CONTROL, "gpioFunction: End\n");
+  debug(CTL_HANLER, "gpioFunction: Exit\n");
   return 0;
 }
 
@@ -57,7 +60,8 @@ void* ControlHandler::gpioFunction(void* arg)
 void* ControlHandler::i2cFunction(void* arg)
 {
   ControlHandler* ch = (ControlHandler*)arg;
-  debug(CONTROL, "i2cFunction: Start\n");
+
+  debug(CTL_HANLER, "i2cFunction: Start\n");
   while (running)
   {
     int      reg   = I2C_MOTOR;
@@ -65,7 +69,7 @@ void* ControlHandler::i2cFunction(void* arg)
     ch->atmega_->writeI2c(reg, (const uint8_t*)&speed, 2); 
     usleep(500000); 
   }
-  debug(CONTROL, "i2cFunction: End\n");
+  debug(CTL_HANLER, "i2cFunction: Exit\n");
   return 0;
 }
 
