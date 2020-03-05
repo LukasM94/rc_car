@@ -32,5 +32,5 @@ add_library(
   src/Gpio.cpp
 )
 add_library( control
-  src/control.cpp
+  src/Control.cpp
 )

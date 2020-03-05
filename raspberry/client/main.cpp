@@ -1,5 +1,5 @@
 
-#include <control.h>
+#include <Control.h>
 #include <camera.h>
 // #include <xbox_controller.h>
 #include <unistd.h>

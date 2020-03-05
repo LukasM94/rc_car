@@ -5,7 +5,7 @@
 #include <Gpio.h>
 #include <i2c_protocol.h>
 #include <debug.h>
-#include <control.h>
+#include <Control.h>
 #include <unistd.h>
 
 #define LED_PIN 0 // change pin number here
