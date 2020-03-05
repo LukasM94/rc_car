@@ -14,11 +14,11 @@ const char GamePadClient::HELLO[] = "Hello from client";
 
 //-------------------------------------------------
 GamePadClient::GamePadClient(unsigned int server_port, const char* server_ip):
-	Socket(server_port, "127.0.0.1"),
+	Socket(server_port, server_ip),
   game_pad_(0),
   running_(1)
 {
-  debug(GP_CLIENT, "ctor:\n");
+  debug(GP_CLIENT, "ctor: %d, %s\n", server_port, server_ip);
 }
 
 //-------------------------------------------------

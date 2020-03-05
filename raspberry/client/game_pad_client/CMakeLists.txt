@@ -5,6 +5,7 @@ add_library(
   game_pad_client
   src/GamePadClient.cpp
   ../../shared/src/Socket.cpp
+  ../../shared/src/GamePad.cpp
 )
 add_library( 
   game_pad

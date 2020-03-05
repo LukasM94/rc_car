@@ -6,7 +6,7 @@
 #if defined(__local)
 #define SERVER_IP   "127.0.0.1"
 #else
-#define SERVER_IP   "192.168.0.34"
+#define SERVER_IP   "192.168.0.32"
 #endif
 
 #define RASPBERRY_PIN_COUNT 28
