@@ -2,7 +2,7 @@
 #ifndef USART_H
 #define USART_H
 
-#include <communication.h>
+#include <Communication.h>
 
 class Usart: public Communication
 {

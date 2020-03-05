@@ -1,5 +1,5 @@
 
-#include <spi.h>
+#include <Spi.h>
 
 Spi::Spi(const char* name) : 
     Communication(name, Communication::TYPE_SPI)

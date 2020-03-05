@@ -1,5 +1,5 @@
 
-#include <i2c.h>
+#include <I2c.h>
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 #include <stdio.h>

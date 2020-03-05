@@ -4,32 +4,32 @@ project(control)
 ## Declare a C++ library
 add_library( 
   communication
-  src/communication.cpp
+  src/Communication.cpp
 )
 add_library( 
   i2c
-  src/i2c.cpp
-  src/communication.cpp
+  src/I2c.cpp
+  src/Communication.cpp
 )
 add_library( 
   spi
-  src/spi.cpp
-  src/communication.cpp
+  src/Spi.cpp
+  src/Communication.cpp
 )
 add_library( 
   usart
-  src/usart.cpp
-  src/communication.cpp
+  src/Usart.cpp
+  src/Communication.cpp
 )
 add_library( 
   atmega
-  src/atmega.cpp
-  src/i2c.cpp
-  src/communication.cpp
+  src/Atmega.cpp
+  src/I2c.cpp
+  src/Communication.cpp
 )
 add_library( 
   gpio
-  src/gpio.cpp
+  src/Gpio.cpp
 )
 add_library( control
   src/control.cpp

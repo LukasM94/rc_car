@@ -2,7 +2,7 @@
 #ifndef SPI_H
 #define SPI_H
 
-#include <communication.h>
+#include <Communication.h>
 
 class Spi: public Communication
 {

@@ -1,8 +1,8 @@
 #include <pthread.h>
 #include <sched.h>
-#include <atmega.h>
+#include <Atmega.h>
 #include <string.h>
-#include <gpio.h>
+#include <Gpio.h>
 #include <i2c_protocol.h>
 #include <debug.h>
 #include <control.h>

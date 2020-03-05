@@ -1,5 +1,5 @@
 
-#include <gpio.h>
+#include <Gpio.h>
 #include <wiringPi.h>
 #include <config.h>
 #include <debug.h>

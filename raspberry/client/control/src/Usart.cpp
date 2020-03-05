@@ -1,5 +1,5 @@
 
-#include <usart.h>
+#include <Usart.h>
 
 Usart::Usart(const char* name) : 
     Communication(name, Communication::TYPE_USART)

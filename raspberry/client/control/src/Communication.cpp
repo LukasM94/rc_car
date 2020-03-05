@@ -1,5 +1,5 @@
 
-#include <communication.h>
+#include <Communication.h>
 #include <debug.h>
 
 Communication::Communication()

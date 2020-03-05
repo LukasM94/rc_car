@@ -1,6 +1,6 @@
 
-#include <atmega.h>
-#include <i2c.h>
+#include <Atmega.h>
+#include <I2c.h>
 #include <debug.h>
 
 #ifndef ATMEGA_I2C_ADDRESS

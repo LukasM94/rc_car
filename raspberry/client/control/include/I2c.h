@@ -2,7 +2,7 @@
 #ifndef I2C_H
 #define I2C_H
 
-#include <communication.h>
+#include <Communication.h>
 
 class I2c: public Communication
 {
