@@ -3,8 +3,7 @@
 #define ATMEGA_H
 
 #include <stdint.h>
-// #include <pthread.h>
-#include <mutex>
+#include <pthread.h>
 
 class I2c;
 
@@ -18,8 +17,7 @@ class Atmega
 
   private:
     I2c*       i2c_;
-    std::mutex communication_lock_;
-    // pthread_mutex_t communication_lock_;
+    pthread_mutex_t communication_lock_;
 };
 
 #endif
