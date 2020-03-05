@@ -8,7 +8,7 @@
 #elif defined(__extern)
 // please change
 #define SERVER_IP   ""
-#elif
+#else
 #define SERVER_IP   "192.168.0.32"
 #endif
 
