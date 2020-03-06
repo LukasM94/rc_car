@@ -52,6 +52,7 @@ void XboxController::run()
   }
   debug(XBOX_CONTR, "run: Ret is %d\n", ret);
   atExit(name_.c_str());
+  gamepad_->reset();
   debug(XBOX_CONTR, "run: Exit\n");
 }
 
