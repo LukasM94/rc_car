@@ -7,6 +7,7 @@ int control(int argv, char* argc[]);
 #include <atomic>
 #include <map>
 #include <ControlHandler.h>
+#include <pthread.h>
 
 class GamePad;
 class UController;
@@ -30,13 +31,37 @@ class Control
     }
 
     void init();
+    inline void lock()
+    {
+      pthread_mutex_lock(&lock_);
+    }
+    inline void unlock()
+    {
+      pthread_mutex_unlock(&lock_);
+    }
+
+    int setTid(const char* primary_key, int tid);
+    int removeTid(const char* primary_key);
 
   private:
     Control();
     Control(const Control&);
 
+    struct start_arg
+    { 
+      Control*    control_;
+      const char* primary_key_;
+      void*       args_;
+      void*       (*f_ptr_)(void*);
+    };
+
+    static void* wrapperStart(void* arg);
+
+    void printTidEntries();
+
     ControlHandler control_handler_;
     std::map<const char*, int> tids_;
+    pthread_mutex_t lock_;
 
     std::atomic_bool running_;
 
