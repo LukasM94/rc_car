@@ -11,9 +11,7 @@
 
 #define HELLO "Hello from server"
 
-extern void lockTids();
-extern void unlockTids();
-extern int  removeFromTids(const char* prime_key);
+extern void atExit(const char* name);
 
 //-------------------------------------------------
 Server::Server(unsigned int port, GamePad* gamepad) : 
@@ -64,10 +62,7 @@ void Server::run()
 			transmit();
 		}
   }
-  debug(SERVER, "run: Remove from tids map\n");
-	lockTids();
-	removeFromTids(name_.c_str());
-	unlockTids();
+	atExit(name_.c_str());
   debug(SERVER, "run: Exit with ret %d\n", ret);
 }
 

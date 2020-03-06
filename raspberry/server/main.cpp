@@ -22,6 +22,8 @@ struct cmp_str
 };
 std::map<const char*, pthread_t, cmp_str> tids;
 
+void atExit(const char* name);
+
 void lockTids();
 void unlockTids();
 int  addToTids(const char* prime_key, pthread_t tid);
@@ -82,6 +84,13 @@ int main(int argc, char* argv[])
   debug(MAIN, "main: Exits\n");
 
   return 0;
+}
+
+void atExit(const char* name)
+{
+  lockTids();
+  removeFromTids(name);
+  unlockTids();
 }
 
 void lockTids()

@@ -8,9 +8,7 @@
 
 const char XboxController::DEFAULT_PATH[] = "/dev/input/js0";
 
-extern void lockTids();
-extern void unlockTids();
-extern int  removeFromTids(const char* prime_key);
+extern void atExit(const char* name);
 
 //-------------------------------------------------
 XboxController::XboxController() :
@@ -53,10 +51,7 @@ void XboxController::run()
   {
   }
   debug(XBOX_CONTR, "run: Ret is %d\n", ret);
-  debug(XBOX_CONTR, "run: Remove from tids map\n", ret);
-	lockTids();
-	removeFromTids(name_.c_str());
-	unlockTids();
+  atExit(name_.c_str());
   debug(XBOX_CONTR, "run: Exit\n");
 }
 
