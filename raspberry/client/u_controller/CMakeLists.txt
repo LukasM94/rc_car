@@ -5,7 +5,6 @@ add_library(
 add_library( 
   i2c
   shared/src/I2c.cpp
-  # shared/src/Communication.cpp
 )
 add_dependencies(
   i2c 
@@ -14,7 +13,6 @@ add_dependencies(
 add_library( 
   spi
   shared/src/Spi.cpp
-  # shared/src/Communication.cpp
 )
 add_dependencies(
   spi
@@ -23,7 +21,6 @@ add_dependencies(
 add_library( 
   usart
   shared/src/Usart.cpp
-  # shared/src/Communication.cpp
 )
 add_dependencies(
   usart
@@ -36,10 +33,6 @@ add_library(
 add_library(
   u_controller
   shared/src/UController.cpp
-  # shared/src/Communication.cpp
-  # shared/src/I2c.cpp
-  # shared/src/Usart.cpp
-  # shared/src/Spi.cpp
 )
 add_dependencies(
   u_controller
@@ -51,11 +44,6 @@ add_dependencies(
 add_library( 
   atmega
   atmega/src/Atmega.cpp
-  # shared/src/UController.cpp
-  # shared/src/Communication.cpp
-  # shared/src/I2c.cpp
-  # shared/src/Usart.cpp
-  # shared/src/Spi.cpp
 )
 add_dependencies(
   atmega

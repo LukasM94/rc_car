@@ -4,3 +4,8 @@ add_library(
   ../../shared/src/GamePad.cpp
   ../../shared/src/Socket.cpp
 )
+add_dependencies(
+  game_pad_client
+  game_pad
+  socket
+)
