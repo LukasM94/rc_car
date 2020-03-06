@@ -21,13 +21,13 @@ include_directories(
   ../../shared
   u_controller/atmega/include
   u_controller/shared/include
-  control/include
+  u_controller_control/include
   camera/include
   game_pad_client/include
 )
 
 add_subdirectory(u_controller) 
-add_subdirectory(control) 
+add_subdirectory(u_controller_control) 
 add_subdirectory(camera)
 add_subdirectory(game_pad_client) 
 
@@ -36,7 +36,7 @@ add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(
   ${PROJECT_NAME}
   communication
-  control
+  u_controller_control
   camera
   game_pad_client
   gpio

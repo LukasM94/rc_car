@@ -2,6 +2,8 @@
 #ifndef I2C_PROTOCOL
 #define I2C_PROTOCOL
 
+#define I2C_ADDRESS 0x05
+
 #define I2C_MOTOR 0x00
 #define I2C_MOTOR_SIZE 4
 

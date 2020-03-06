@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 2.8.3)
-project(control)
-
 add_library( 
-  control
+  control_handler
+  src/ControlHandler.cpp
+)
+add_library( 
+  u_controller_control
   src/Control.cpp
   src/ControlHandler.cpp
   ../u_controller/shared/src/UController.cpp
@@ -12,7 +13,7 @@ add_library(
   ../u_controller/shared/src/Communication.cpp
 )
 # add_dependencies(
-#   control
+#   u_controller_control
 #   control_handler
 #   u_controller
 #   usart
@@ -20,7 +21,3 @@ add_library(
 #   i2c
 #   communication
 # )
-add_library( 
-  control_handler
-  src/ControlHandler.cpp
-)
