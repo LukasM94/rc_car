@@ -53,11 +53,10 @@ target_link_libraries(
   u_controller
   lock
   -pthread
-  # -lwiringPi
   -lrt
   -ljsoncpp
 )
-else()
+elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm.*|ARM.*)")
 target_link_libraries(
   ${PROJECT_NAME}
   communication
@@ -78,6 +77,3 @@ target_link_libraries(
   -ljsoncpp
 )
 endif()
-
-# if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64.*|AARCH64.*|arm64.*|ARM64.*)")
-# elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm.*|ARM.*)")
