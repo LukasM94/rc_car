@@ -76,7 +76,7 @@ void* ControlHandler::i2cFunction(void* arg)
     ch->u_controller_->writeI2c(I2C_MOTOR, (const uint8_t*)&speed, 1); 
     ch->u_controller_->writeI2c(I2C_SERVO, (const uint8_t*)&angle, 1); 
 
-    usleep(500000); 
+    usleep(I2C_SLEEP_TIME); 
   }
   debug(CTL_HANDLER, "i2cFunction: Exit\n");
   return 0;
