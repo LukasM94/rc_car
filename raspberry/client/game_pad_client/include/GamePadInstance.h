@@ -12,13 +12,14 @@ class GamePadInstance
 
     GamePad* getGamePad();
     
-    inline void incrementGamePadClient()
+    inline void startGamePadClient()
     {
-      active_game_pad_client_++;
+      active_game_pad_client_ = 1;
     }
-    inline void decrementGamePadClient()
+    inline void exitGamePadClient()
     {
-      active_game_pad_client_--;
+      game_pad_.reset();
+      active_game_pad_client_ = 0;
     }
     inline void incrementUController()
     {

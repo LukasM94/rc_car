@@ -18,13 +18,11 @@ GamePadClient::GamePadClient(unsigned int server_port, const char* server_ip) :
   running_(1)
 {
   debug(GP_CLIENT, "ctor: %d, %s\n", server_port, server_ip);
-  GamePadInstance::instance()->incrementGamePadClient();
 }
 
 //-------------------------------------------------
 GamePadClient::~GamePadClient()
 {
-  GamePadInstance::instance()->decrementGamePadClient();
   debug(GP_CLIENT, "dtor:\n");
 }
 
@@ -129,12 +127,14 @@ void GamePadClient::run()
       sleep(2);
       continue;
     }
-    connected_ = 1;
-    memset(buffer_, 0, BUFFER_SIZE);
-    strncpy(buffer_, HELLO, BUFFER_SIZE - 1);
-    buffer_[BUFFER_SIZE - 1] = 0;
-    transmit();
+
     debug(GP_CLIENT, "run: Connected\n");
+    GamePadInstance::instance()->startGamePadClient();
+    connected_ = 1;
+    // memset(buffer_, 0, BUFFER_SIZE);
+    // strncpy(buffer_, HELLO, BUFFER_SIZE - 1);
+    // buffer_[BUFFER_SIZE - 1] = 0;
+    // transmit();
     while (connected_)
     {
       ret = receive();
@@ -147,6 +147,7 @@ void GamePadClient::run()
 
       GamePad::getFromString(GamePadInstance::instance()->getGamePad(), str.c_str());
     }
+    GamePadInstance::instance()->exitGamePadClient();
   }
   debug(GP_CLIENT, "run: Exit\n");
 }

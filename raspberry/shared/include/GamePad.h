@@ -114,6 +114,8 @@ class GamePad
       pthread_mutex_unlock(&lock_);
     }
 
+    void reset();
+
   private:
     void getJson(Json::Value& root);
     void fromPackage(const char* package);

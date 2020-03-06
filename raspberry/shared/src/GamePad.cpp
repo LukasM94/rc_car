@@ -169,3 +169,20 @@ void GamePad::allocateButtons(unsigned int button_ctn)
   buttons_ = new std::atomic_bool[button_ctn]; 
   buttons_count_ = button_ctn;
 }
+
+void GamePad::reset()
+{
+  debug(GAME_PAD, "reset: Reset all data for left, right, lt, rt and %d buttons\n", buttons_count_.load());
+  left_.x_  = 0;
+  left_.y_  = 0;
+  right_.x_ = 0;
+  right_.y_ = 0;
+
+  lt_ = 0;
+  rt_ = 0;
+
+  for (int i = 0; i < buttons_count_; ++i)
+  {
+    buttons_[i] = 0;
+  }
+}

@@ -52,7 +52,7 @@ void Server::run()
 			sleep(2);
 			continue;
 		}
-		receive();
+		// receive();
 		connected_ = 1;
 		while (connected_)
 		{

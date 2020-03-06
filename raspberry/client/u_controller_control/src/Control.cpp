@@ -108,8 +108,8 @@ void Control::run()
     printTidEntries();
     unlock();
 
-    debug(CONTROL, "run: Now I am going to sleep for 1 second\n");
-    sleep(1);
+    debug(CONTROL, "run: Nothing to do\n");
+    sleep(5);
   }
 
   debug(CONTROL, "run: Exit\n");
@@ -124,5 +124,5 @@ void Control::printTidEntries()
     str += "<" + std::string(it->first) + ">, ";
   }
   str.erase(str.end() - 2, str.end());
-  debug(CONTROL, "printTidEntries: %s\n", str.c_str());
+  debug(CTL_DATA, "printTidEntries: %s\n", str.c_str());
 }
