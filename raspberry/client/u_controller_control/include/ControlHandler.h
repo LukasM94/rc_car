@@ -7,7 +7,7 @@ class GamePad;
 class ControlHandler
 {
   public:
-    ControlHandler(UController* u_controller, GamePad* game_pad);
+    ControlHandler(UController* u_controller);
     ~ControlHandler();
 
     void gpioInit();
@@ -23,7 +23,6 @@ class ControlHandler
     ControlHandler(const ControlHandler&);
 
     UController* u_controller_;
-    GamePad*     game_pad_;
 };
 
 #endif

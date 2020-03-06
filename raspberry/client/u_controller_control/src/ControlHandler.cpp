@@ -4,16 +4,16 @@
 #include <debug.h>
 #include <ControlHandler.h>
 #include <GamePad.h>
+#include <GamePadInstance.h>
 #include <unistd.h>
 #include <com_config.h>
 #include <config.h>
 
 //--------------------------------------------------------------------
-ControlHandler::ControlHandler(UController* u_controller, GamePad* game_pad) : 
-  u_controller_(u_controller),
-  game_pad_(game_pad)
+ControlHandler::ControlHandler(UController* u_controller) : 
+  u_controller_(u_controller)
 {
-  debug(CTL_HANLER, "ctor: game_pad <%p>\n", game_pad_);
+  debug(CTL_HANLER, "ctor: u_controller <%p>\n", u_controller);
 }
 
 //--------------------------------------------------------------------
@@ -66,9 +66,16 @@ void* ControlHandler::i2cFunction(void* arg)
   debug(CTL_HANLER, "i2cFunction: Start\n");
   while (1)
   {
-    int      reg   = I2C_MOTOR;
-    uint16_t speed = 0x1234;
-    ch->u_controller_->writeI2c(reg, (const uint8_t*)&speed, 2); 
+    GamePad* game_pad = GamePadInstance::instance()->getGamePad();
+
+    game_pad->lock();
+    int8_t speed = game_pad->getLeftAxisY();
+    int8_t angle = game_pad->getLeftAxisX();
+    game_pad->unlock();
+
+    ch->u_controller_->writeI2c(I2C_MOTOR, (const uint8_t*)&speed, 1); 
+    ch->u_controller_->writeI2c(I2C_SERVO, (const uint8_t*)&angle, 1); 
+
     usleep(500000); 
   }
   debug(CTL_HANLER, "i2cFunction: Exit\n");

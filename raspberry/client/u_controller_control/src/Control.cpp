@@ -10,7 +10,7 @@ const char Control::GPIO[] = "gpio";
 
 //--------------------------------------------------------------------
 Control::Control(UController* u_controller) :
-  control_handler_(u_controller, 0),
+  control_handler_(u_controller),
   tids_(),
   lock_("Control::lock_"),
   running_(1)

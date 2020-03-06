@@ -82,10 +82,10 @@ GamePad* GamePad::getFromString(GamePad* game_pad, const char* str)
     game_pad->allocateButtons(button_cnt);
   }
 
-  game_pad->left_.x_  = left[0].asBool();  
-  game_pad->left_.y_  = left[1].asBool();  
-  game_pad->right_.x_ = right[0].asBool();  
-  game_pad->right_.y_ = right[1].asBool();  
+  game_pad->left_.x_  = left[0].asInt();  
+  game_pad->left_.y_  = left[1].asInt();  
+  game_pad->right_.x_ = right[0].asInt();  
+  game_pad->right_.y_ = right[1].asInt();  
 
   game_pad->rt_ = root[STRING_RT].asBool();
   game_pad->lt_ = root[STRING_LT].asBool();
