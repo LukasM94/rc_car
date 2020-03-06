@@ -15,7 +15,7 @@ set(warnings "-Wall -Wextra")
 # add_definitions(-D__extern)
 
 include_directories(
-  shared
+  shared/include
   ../shared/
   ../shared/include
   ../../shared
@@ -27,9 +27,13 @@ include_directories(
 )
 
 add_subdirectory(u_controller) 
+add_subdirectory(shared) 
 add_subdirectory(u_controller_control) 
 add_subdirectory(camera)
 add_subdirectory(game_pad_client) 
+
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
+set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
@@ -46,6 +50,7 @@ target_link_libraries(
   spi
   usart
   u_controller
+  lock
   -pthread
   -lwiringPi
   -lrt

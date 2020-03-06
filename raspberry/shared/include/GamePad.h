@@ -101,6 +101,10 @@ class GamePad
       return buttons_count_;
     }
 
+    inline void initLock()
+    {
+      pthread_mutex_init(&lock_, 0);
+    }
     inline void lock()
     {
       pthread_mutex_lock(&lock_);

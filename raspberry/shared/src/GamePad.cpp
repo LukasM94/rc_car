@@ -24,8 +24,8 @@ GamePad::GamePad() :
   buttons_count_(0),
   buttons_(0)
 {
+  initLock();
   debug(GAME_PAD, "ctor\n");
-  pthread_mutex_init(&lock_, 0);
 }
 
 
@@ -35,8 +35,8 @@ GamePad::GamePad(uint8_t button_count) :
   buttons_count_(button_count),
   buttons_(new std::atomic_bool[buttons_count_])
 {
+  initLock();
   debug(GAME_PAD, "ctor: button_count <%d>\n", button_count);
-  pthread_mutex_init(&lock_, 0);
 }
 
 GamePad::~GamePad()

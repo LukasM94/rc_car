@@ -12,18 +12,20 @@ const char Control::GPIO[] = "gpio";
 Control::Control(UController* u_controller) :
   control_handler_(u_controller, 0),
   tids_(),
+  // lock_("Control::lock_"),
   running_(1)
 {
-  pthread_mutex_init(&lock_, 0);
+  initLock();
   debug(CONTROL, "ctor\n");
 }
 //--------------------------------------------------------------------
 Control::Control(UController* u_controller, GamePad* game_pad) :
   control_handler_(u_controller, game_pad),
   tids_(),
+  // lock_("Control::lock_"),
   running_(1)
 {
-  pthread_mutex_init(&lock_, 0);
+  initLock();
   debug(CONTROL, "ctor: game_pad <%p>\n", game_pad);
 }
 
@@ -48,10 +50,12 @@ void* Control::wrapperStart(void* args)
   Control*        control         = ((struct start_arg*)args)->control_;
   ControlHandler* control_handler = &control->control_handler_;
 
+  debug(CONTROL, "setTid: Want to set tid\n");
   control->lock();
   control->setTid(primary_key, pthread_self());
   control->unlock();
 
+  debug(CONTROL, "setTid: Go to f_ptr\n");
   void* ret = ((struct start_arg*)args)->f_ptr_(control_handler);
 
   control->lock();
@@ -99,7 +103,6 @@ void Control::run()
   debug(CONTROL, "run: Create threads\n");
 
   pthread_create(&tid, 0, Control::wrapperStart, &args_gpio);
-
   pthread_create(&tid, 0, Control::wrapperStart, &args_i2c);
 
   while (running_)
@@ -114,7 +117,7 @@ void Control::run()
     unlock();
 
     debug(CONTROL, "run: Now I am going to sleep for 1 second\n");
-   sleep(1);
+    sleep(1);
   }
 
   debug(CONTROL, "run: Exit\n");
