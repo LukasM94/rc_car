@@ -3,6 +3,7 @@
 #define COMMUNICATION_H
 
 #include <stdint.h>
+#include <string>
 
 class Communication
 {
@@ -14,17 +15,17 @@ class Communication
       TYPE_SPI
     };
 
-    Communication(const char* name, enum Type com);
+    Communication(std::string name, enum Type com);
     ~Communication();
 
     virtual int write(uint8_t reg, const uint8_t* data, int length) = 0;
     virtual int read(uint8_t reg, uint8_t* data, int lenght) = 0;
-    const char* getName();
+    std::string& getName();
     enum Type getType();
     
   private:
     Communication();
-    const char* name_;
+    std::string name_;
     enum Type   type_;
 };
 

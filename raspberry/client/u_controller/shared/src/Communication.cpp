@@ -2,24 +2,19 @@
 #include <Communication.h>
 #include <debug.h>
 
-Communication::Communication()
-{
-
-}
-
 Communication::~Communication()
 {
   debug(COM, "Communication::~Communication()\n");
 }
 
-Communication::Communication(const char* name, enum Type type) : 
+Communication::Communication(std::string name, enum Type type) : 
     name_(name), 
     type_(type)
 {
-  debug(COM, "Communication::Communication(const char* %s)\n", name_);
+  debug(COM, "ctor: name <%s>\n", name_.c_str());
 }
 
-const char* Communication::getName()
+std::string& Communication::getName()
 {
   return name_;
 }

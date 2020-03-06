@@ -73,27 +73,27 @@ I2c::I2c(const char* name, const int dev_address) :
     Communication(name, Communication::TYPE_I2C)
 {
   fd_ = wiringPiI2CSetupInterface(I2C_DEVICE, dev_address);
-  debug(I2C, "I2c::I2c\n");
+  debug(I2C, "ctor\n");
   if (fd_ <= 0)
   {
-    debug(ERROR, "I2c::I2c: no device found\n");
+    debug(ERROR, "ctor: no device found\n");
     return;
   }
   if (gpioTestAndSet(RASPBERRY_I2C_SDA))
   {
     fd_ = -1;
-    debug(ERROR, "I2c::I2c: sda already taken\n");
+    debug(ERROR, "ctor: sda already taken\n");
     return;
   }
   if (gpioTestAndSet(RASPBERRY_I2C_SCL))
   {
     fd_ = -1;
     gpioTestAndUnset(RASPBERRY_I2C_SDA);
-    debug(ERROR, "I2c::I2c: scl already taken\n");
+    debug(ERROR, "ctor: scl already taken\n");
     return;
   }
-  debug(I2C, "I2c::I2c: PIN %d is SDA\n", RASPBERRY_I2C_SDA);
-  debug(I2C, "I2c::I2c: PIN %d is SCL\n", RASPBERRY_I2C_SCL);
+  debug(I2C, "ctor: PIN %d is SDA\n", RASPBERRY_I2C_SDA);
+  debug(I2C, "ctor: PIN %d is SCL\n", RASPBERRY_I2C_SCL);
 }   
 
 I2c::~I2c()
@@ -106,9 +106,9 @@ int I2c::writeByte(uint8_t reg, const uint8_t data)
   union i2c_smbus_data smbus_data;
 
   smbus_data.byte = data;
-  debug(I2C, "I2c::writeByte reg <0x%x>, data <%d>\n", reg, smbus_data.byte);
+  debug(I2C, "writeByte reg <0x%x>, data <%d>\n", reg, smbus_data.byte);
   int ret = i2c_smbus_access(fd_, I2C_SMBUS_WRITE, reg, I2C_SMBUS_BYTE_DATA, &smbus_data);
-  debug(I2C, "I2c::writeByte ret %d\n", ret);
+  debug(I2C, "writeByte ret %d\n", ret);
   return ret;
 }
 
@@ -136,9 +136,9 @@ int I2c::writeBlock(uint8_t reg, const uint8_t* data, int length)
   char string[6 * length];
   dataToHexArray(string, &smbus_data.block[1], length);
 
-  debug(I2C, "I2c::writeBlock reg <0x%x>, length <%d>, data<%s>\n", reg, smbus_data.block[0], string);
+  debug(I2C, "writeBlock reg <0x%x>, length <%d>, data<%s>\n", reg, smbus_data.block[0], string);
   int ret = i2c_smbus_access(fd_, I2C_SMBUS_WRITE, reg, I2C_SMBUS_BLOCK_DATA, &smbus_data);
-  debug(I2C, "I2c::writeBlock ret %d\n", ret);
+  debug(I2C, "writeBlock ret %d\n", ret);
   return ret;
 }
 

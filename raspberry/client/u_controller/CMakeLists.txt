@@ -1,9 +1,11 @@
 add_library( 
   communication
+  SHARED
   shared/src/Communication.cpp
 )
 add_library( 
   i2c
+  SHARED
   shared/src/I2c.cpp
 )
 add_dependencies(
@@ -12,6 +14,7 @@ add_dependencies(
 )
 add_library( 
   spi
+  SHARED
   shared/src/Spi.cpp
 )
 add_dependencies(
@@ -20,6 +23,7 @@ add_dependencies(
 )
 add_library( 
   usart
+  SHARED
   shared/src/Usart.cpp
 )
 add_dependencies(
@@ -28,10 +32,12 @@ add_dependencies(
 )
 add_library( 
   gpio
+  SHARED
   shared/src/Gpio.cpp
 )
 add_library(
   u_controller
+  SHARED
   shared/src/UController.cpp
 )
 add_dependencies(
@@ -43,6 +49,7 @@ add_dependencies(
 )
 add_library( 
   atmega
+  SHARED
   atmega/src/Atmega.cpp
 )
 add_dependencies(

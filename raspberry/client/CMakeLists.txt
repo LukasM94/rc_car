@@ -26,15 +26,6 @@ include_directories(
   game_pad_client/include
 )
 
-add_library(
-  game_pad
-  ../shared/src/GamePad.cpp
-)
-add_library(
-  socket
-  ../shared/src/Socket.cpp
-)
-
 add_subdirectory(u_controller) 
 add_subdirectory(u_controller_control) 
 add_subdirectory(camera)
@@ -46,6 +37,7 @@ target_link_libraries(
   ${PROJECT_NAME}
   communication
   u_controller_control
+  control_handler
   camera
   game_pad_client
   gpio

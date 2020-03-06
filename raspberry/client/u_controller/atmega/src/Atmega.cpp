@@ -7,7 +7,7 @@
 #define ATMEGA_I2C_ADDRESS 0x05
 #endif
 
-Atmega::Atmega() : UController()
+Atmega::Atmega() : UController("Atmega")
 {
   debug(ATMEGA, "ctor\n");
 }
