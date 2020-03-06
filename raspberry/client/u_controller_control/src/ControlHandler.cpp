@@ -6,6 +6,7 @@
 #include <GamePad.h>
 #include <unistd.h>
 #include <com_config.h>
+#include <config.h>
 
 //--------------------------------------------------------------------
 ControlHandler::ControlHandler(UController* u_controller, GamePad* game_pad) : 
@@ -25,8 +26,9 @@ ControlHandler::~ControlHandler()
 void ControlHandler::gpioInit()
 {
   debug(CTL_HANLER, "gpioInit\n");
-  Gpio::instance()->initLed();
-  Gpio::instance()->initButton(&buttonCallback);
+  u_controller_->initGpio();
+  u_controller_->initLed(RASPBERRY_LED);
+  u_controller_->initButton(RASPBERRY_BUTTON, &buttonCallback);
 }
 
 //--------------------------------------------------------------------
@@ -50,7 +52,7 @@ void* ControlHandler::gpioFunction(void* arg)
   debug(CTL_HANLER, "gpioFunction: Start\n");
   while (1)
   {
-    Gpio::instance()->heartBeat();
+    ch->u_controller_->heartBeat();
   }
   debug(CTL_HANLER, "gpioFunction: Exit\n");
   return 0;
