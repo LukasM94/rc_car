@@ -27,7 +27,7 @@ void Printf_init(struct Usart* usart)
 }
 
 //---------------------------------------------------------------------
-static uint8_t print(const char* string)
+__attribute__((unused))static uint8_t print(const char* string)
 {
   if (usart_->transmitString(usart_, string) != 0)
   {
@@ -39,6 +39,7 @@ static uint8_t print(const char* string)
 //---------------------------------------------------------------------
 uint8_t Printf_print(char* fmt, ...)
 {
+#if defined(DEBUG)
   asm volatile("cli"::);
   va_list args;
   char string[USART_MAX_LENGTH];
@@ -58,4 +59,7 @@ uint8_t Printf_print(char* fmt, ...)
   va_end(args);
   asm volatile("sei"::);
   return return_value;
+#else
+  return 1;
+#endif
 }

@@ -40,6 +40,9 @@ CFLAGS += -fshort-enums
 
 all: begin sizebefore compiling linking hex sizeafter end
 
+debug: CFLAGS += -DDEBUG=1 -g
+debug: begin sizebefore compiling linking hex sizeafter end
+
 $(OBJECT_DIR)/$(TARGET).o: $(TARGET).c
 	$(CC) -c $(CFLAGS) $< -o $@
 
