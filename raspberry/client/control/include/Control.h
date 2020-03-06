@@ -9,11 +9,13 @@ int control(int argv, char* argc[]);
 #include <ControlHandler.h>
 
 class GamePad;
+class UController;
 
 class Control
 {
   public:
-    Control(GamePad* game_pad);
+    Control(UController* u_controller);
+    Control(UController* u_controller, GamePad* game_pad);
     ~Control();
 
     inline static void* runWrapper(void* arg)

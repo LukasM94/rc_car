@@ -16,6 +16,8 @@ class Gpio
     Gpio();
     uint8_t led_pin_;
     uint8_t button_pin_;
+    uint8_t i2c_sda_pin_;
+    uint8_t i2c_clk_pin_;
     
     static Gpio* instance_;
 };

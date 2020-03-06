@@ -8,16 +8,16 @@ const char Control::I2C[]  = "i2c";
 const char Control::GPIO[] = "gpio";
 
 //--------------------------------------------------------------------
-Control::Control() :
-  control_handler_(0),
+Control::Control(UController* u_controller) :
+  control_handler_(u_controller, 0),
   tids_(),
   running_(1)
 {
   debug(CONTROL, "ctor\n");
 }
 //--------------------------------------------------------------------
-Control::Control(GamePad* game_pad) :
-  control_handler_(game_pad),
+Control::Control(UController* u_controller, GamePad* game_pad) :
+  control_handler_(u_controller, game_pad),
   tids_(),
   running_(1)
 {

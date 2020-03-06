@@ -1,44 +1,26 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(control)
 
-## Declare a C++ library
 add_library( 
-  communication
-  src/Communication.cpp
-)
-add_library( 
-  i2c
-  src/I2c.cpp
-  src/Communication.cpp
-)
-add_library( 
-  spi
-  src/Spi.cpp
-  src/Communication.cpp
-)
-add_library( 
-  usart
-  src/Usart.cpp
-  src/Communication.cpp
-)
-add_library( 
-  atmega
-  src/Atmega.cpp
-  src/I2c.cpp
-  src/Communication.cpp
-)
-add_library( 
-  gpio
-  src/Gpio.cpp
-)
-add_library( control
-  src/ControlHandler.cpp
+  control
   src/Control.cpp
-  src/Atmega.cpp
-  src/I2c.cpp
-  src/Communication.cpp
-  src/I2c.cpp
+  src/ControlHandler.cpp
+  ../u_controller/shared/src/UController.cpp
+  ../u_controller/shared/src/Usart.cpp
+  ../u_controller/shared/src/Spi.cpp
+  ../u_controller/shared/src/I2c.cpp
+  ../u_controller/shared/src/Communication.cpp
 )
-add_library( control_handler
+# add_dependencies(
+#   control
+#   control_handler
+#   u_controller
+#   usart
+#   spi
+#   i2c
+#   communication
+# )
+add_library( 
+  control_handler
   src/ControlHandler.cpp
 )

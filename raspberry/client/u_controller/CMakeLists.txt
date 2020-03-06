@@ -1,0 +1,71 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(u_controller)
+
+## Declare a C++ library
+add_library( 
+  communication
+  shared/src/Communication.cpp
+)
+add_library( 
+  i2c
+  shared/src/I2c.cpp
+  shared/src/Communication.cpp
+)
+# add_dependencies(
+#   i2c 
+#   communication
+# )
+add_library( 
+  spi
+  shared/src/Spi.cpp
+  shared/src/Communication.cpp
+)
+# add_dependencies(
+#   spi
+#   communication
+# )
+add_library( 
+  usart
+  shared/src/Usart.cpp
+  shared/src/Communication.cpp
+)
+# add_dependencies(
+#   usart
+#   communication
+# )
+add_library( 
+  gpio
+  shared/src/Gpio.cpp
+)
+add_library(
+  u_controller
+  shared/src/UController.cpp
+  shared/src/Communication.cpp
+  shared/src/I2c.cpp
+  shared/src/Usart.cpp
+  shared/src/Spi.cpp
+)
+# add_dependencies(
+#   u_controller
+#   usart
+#   spi
+#   i2c
+#   communication
+# )
+add_library( 
+  atmega
+  atmega/src/Atmega.cpp
+  shared/src/UController.cpp
+  shared/src/Communication.cpp
+  shared/src/I2c.cpp
+  shared/src/Usart.cpp
+  shared/src/Spi.cpp
+)
+# add_dependencies(
+#   atmega
+#   u_controller
+#   usart
+#   spi
+#   i2c
+#   communication
+# )

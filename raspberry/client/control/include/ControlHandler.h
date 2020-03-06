@@ -1,13 +1,13 @@
 #ifndef CONTROL_HANDLER_H
 #define CONTROL_HANDLER_H
 
-class Atmega;
+class UController;
 class GamePad;
 
 class ControlHandler
 {
   public:
-    ControlHandler(GamePad* game_pad);
+    ControlHandler(UController* u_controller, GamePad* game_pad);
     ~ControlHandler();
 
     void gpioInit();
@@ -22,8 +22,8 @@ class ControlHandler
     ControlHandler();
     ControlHandler(const ControlHandler&);
 
-    Atmega*  atmega_;
-    GamePad* game_pad_;
+    UController* u_controller_;
+    GamePad*     game_pad_;
 };
 
 #endif

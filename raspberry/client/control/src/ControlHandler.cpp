@@ -1,15 +1,15 @@
-#include <Atmega.h>
+#include <UController.h>
 #include <string.h>
 #include <Gpio.h>
-#include <i2c_protocol.h>
 #include <debug.h>
 #include <ControlHandler.h>
 #include <GamePad.h>
 #include <unistd.h>
+#include <com_config.h>
 
 //--------------------------------------------------------------------
-ControlHandler::ControlHandler(GamePad* game_pad) : 
-  atmega_(0),
+ControlHandler::ControlHandler(UController* u_controller, GamePad* game_pad) : 
+  u_controller_(u_controller),
   game_pad_(game_pad)
 {
   debug(CTL_HANLER, "ctor: game_pad <%p>\n", game_pad_);
@@ -32,8 +32,8 @@ void ControlHandler::gpioInit()
 //--------------------------------------------------------------------
 void ControlHandler::i2cInit()
 {
-  atmega_ = new Atmega();
-  debug(CTL_HANLER, "i2cInit: atmega_ <%p>\n", atmega_);
+  debug(CTL_HANLER, "i2cInit\n");
+  u_controller_->initI2c();
 }
 
 //--------------------------------------------------------------------
@@ -66,86 +66,9 @@ void* ControlHandler::i2cFunction(void* arg)
   {
     int      reg   = I2C_MOTOR;
     uint16_t speed = 0x1234;
-    ch->atmega_->writeI2c(reg, (const uint8_t*)&speed, 2); 
+    ch->u_controller_->writeI2c(reg, (const uint8_t*)&speed, 2); 
     usleep(500000); 
   }
   debug(CTL_HANLER, "i2cFunction: Exit\n");
-  return 0;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-//--------------------------------------------------------------------
-pthread_t    tid_i2c;
-volatile int running = 1;
-Atmega*      atmega;
-
-//--------------------------------------------------------------------
-void  gpioInit();
-void  i2cInit();
-void  buttonCallback();
-void* i2cFunction(void* arg);
-
-//--------------------------------------------------------------------
-int control(int argc, char* argv[])
-{
-  gpioInit();
-  i2cInit();
-
-  debug(CONTROL, "control: Finish with initialization\n");
-
-  pthread_create(&tid_i2c, 0, i2cFunction, 0);
-
-  debug(CONTROL, "control: Start hear beat\n");
-
-  while (running)
-  {
-    Gpio::instance()->heartBeat();
-  }
-  debug(CONTROL, "control: End hear beat\n");
-  return 0;
-}
-
-//--------------------------------------------------------------------
-void gpioInit()
-{
-  Gpio::instance()->initLed();
-  Gpio::instance()->initButton(&buttonCallback);
-}
-
-//--------------------------------------------------------------------
-void i2cInit()
-{
-  atmega = new Atmega();
-}
-
-//--------------------------------------------------------------------
-void buttonCallback()
-{
-  debug(CONTROL, "buttonCallback: Button pressed\n");
-}
-
-//--------------------------------------------------------------------
-void* i2cFunction(void* arg)
-{
-  debug(CONTROL, "i2cFunction: Start\n");
-  while (running)
-  {
-    int      reg   = I2C_MOTOR;
-    uint16_t speed = 0x1234;
-    atmega->writeI2c(reg, (const uint8_t*)&speed, 2); 
-    usleep(500000); 
-  }
-  debug(CONTROL, "i2cFunction: End\n");
   return 0;
 }

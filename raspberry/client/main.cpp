@@ -1,5 +1,6 @@
 
 #include <Control.h>
+#include <Atmega.h>
 #include <camera.h>
 // #include <xbox_controller.h>
 #include <unistd.h>
@@ -34,7 +35,8 @@ int main(int argc, char* argv[])
 
   debug(MAIN, "main: Initialize the instances\n");
   GamePadClient gp_client(atoi(port_no), ip_addr);
-  Control control(gp_client.getGamePad());
+  Atmega* atmega = new Atmega();
+  Control control(atmega, gp_client.getGamePad());
 
   debug(MAIN, "main: Create threads\n");
   pthread_create(&tid_gp_client, 0, GamePadClient::runWrapper, &gp_client);
@@ -42,7 +44,7 @@ int main(int argc, char* argv[])
 
   debug(MAIN, "main: Goes to sleep\n");
   pthread_join(tid_gp_client, 0);
-  // pthread_join(tid_ucontroller, 0);
+  pthread_join(tid_ucontroller, 0);
 
   debug(MAIN, "main: Exits\n");
   return 0;

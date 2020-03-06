@@ -7,7 +7,10 @@
 
 Gpio* Gpio::instance_ = 0;
 
-Gpio::Gpio() : led_pin_(0), button_pin_(1)
+Gpio::Gpio() : 
+  led_pin_(0), 
+  button_pin_(1)
+
 {
   wiringPiSetupGpio();
 }
@@ -25,7 +28,7 @@ void Gpio::initLed()
     return;
   }
   pinMode(led_pin_, OUTPUT);
-  debug(GPIO, "Gpio::init: Pin %d is OUTPUT\n", led_pin_);
+  debug(GPIO, "init: Pin %d is OUTPUT\n", led_pin_);
 }
 
 void Gpio::initButton(void (*f_ptr)())

@@ -19,11 +19,14 @@ include_directories(
   ../shared/
   ../shared/include
   ../../shared
+  u_controller/atmega/include
+  u_controller/shared/include
   control/include
   camera/include
   game_pad_client/include
 )
 
+add_subdirectory(u_controller) 
 add_subdirectory(control) 
 add_subdirectory(camera)
 add_subdirectory(game_pad_client) 
@@ -41,6 +44,7 @@ target_link_libraries(
   atmega
   spi
   usart
+  u_controller
   -pthread
   -lwiringPi
   -lrt

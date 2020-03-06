@@ -7,15 +7,14 @@
 #define ATMEGA_I2C_ADDRESS 0x05
 #endif
 
-Atmega::Atmega() : i2c_(new I2c("Atmega::i2c", ATMEGA_I2C_ADDRESS))
+Atmega::Atmega() : UController()
 {
-  pthread_mutex_init(&communication_lock_, 0);
-  debug(ATMEGA, "Atmega\n");
+  debug(ATMEGA, "ctor\n");
 }
 
 Atmega::~Atmega()
 {
-   delete i2c_;
+  debug(ATMEGA, "dtor\n");
 }
 
 int Atmega::writeI2c(uint8_t reg, const uint8_t* data, int length)
@@ -24,4 +23,14 @@ int Atmega::writeI2c(uint8_t reg, const uint8_t* data, int length)
   int ret = i2c_->write(reg, data, length);
   pthread_mutex_unlock(&communication_lock_);
   return ret;
+}
+
+int Atmega::writeUsart(uint8_t reg, const uint8_t* data, int length)
+{
+  return -1;
+}
+
+int Atmega::writeSpi(uint8_t reg, const uint8_t* data, int length)
+{
+  return -1;
 }
