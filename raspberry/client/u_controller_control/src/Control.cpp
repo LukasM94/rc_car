@@ -17,15 +17,6 @@ Control::Control(UController* u_controller) :
 {
   debug(CONTROL, "ctor\n");
 }
-//--------------------------------------------------------------------
-Control::Control(UController* u_controller, GamePad* game_pad) :
-  control_handler_(u_controller, game_pad),
-  tids_(),
-  lock_("Control::lock_"),
-  running_(1)
-{
-  debug(CONTROL, "ctor: game_pad <%p>\n", game_pad);
-}
 
 //--------------------------------------------------------------------
 Control::~Control()

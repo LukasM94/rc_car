@@ -52,6 +52,9 @@ target_link_libraries(
   usart
   u_controller
   lock
+  game_pad_instance
+  socket
+  game_pad
   -pthread
   -lrt
   -ljsoncpp
@@ -71,6 +74,9 @@ target_link_libraries(
   usart
   u_controller
   lock
+  game_pad_instance
+  socket
+  game_pad
   -pthread
   -lwiringPi
   -lrt

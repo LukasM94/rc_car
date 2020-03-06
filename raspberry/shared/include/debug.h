@@ -43,3 +43,4 @@ const size_t ATMEGA      = Ansi_Cyan    | OUTPUT_ENABLED;
 const size_t COM         = Ansi_Magenta | OUTPUT_ENABLED;
 const size_t CAMERA      = Ansi_Cyan    | OUTPUT_ENABLED;
 const size_t UCONTROLLER = Ansi_Magenta | OUTPUT_ENABLED;
+const size_t GP_INSTANCE = Ansi_Yellow  | OUTPUT_ENABLED;

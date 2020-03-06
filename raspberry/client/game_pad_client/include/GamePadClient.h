@@ -29,18 +29,11 @@ class GamePadClient : public Socket
     virtual int transmit();
     int connectToServer();
 
-    inline GamePad* getGamePad()
-    {
-      return game_pad_;
-    }
-
   private:
     GamePadClient();
     GamePadClient(const GamePadClient&);
 
     int server_socket_;
-
-    GamePad* game_pad_;
 
     std::atomic_bool running_;
 

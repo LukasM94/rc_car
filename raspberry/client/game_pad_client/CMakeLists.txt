@@ -1,7 +1,31 @@
+add_library(
+  game_pad
+  SHARED
+  ../../shared/src/GamePad.cpp
+)
+add_library(
+  socket
+  SHARED
+  ../../shared/src/Socket.cpp
+)
 add_library( 
   game_pad_client
   SHARED
   src/GamePadClient.cpp
-  ../../shared/src/GamePad.cpp
-  ../../shared/src/Socket.cpp
+)
+add_dependencies(
+  game_pad_client
+  socket
+  game_pad
+)
+add_library( 
+  game_pad_instance
+  SHARED
+  src/GamePadInstance.cpp
+)
+add_dependencies(
+  game_pad_instance
+  game_pad_client
+  socket
+  game_pad
 )

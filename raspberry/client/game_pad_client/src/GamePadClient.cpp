@@ -8,26 +8,23 @@
 #include <GamePadClient.h>
 #include <config.h>
 #include <debug.h>
-#include <GamePad.h>
+#include <GamePadInstance.h>
   
 const char GamePadClient::HELLO[] = "Hello from client";
 
 //-------------------------------------------------
-GamePadClient::GamePadClient(unsigned int server_port, const char* server_ip):
+GamePadClient::GamePadClient(unsigned int server_port, const char* server_ip) :
 	Socket(server_port, server_ip),
-  game_pad_(new GamePad()),
   running_(1)
 {
   debug(GP_CLIENT, "ctor: %d, %s\n", server_port, server_ip);
+  GamePadInstance::instance()->incrementGamePadClient();
 }
 
 //-------------------------------------------------
 GamePadClient::~GamePadClient()
 {
-  if (game_pad_ != 0)
-  {
-    delete game_pad_;
-  }
+  GamePadInstance::instance()->decrementGamePadClient();
   debug(GP_CLIENT, "dtor:\n");
 }
 
@@ -148,7 +145,7 @@ void GamePadClient::run()
       str.erase(std::remove(str.begin(), str.end(), 0), str.end());
       debug(GP_CLIENT_D, "run: string is %s\n", str.c_str());
 
-      GamePad::getFromString(game_pad_, str.c_str());
+      GamePad::getFromString(GamePadInstance::instance()->getGamePad(), str.c_str());
     }
   }
   debug(GP_CLIENT, "run: Exit\n");

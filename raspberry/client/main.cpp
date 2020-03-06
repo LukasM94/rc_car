@@ -9,6 +9,7 @@
 #include <csignal>
 #include <config.h>
 #include <GamePadClient.h>
+#include <GamePadInstance.h>
 #include <pthread.h>
 
 pthread_t tid_gp_client;
@@ -29,9 +30,10 @@ int main(int argc, char* argv[])
   const char* port_no = SERVER_PORT;
 
   debug(MAIN, "main: Initialize the instances\n");
+  GamePad* game_pad = GamePadInstance::instance()->getGamePad();
   GamePadClient gp_client(atoi(port_no), ip_addr);
   Atmega* atmega = new Atmega();
-  Control control(atmega, gp_client.getGamePad());
+  Control control(atmega);
 
   debug(MAIN, "main: Create threads\n");
   pthread_create(&tid_gp_client, 0, GamePadClient::runWrapper, &gp_client);

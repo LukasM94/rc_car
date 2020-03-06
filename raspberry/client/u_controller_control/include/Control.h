@@ -16,7 +16,6 @@ class Control
 {
   public:
     Control(UController* u_controller);
-    Control(UController* u_controller, GamePad* game_pad);
     ~Control();
 
     inline static void* runWrapper(void* arg)
