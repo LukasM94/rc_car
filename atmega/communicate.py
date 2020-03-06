@@ -10,4 +10,4 @@ ser = serial.Serial(
 while 1:
   c = ser.readline()
   if c != '':
-    print(c)
+    sys.stdout.write(c)
