@@ -87,12 +87,12 @@ void Control::run()
 
   init();
 
+  lock();
   debug(CONTROL, "run: Create threads\n");
   pthread_create(&tid_gpio, 0, Control::wrapperStart, &args_gpio);
   pthread_create(&tid_i2c, 0, Control::wrapperStart, &args_i2c);
   
   debug(CONTROL, "run: Set the tids\n");
-  lock();
   setTid(args_gpio.primary_key_, tid_gpio);
   setTid(args_i2c.primary_key_, tid_i2c);
   unlock();
