@@ -8,13 +8,17 @@
 
 const char XboxController::DEFAULT_PATH[] = "/dev/input/js0";
 
+extern void lockTids();
+extern void unlockTids();
+extern int  removeFromTids(const char* prime_key);
+
 //-------------------------------------------------
 XboxController::XboxController() :
   path_(DEFAULT_PATH),
   gamepad_(new GamePad(BUTTON_COUNT)),
   running_(1)
 {
-  fd_ = open(path_, O_RDONLY);
+  init();
   debug(XBOX_CONTR, "ctor: fd_ <%d>\n", fd_);
 }
 
@@ -24,7 +28,7 @@ XboxController::XboxController(const char* path) :
   gamepad_(new GamePad(BUTTON_COUNT)),
   running_(1)
 {
-  fd_ = open(path_, O_RDONLY);
+  init();
   debug(XBOX_CONTR, "ctor: fd_ <%d>\n", fd_);
 }
 
@@ -32,6 +36,12 @@ XboxController::XboxController(const char* path) :
 XboxController::~XboxController()
 {
   close(fd_);
+}
+
+//-------------------------------------------------
+void XboxController::init()
+{
+  fd_ = open(path_, O_RDONLY);
 }
 
 //-------------------------------------------------
@@ -43,6 +53,10 @@ void XboxController::run()
   {
   }
   debug(XBOX_CONTR, "run: Ret is %d\n", ret);
+  debug(XBOX_CONTR, "run: Remove from tids map\n", ret);
+	lockTids();
+	removeFromTids(name_.c_str());
+	unlockTids();
   debug(XBOX_CONTR, "run: Exit\n");
 }
 

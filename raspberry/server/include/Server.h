@@ -4,6 +4,7 @@
 #include <atomic>
 #include <netinet/in.h> 
 #include <Socket.h>
+#include <string>
 
 class GamePad;
 
@@ -29,6 +30,11 @@ class Server : public Socket
     virtual int transmit();
     int listenAndAccept();
 
+    void setName(const char* name)
+    {
+      name_ = name;
+    }
+
   private:
     Server();
     Server(const Server&);
@@ -39,6 +45,8 @@ class Server : public Socket
     GamePad* gamepad_;
 
     std::atomic_bool running_;
+
+    std::string name_;
 };
 
 #endif

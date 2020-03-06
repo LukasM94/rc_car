@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <linux/joystick.h>
 #include <atomic>
+#include <string>
 
 class GamePad;
 
@@ -40,6 +41,13 @@ class XboxController
       return gamepad_;
     }
 
+    void setName(const char* name)
+    {
+      name_ = name;
+    }
+
+    void init();
+
   private:
     XboxController(XboxController& c);
 
@@ -68,6 +76,8 @@ class XboxController
     GamePad* gamepad_;
 
     struct js_event event_;
+
+    std::string name_;
 
     static const unsigned char LT_THRESHOLD = 64;
     static const unsigned char RT_THRESHOLD = 64;
