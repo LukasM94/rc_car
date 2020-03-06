@@ -37,6 +37,27 @@ set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "amd64.*|x86_64.*|AMD64.*")
+target_link_libraries(
+  ${PROJECT_NAME}
+  communication
+  u_controller_control
+  control_handler
+  camera
+  game_pad_client
+  gpio
+  i2c
+  atmega
+  spi
+  usart
+  u_controller
+  lock
+  -pthread
+  # -lwiringPi
+  -lrt
+  -ljsoncpp
+)
+else()
 target_link_libraries(
   ${PROJECT_NAME}
   communication
@@ -56,3 +77,7 @@ target_link_libraries(
   -lrt
   -ljsoncpp
 )
+endif()
+
+# if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64.*|AARCH64.*|arm64.*|ARM64.*)")
+# elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm.*|ARM.*)")

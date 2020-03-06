@@ -50,12 +50,13 @@ void* Control::wrapperStart(void* args)
   Control*        control         = ((struct start_arg*)args)->control_;
   ControlHandler* control_handler = &control->control_handler_;
 
-  debug(CONTROL, "setTid: Want to set tid\n");
+  debug(CONTROL, "wrapperStart: Want to set tid\n");
   control->lock();
   control->setTid(primary_key, pthread_self());
   control->unlock();
 
-  debug(CONTROL, "setTid: Go to f_ptr\n");
+  debug(CONTROL, "wrapperStart: Primary key is %s\n", primary_key);
+  debug(CONTROL, "wrapperStart: Go to f_ptr\n");
   void* ret = ((struct start_arg*)args)->f_ptr_(control_handler);
 
   control->lock();

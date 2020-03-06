@@ -1,7 +1,9 @@
 
 #include <I2c.h>
+#if defined(__arm__)
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -72,6 +74,7 @@ static inline int i2c_smbus_access(int fd, char rw, uint8_t command, int size, u
 I2c::I2c(const char* name, const int dev_address) : 
     Communication(name, Communication::TYPE_I2C)
 {
+#if defined(__arm__)
   fd_ = wiringPiI2CSetupInterface(I2C_DEVICE, dev_address);
   debug(I2C, "ctor\n");
   if (fd_ <= 0)
@@ -94,6 +97,7 @@ I2c::I2c(const char* name, const int dev_address) :
   }
   debug(I2C, "ctor: PIN %d is SDA\n", RASPBERRY_I2C_SDA);
   debug(I2C, "ctor: PIN %d is SCL\n", RASPBERRY_I2C_SCL);
+#endif
 }   
 
 I2c::~I2c()
