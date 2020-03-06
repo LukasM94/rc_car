@@ -2,10 +2,9 @@
 #include <sched.h>
 
 Lock::Lock(const char* name) :
-  lock_(0),
   name_(name)
 {
-
+  pthread_mutex_init(&lock_, 0);
 }
 
 Lock::~Lock()
@@ -15,22 +14,10 @@ Lock::~Lock()
 
 void Lock::lock()
 {
-  size_t value = 1;
-  do
-  {
-    value = __atomic_exchange_n(&lock_, value, __ATOMIC_RELAXED);
-  } while (value && sched_yield());
+  pthread_mutex_lock(&lock_);
 }
 
 void Lock::unlock()
 {
-  size_t value = 0;
-  __atomic_exchange_n(&lock_, value, __ATOMIC_RELAXED);
-}
-
-int Lock::trylock()
-{
-  size_t value = 1;
-  value = __atomic_exchange_n(&lock_, value, __ATOMIC_RELAXED);
-  return value;
+  pthread_mutex_unlock(&lock_);
 }

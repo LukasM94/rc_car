@@ -19,9 +19,9 @@ Atmega::~Atmega()
 
 int Atmega::writeI2c(uint8_t reg, const uint8_t* data, int length)
 {
-  pthread_mutex_lock(&communication_lock_);
+  communication_lock_.lock();
   int ret = i2c_->write(reg, data, length);
-  pthread_mutex_unlock(&communication_lock_);
+  communication_lock_.unlock();
   return ret;
 }
 

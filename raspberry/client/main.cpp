@@ -38,8 +38,6 @@ int main(int argc, char* argv[])
   pthread_create(&tid_ucontroller, 0, Control::runWrapper, &control);
 
   debug(MAIN, "main: Goes to sleep\n");
-  sleep(1);
-  return -2;
   pthread_join(tid_gp_client, 0);
   pthread_join(tid_ucontroller, 0);
 

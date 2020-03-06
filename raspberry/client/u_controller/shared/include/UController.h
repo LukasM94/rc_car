@@ -3,7 +3,7 @@
 #define U_CONTROLLER_H
 
 #include <stdint.h>
-#include <pthread.h>
+#include <Lock.h>
 #include <string>
 
 class I2c;
@@ -39,7 +39,7 @@ class UController
 
     std::string name_;
 
-    pthread_mutex_t communication_lock_;
+    Lock communication_lock_;
 };
 
 #endif

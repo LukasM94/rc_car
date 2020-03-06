@@ -3,6 +3,7 @@
 
 #include <string>
 #include <stddef.h>
+#include <pthread.h>
 
 class Lock
 {
@@ -15,8 +16,8 @@ class Lock
 
   private:  
     Lock();
-    size_t      lock_;
-    std::string name_;
+    pthread_mutex_t lock_;
+    std::string     name_;
 };
 
 #endif

@@ -11,9 +11,9 @@ UController::UController(const char* name) :
   i2c_(0),
   usart_(0),
   spi_(0),
-  name_(name)
+  name_(name),
+  communication_lock_((std::string(name) + "::communication_lock_").c_str())
 {
-  pthread_mutex_init(&communication_lock_, 0);
   debug(UCONTROLLER, "ctor\n");
 }
 

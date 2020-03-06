@@ -12,20 +12,18 @@ const char Control::GPIO[] = "gpio";
 Control::Control(UController* u_controller) :
   control_handler_(u_controller, 0),
   tids_(),
-  // lock_("Control::lock_"),
+  lock_("Control::lock_"),
   running_(1)
 {
-  initLock();
   debug(CONTROL, "ctor\n");
 }
 //--------------------------------------------------------------------
 Control::Control(UController* u_controller, GamePad* game_pad) :
   control_handler_(u_controller, game_pad),
   tids_(),
-  // lock_("Control::lock_"),
+  lock_("Control::lock_"),
   running_(1)
 {
-  initLock();
   debug(CONTROL, "ctor: game_pad <%p>\n", game_pad);
 }
 
@@ -49,11 +47,6 @@ void* Control::wrapperStart(void* args)
   const char*     primary_key     = ((struct start_arg*)args)->primary_key_;
   Control*        control         = ((struct start_arg*)args)->control_;
   ControlHandler* control_handler = &control->control_handler_;
-
-  debug(CONTROL, "wrapperStart: Want to set tid\n");
-  control->lock();
-  control->setTid(primary_key, pthread_self());
-  control->unlock();
 
   debug(CONTROL, "wrapperStart: Primary key is %s\n", primary_key);
   debug(CONTROL, "wrapperStart: Go to f_ptr\n");
@@ -95,16 +88,23 @@ int Control::removeTid(const char* primary_key)
 //--------------------------------------------------------------------
 void Control::run()
 {
-  pthread_t tid;
+  pthread_t tid_i2c;
+  pthread_t tid_gpio;
+
   struct start_arg  args_i2c  = {this, I2C, 0, &ControlHandler::i2cFunction};
   struct start_arg  args_gpio = {this, GPIO, 0,  &ControlHandler::gpioFunction};
 
   init();
 
   debug(CONTROL, "run: Create threads\n");
-
-  pthread_create(&tid, 0, Control::wrapperStart, &args_gpio);
-  pthread_create(&tid, 0, Control::wrapperStart, &args_i2c);
+  pthread_create(&tid_gpio, 0, Control::wrapperStart, &args_gpio);
+  pthread_create(&tid_i2c, 0, Control::wrapperStart, &args_i2c);
+  
+  debug(CONTROL, "run: Set the tids\n");
+  lock();
+  setTid(args_gpio.primary_key_, tid_gpio);
+  setTid(args_i2c.primary_key_, tid_i2c);
+  unlock();
 
   while (running_)
   {
