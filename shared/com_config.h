@@ -10,7 +10,7 @@
 #define I2C_SERVO 0x04
 #define I2C_SERVO_SIZE 4
 
-#define I2C_SLEEP_TIME  200000 //us
+#define I2C_SLEEP_TIME  50000 //us
 #define I2C_DEAD_TIME   500 //ms
 
 struct RegisterEntry

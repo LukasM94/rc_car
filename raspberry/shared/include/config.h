@@ -28,6 +28,8 @@
 
 #define RASPBERRY_PWM0_1    18
 
+#define SERVER_SEND_DATA    20000 //us
+
 #include <stdio.h>
 
 static size_t gpios[RASPBERRY_PIN_COUNT];

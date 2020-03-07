@@ -8,6 +8,7 @@
 #include <debug.h>
 #include <GamePad.h>
 #include <exception>
+#include <config.h>
 
 #define HELLO "Hello from server"
 
@@ -56,7 +57,7 @@ void Server::run()
 		connected_ = 1;
 		while (connected_)
 		{
-			usleep(100000);
+			usleep(SERVER_SEND_DATA);
 			memset(buffer_, 0, BUFFER_SIZE);
 			gamepad_->getMsg(buffer_, BUFFER_SIZE);
 			transmit();
