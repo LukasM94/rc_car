@@ -23,4 +23,14 @@ add_dependencies(
   i2c
   communication
 )
+add_library(
+  peripherial
+  SHARED
+  src/Peripherial.cpp
+)
+add_dependencies(
+  peripherial
+  gpio
+)
+
 

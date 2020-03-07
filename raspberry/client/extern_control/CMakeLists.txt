@@ -4,12 +4,12 @@ add_library(
   src/ControlHandler.cpp
 )
 add_library( 
-  u_controller_control
+  extern_control
   SHARED
   src/Control.cpp
 )
 add_dependencies(
-  u_controller_control
+  extern_control
   control_handler
   u_controller
   usart

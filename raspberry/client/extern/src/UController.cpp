@@ -72,31 +72,3 @@ int UController::initSpi()
   spi_ = new Spi(temp.c_str());
   return 0;
 }
-
-int UController::initGpio()
-{
-  debug(UCONTROLLER, "initGpio\n");
-  if (gpio_ != 0)
-  {
-    debug(UCONTROLLER, "initGpio: return -1\n");
-    return -1;
-  }
-  std::string temp = name_ + "::Spi";
-  gpio_ = new Gpio(temp.c_str());
-  return 0;
-}
-
-void UController::initLed(uint8_t led_pin)
-{
-  gpio_->initLed(led_pin);
-}
-
-void UController::initButton(uint8_t button_pin, void (*f_ptr)())
-{
-  gpio_->initButton(button_pin, f_ptr);
-}
-
-void UController::heartBeat()
-{
-  gpio_->heartBeat();
-}

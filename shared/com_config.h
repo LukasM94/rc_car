@@ -5,10 +5,10 @@
 #define I2C_ADDRESS 0x05
 
 #define I2C_MOTOR 0x00
-#define I2C_MOTOR_SIZE 4
+#define I2C_MOTOR_SIZE 1
 
 #define I2C_SERVO 0x04
-#define I2C_SERVO_SIZE 4
+#define I2C_SERVO_SIZE 1
 
 #define I2C_SLEEP_TIME  50000 //us
 #define I2C_DEAD_TIME   500 //ms

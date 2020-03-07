@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <com_config.h>
 #include <config.h>
+#include <Peripherial.h>
 
 //--------------------------------------------------------------------
 ControlHandler::ControlHandler(UController* u_controller) : 
@@ -26,9 +27,9 @@ ControlHandler::~ControlHandler()
 void ControlHandler::gpioInit()
 {
   debug(CTL_HANDLER, "gpioInit\n");
-  u_controller_->initGpio();
-  u_controller_->initLed(RASPBERRY_LED);
-  u_controller_->initButton(RASPBERRY_BUTTON, &buttonCallback);
+  Peripherial::instance()->initGpio();
+  Peripherial::instance()->initLed(RASPBERRY_LED);
+  Peripherial::instance()->initButton(RASPBERRY_BUTTON, &buttonCallback);
 }
 
 //--------------------------------------------------------------------
@@ -52,7 +53,7 @@ void* ControlHandler::gpioFunction(void* arg)
   debug(CTL_HANDLER, "gpioFunction: Start\n");
   while (1)
   {
-    ch->u_controller_->heartBeat();
+    Peripherial::instance()->heartBeat();
   }
   debug(CTL_HANDLER, "gpioFunction: Exit\n");
   return 0;

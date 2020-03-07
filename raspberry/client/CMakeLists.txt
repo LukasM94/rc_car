@@ -19,16 +19,16 @@ include_directories(
   ../shared/
   ../shared/include
   ../../shared
-  u_controller/include
+  extern/include
   raspberry/include
-  u_controller_control/include
+  extern_control/include
   camera/include
   game_pad_client/include
 )
 
-add_subdirectory(u_controller) 
+add_subdirectory(extern) 
 add_subdirectory(shared) 
-add_subdirectory(u_controller_control) 
+add_subdirectory(extern_control) 
 add_subdirectory(camera)
 add_subdirectory(game_pad_client) 
 add_subdirectory(raspberry) 
@@ -42,7 +42,8 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "amd64.*|x86_64.*|AMD64.*")
 target_link_libraries(
   ${PROJECT_NAME}
   communication
-  u_controller_control
+  extern_control
+  peripherial
   control_handler
   camera
   game_pad_client
@@ -64,7 +65,8 @@ elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm.*|ARM.*)")
 target_link_libraries(
   ${PROJECT_NAME}
   communication
-  u_controller_control
+  extern_control
+  peripherial
   control_handler
   camera
   game_pad_client
