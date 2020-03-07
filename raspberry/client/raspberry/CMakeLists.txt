@@ -1,0 +1,38 @@
+add_library( 
+  communication
+  SHARED
+  src/Communication.cpp
+)
+add_library( 
+  i2c
+  SHARED
+  src/I2c.cpp
+)
+add_dependencies(
+  i2c 
+  communication
+)
+add_library( 
+  spi
+  SHARED
+  src/Spi.cpp
+)
+add_dependencies(
+  spi
+  communication
+)
+add_library( 
+  usart
+  SHARED
+  src/Usart.cpp
+)
+add_dependencies(
+  usart
+  communication
+)
+add_library( 
+  gpio
+  SHARED
+  src/Gpio.cpp
+)
+

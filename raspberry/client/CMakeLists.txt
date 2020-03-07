@@ -19,8 +19,8 @@ include_directories(
   ../shared/
   ../shared/include
   ../../shared
-  u_controller/atmega/include
-  u_controller/shared/include
+  u_controller/include
+  raspberry/include
   u_controller_control/include
   camera/include
   game_pad_client/include
@@ -31,6 +31,7 @@ add_subdirectory(shared)
 add_subdirectory(u_controller_control) 
 add_subdirectory(camera)
 add_subdirectory(game_pad_client) 
+add_subdirectory(raspberry) 
 
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
 set(CMAKE_BUILD_TYPE Debug)
