@@ -4,6 +4,8 @@
 #include <stdint.h>
 
 void pwmInit();
+void pwmStart();
+void pwmStop();
 void pwmChangePulseOfOCRA(int8_t pulse);
 void pwmChangePulseOfOCRB(int8_t pulse);
 

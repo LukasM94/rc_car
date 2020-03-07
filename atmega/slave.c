@@ -47,6 +47,7 @@ int main()
   initTimer();
   initPwm();
   Printf_print("main: slave\n");
+  pwmStart();
 
   sei();
 
