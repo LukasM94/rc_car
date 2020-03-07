@@ -4,6 +4,7 @@
 #include "Printf.h"
 #include "Timer.h"
 #include "I2cSlave.h"
+#include "Pwm.h"
 #include <string.h>
 #include <com_config.h>
 
@@ -25,6 +26,7 @@ void initUsart();
 void initLed();
 void initI2c();
 void initTimer();
+void initPwm();
 
 void receiveFunction(uint8_t* data, uint8_t length, uint8_t reg);
 void requestFunction();
@@ -43,6 +45,7 @@ int main()
   initLed();
   initI2c();
   initTimer();
+  initPwm();
   Printf_print("main: slave\n");
 
   sei();
@@ -60,6 +63,14 @@ int main()
       const char* register_name = getNameOfRegister(received_register);
       int8_t value = (int8_t)buffer[received_register];
       Printf_print("main: <%s> <%d>\n", register_name, value);
+      if (received_register == I2C_MOTOR)
+      {
+        pwmChangePulseOfOCRA(value);
+      }
+      else if (received_register == I2C_SERVO)
+      {
+        pwmChangePulseOfOCRB(value);
+      }
     }
     if (lost_i2c)
     {
@@ -96,6 +107,12 @@ void initTimer()
   timerInit();
   timerSetCallbacks(timer);
   timerStart();
+}
+
+//---------------------------------------------------------------------
+void initPwm()
+{
+  pwmInit();
 }
 
 //---------------------------------------------------------------------
