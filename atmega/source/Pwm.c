@@ -54,17 +54,13 @@ void pwmStop()
 //---------------------------------------------------------------------
 void pwmChangeOCRA(uint16_t new_ocra)
 {
-  OCR1AH = (new_ocra >> 8) & 0xff;
-  OCR1AL = new_ocra & 0xff;
-  // pwmChangeOCR(&OCR1AH, &OCR1AL, new_ocra);
+  pwmChangeOCR(&OCR1AH, &OCR1AL, new_ocra);
 }
 
 //---------------------------------------------------------------------
 void pwmChangeOCRB(uint16_t new_ocrb)
 {
-  OCR1BH = (new_ocrb >> 8) & 0xff;
-  OCR1BL = new_ocrb & 0xff;
-  // pwmChangeOCR(&OCR1BH, &OCR1BL, new_ocrb);
+  pwmChangeOCR(&OCR1BH, &OCR1BL, new_ocrb);
 }
 
 //---------------------------------------------------------------------
@@ -84,17 +80,11 @@ __attribute__((unused))void pwmChangePulseOfOCR(volatile uint8_t* ORC1H, volatil
 //---------------------------------------------------------------------
 void pwmChangePulseOfOCRA(int8_t pulse)
 {
-  // pwmChangePulseOfOCR(&OCR1AH, &OCR1AL, pulse);
-  uint16_t new_ocra = (uint16_t)((int16_t)pwm_middle + pulse);
-  OCR1AH = (new_ocra >> 8) & 0xff;
-  OCR1AL = new_ocra & 0xff;
+  pwmChangePulseOfOCR(&OCR1AH, &OCR1AL, pulse);
 }
 
 //---------------------------------------------------------------------
 void pwmChangePulseOfOCRB(int8_t pulse)
 {
-  // pwmChangePulseOfOCR(&OCR1BH, &OCR1BL, pulse);
-  uint16_t new_ocra = (uint16_t)((int16_t)pwm_middle + pulse);
-  OCR1BH = (new_ocra >> 8) & 0xff;
-  OCR1BL = new_ocra & 0xff;
+  pwmChangePulseOfOCR(&OCR1BH, &OCR1BL, pulse);
 }
