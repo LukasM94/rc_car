@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(main)
+project(client)
 
 if (NOT CONFIGURED_ONCE)
     set(CMAKE_CXX_FLAGS "${warnings}"
@@ -36,7 +36,7 @@ add_subdirectory(raspberry)
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} client.cpp)
 
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "amd64.*|x86_64.*|AMD64.*")
 target_link_libraries(

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(main)
+project(server)
 
 if (NOT CONFIGURED_ONCE)
     set(CMAKE_CXX_FLAGS "${warnings}"
@@ -20,7 +20,7 @@ include_directories(
 
 set(warnings "-Wall -Wextra")
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} server.cpp)
 
 add_library( 
   xbox_controller
