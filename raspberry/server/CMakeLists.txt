@@ -27,7 +27,7 @@ add_library(
   src/XboxController.cpp
 )
 add_library( 
-  server
+  socket_server
   ../shared/src/Socket.cpp
   src/Server.cpp
 )
@@ -39,7 +39,7 @@ add_library(
 target_link_libraries(
   ${PROJECT_NAME}
   xbox_controller
-  server
+  socket_server
   gamepad
   -pthread
   -ljsoncpp

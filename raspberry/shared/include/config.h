@@ -30,6 +30,9 @@
 
 #define SERVER_SEND_DATA    20000 //us
 
+#define XBOX_CONTROLLER_PATH "/dev/input/js0"
+#define SERVER_PORT 8080
+
 #include <stdio.h>
 
 static size_t gpios[RASPBERRY_PIN_COUNT];
