@@ -3,6 +3,8 @@
 #define CONFIG_H
 
 #define SERVER_PORT "8080"
+#define SERVER_PORT_INT 8080
+
 #if defined(__local)
 #define SERVER_IP   "127.0.0.1"
 #elif defined(__extern)
@@ -31,7 +33,6 @@
 #define SERVER_SEND_DATA    20000 //us
 
 #define XBOX_CONTROLLER_PATH "/dev/input/js0"
-#define SERVER_PORT 8080
 
 #include <stdio.h>
 

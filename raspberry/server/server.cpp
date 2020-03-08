@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 
   debug(MAIN, "main: Initialize the instances\n");
   XboxController xc(XboxController::DEFAULT_PATH);
-  Server server(SERVER_PORT, xc.getJoystickData());
+  Server server(SERVER_PORT_INT, xc.getJoystickData());
   xc.setName(XBOX_CONTROLLER);
   server.setName(SERVER_NAME);
 
