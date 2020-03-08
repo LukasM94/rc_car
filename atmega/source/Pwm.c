@@ -14,7 +14,7 @@ __attribute__((unused))static uint16_t pwm_border_up;
 static void pwmChangeOCRA(uint16_t new_ocra);
 static void pwmChangeOCRB(uint16_t new_ocrb);
 static void pwmChangeOCR(volatile uint8_t* ORC1H, volatile uint8_t* ORC1L, uint16_t new_ocra);
-static void pwmChangePulseOfOCR(volatile uint8_t* ORC1H, volatile uint8_t* ORC1L, int8_t pulse);
+static void pwmChangePulseOfOCR(volatile uint8_t* ORC1H, volatile uint8_t* ORC1L, uint16_t pulse);
 
 //---------------------------------------------------------------------
 extern int8_t  pwm_ocra_offset;
@@ -75,7 +75,7 @@ void pwmChangeOCR(volatile uint8_t* ORC1H, volatile uint8_t* ORC1L, uint16_t new
 }
 
 //---------------------------------------------------------------------
-__attribute__((unused))void pwmChangePulseOfOCR(volatile uint8_t* ORC1H, volatile uint8_t* ORC1L, int8_t pulse)
+void pwmChangePulseOfOCR(volatile uint8_t* ORC1H, volatile uint8_t* ORC1L, uint16_t pulse)
 {
   int16_t new_ocra = (int16_t)pwm_middle + pulse;
   pwmChangeOCR(ORC1H, ORC1L, (uint16_t)new_ocra);
@@ -84,13 +84,13 @@ __attribute__((unused))void pwmChangePulseOfOCR(volatile uint8_t* ORC1H, volatil
 //---------------------------------------------------------------------
 void pwmChangePulseOfOCRA(int8_t pulse)
 {
-  pulse += pwm_ocra_offset;
-  pwmChangePulseOfOCR(&OCR1AH, &OCR1AL, pulse);
+  int16_t new_pulse = (int16_t)pulse + pwm_ocra_offset;
+  pwmChangePulseOfOCR(&OCR1AH, &OCR1AL, new_pulse);
 }
 
 //---------------------------------------------------------------------
 void pwmChangePulseOfOCRB(int8_t pulse)
 {
-  pulse += pwm_ocrb_offset;
-  pwmChangePulseOfOCR(&OCR1BH, &OCR1BL, pulse);
+  int16_t new_pulse = (int16_t)pulse + pwm_ocrb_offset;
+  pwmChangePulseOfOCR(&OCR1BH, &OCR1BL, new_pulse);
 }

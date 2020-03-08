@@ -215,6 +215,7 @@ void changePwmOffset(uint8_t value)
       pwmChangePulseOfOCRB(0);
       break;
     default:
+      break;
   }
   sei();
   Printf_print("changeControlRegister: ofa %d\n", pwm_ocra_offset);
