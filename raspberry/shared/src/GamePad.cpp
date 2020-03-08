@@ -56,9 +56,9 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
 {
   debug(GAME_PAD, "getFromString\n");
 
+  game_pad->lock();
   try
   {
-    game_pad->lock();
     Json::Value  root;
     Json::Reader reader;
     Json::Value  left;
@@ -69,8 +69,7 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
     if (ret == 0)
     {
       debug(WARNING, "GamePad::getMsg: parsing not successful\n");
-      game_pad->unlock();
-      return -1;
+      goto GET_FROM_STRING_ERROR;
     }
 
     buttons = root[STRING_BTN];
@@ -96,15 +95,19 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
     {
       game_pad->buttons_[i] = buttons[i].asBool();
     }
-
-    game_pad->unlock();
-    return 0;
   }
   catch (Json::Exception& e)
   {
     debug(WARNING, "GamePad::getFromString: %s\n", e.what());
-    return -1;
+    goto GET_FROM_STRING_ERROR;
   }
+
+  game_pad->unlock();
+  return 0;
+
+GET_FROM_STRING_ERROR:
+  game_pad->unlock();
+  return -1;
 }
 
 int GamePad::getMsg(char* msg, unsigned int max_length)
@@ -130,6 +133,7 @@ int GamePad::getMsg(char* msg, unsigned int max_length)
 
 int GamePad::getJson(Json::Value& root)
 {
+  lock();
   try
   {
     Json::Value left;
@@ -151,13 +155,19 @@ int GamePad::getJson(Json::Value& root)
       buttons[i] = buttons_[i].load()? 1 : 0;
     }
     root[STRING_BTN] = buttons;
-    return 0;
   }
   catch (Json::Exception& e)
   {
     debug(WARNING, "GamePad::getjson: %s\n", e.what());
-    return -1;
+    goto GET_JSON_ERROR;
   }
+  
+  unlock();
+  return 0;
+
+GET_JSON_ERROR:
+  unlock();
+  return -1;
 }
 
 int GamePad::getMsg(char** msg, unsigned int* length)
