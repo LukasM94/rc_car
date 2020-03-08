@@ -17,8 +17,8 @@ static void pwmChangeOCR(volatile uint8_t* ORC1H, volatile uint8_t* ORC1L, uint1
 static void pwmChangePulseOfOCR(volatile uint8_t* ORC1H, volatile uint8_t* ORC1L, uint16_t pulse);
 
 //---------------------------------------------------------------------
-extern int8_t  pwm_ocra_offset;
-extern int8_t  pwm_ocrb_offset;
+extern int8_t pwm_ocra_offset;
+extern int8_t pwm_ocrb_offset;
 
 //---------------------------------------------------------------------
 void pwmInit()

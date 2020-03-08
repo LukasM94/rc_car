@@ -5,6 +5,7 @@
 #include "Timer.h"
 #include "I2cSlave.h"
 #include "Pwm.h"
+#include "Eeprom.h"
 #include <string.h>
 #include <com_config.h>
 
@@ -46,8 +47,9 @@ int main()
 {
   cli();
 
-  uint8_t old_flag;
-  uint8_t lost_i2c;
+  uint8_t old_flag = 0;
+  uint8_t lost_i2c = 0;
+  uint8_t no_i2c   = 0;
 
   initUsart();
   initLed();
@@ -56,6 +58,9 @@ int main()
   initTimer();
   initPwm();
   Printf_print("main: slave\n");
+
+  pwm_ocra_offset = readOffsetA();
+  pwm_ocrb_offset = readOffsetB();
   // pwmStart();
 
   sei();
@@ -66,13 +71,13 @@ int main()
     old_flag = flag;
     flag     = 0;
     
-    lost_i2c = time_last_i2c > time_threshold ? 1 : 0;
+    lost_i2c = time_last_i2c > time_threshold ? (lost_i2c + 1) : 0;
     sei();
     if (old_flag)
     {
-      const char* register_name = getNameOfRegister(received_register);
+      __attribute__((unused))const char* register_name = getNameOfRegister(received_register);
       int8_t value = (int8_t)buffer[received_register];
-      Printf_print("main: <%s> <%d>\n", register_name, value);
+      // Printf_print("main: <%s> <%d>\n", register_name, value);
       switch (received_register)
       {
         case I2C_MOTOR:
@@ -94,7 +99,17 @@ int main()
     }
     if (lost_i2c)
     {
+      pwmStop();
+      no_i2c = 1;
       Printf_print("main: lost i2c connection\n");
+      Printf_print("main: %d time\n", lost_i2c);
+      _delay_ms(2000);
+    } 
+    else if (no_i2c)
+    {
+      pwmStart();
+      no_i2c = 0;
+      Printf_print("main: got connected again\n");
     }
   }
 }
@@ -204,6 +219,8 @@ void changeControlRegister(uint8_t value)
   }
 }
 
+
+static const int8_t MAX_OFFSET = 32;
 //---------------------------------------------------------------------
 void changePwmOffset(uint8_t value)
 {
@@ -211,25 +228,29 @@ void changePwmOffset(uint8_t value)
   switch (value)
   {
     case I2C_MOTOR_OFFSET_INCREMENT:
-      (pwm_ocra_offset < 32) ? ++pwm_ocra_offset : 0;
+      (pwm_ocra_offset < MAX_OFFSET) ? ++pwm_ocra_offset : 0;
       pwmChangePulseOfOCRA(0);
+      writeOffsetA(pwm_ocra_offset);
       break;
     case I2C_MOTOR_OFFSET_DECREMENT:
-      (pwm_ocra_offset > -32) ? --pwm_ocra_offset : 0;
+      (pwm_ocra_offset > (-1 * MAX_OFFSET)) ? --pwm_ocra_offset : 0;
       pwmChangePulseOfOCRA(0);
+      writeOffsetA(pwm_ocra_offset);
       break;
     case I2C_SERVO_OFFSET_INCREMENT:
-      (pwm_ocrb_offset < 32) ? ++pwm_ocrb_offset : 0;
+      (pwm_ocrb_offset < MAX_OFFSET) ? ++pwm_ocrb_offset : 0;
       pwmChangePulseOfOCRB(0);
+      writeOffsetB(pwm_ocrb_offset);
       break;
     case I2C_SERVO_OFFSET_DECREMENT:
-      (pwm_ocrb_offset > -32) ? --pwm_ocrb_offset : 0;
+      (pwm_ocrb_offset > (-1 * MAX_OFFSET)) ? --pwm_ocrb_offset : 0;
       pwmChangePulseOfOCRB(0);
+      writeOffsetB(pwm_ocrb_offset);
       break;
     default:
       break;
   }
   sei();
-  Printf_print("changeControlRegister: ofa %d\n", pwm_ocra_offset);
-  Printf_print("changeControlRegister: ofb %d\n", pwm_ocrb_offset);
+  // Printf_print("changeControlRegister: ofa %d\n", pwm_ocra_offset);
+  // Printf_print("changeControlRegister: ofb %d\n", pwm_ocrb_offset);
 }
