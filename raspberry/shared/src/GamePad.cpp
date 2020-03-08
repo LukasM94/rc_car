@@ -100,9 +100,9 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
     game_pad->unlock();
     return 0;
   }
-  catch (std::string const& msg)
+  catch (Json::Exception& e)
   {
-    debug(WARNING, "GamePad::getFromString: %s\n", msg.c_str());
+    debug(WARNING, "GamePad::getFromString: %s\n", e.what());
     return -1;
   }
 }
@@ -153,9 +153,9 @@ int GamePad::getJson(Json::Value& root)
     root[STRING_BTN] = buttons;
     return 0;
   }
-  catch (std::string const& msg)
+  catch (Json::Exception& e)
   {
-    debug(WARNING, "GamePad::getjson: %s\n", msg.c_str());
+    debug(WARNING, "GamePad::getjson: %s\n", e.what());
     return -1;
   }
 }
