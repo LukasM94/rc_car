@@ -64,32 +64,53 @@ void* ControlHandler::i2cFunction(void* arg)
 {
   ControlHandler* ch = (ControlHandler*)arg;
 
-  bool old_start_button = false;
+  bool prev_start_button = false;
+  bool prev_select_button = false;
 
   enum I2C_MODE mode = NORMAL;
+  
+  int8_t speed;
+  int8_t angle;
 
   debug(CTL_HANDLER, "i2cFunction: Start\n");
   while (1)
   {
     GamePad* game_pad = GamePadInstance::instance()->getGamePad();
 
-    debug(CTL_HANDLER, "i2cFunction: Get data of game_pad\n");
+    debug(CTL_HAND_D, "i2cFunction: Get data of game_pad\n");
     game_pad->lock();
     bool start_button = game_pad->getButton(GamePad::BUTTON_START);
+    bool select_button = game_pad->getButton(GamePad::BUTTON_SELECT);
     
-    int8_t speed = game_pad->getLeftAxisY();
-    int8_t angle = game_pad->getLeftAxisX();
+    speed = game_pad->getLeftAxisY();
+    angle = game_pad->getLeftAxisX();
     game_pad->unlock();
 
-    debug(CTL_HANDLER, "i2cFunction: Check button action\n");
-    if (start_button && !old_start_button)
+    debug(CTL_HAND_D, "i2cFunction: Check button action\n");
+
+    if (start_button && !prev_start_button)
     {
       uint8_t change_register = I2C_CONTROL_REGISTER_CHANGE_PWM_RUNNING;
       ch->u_controller_->writeI2c(I2C_CONTROL_REGISTER, (const uint8_t*)&change_register, 1); 
     }
-    old_start_button = start_button;
+    prev_start_button = start_button;
 
-    debug(CTL_HANDLER, "i2cFunction: Current mode %d\n", mode);
+    if (select_button && !prev_select_button)
+    {
+      if (mode == NORMAL)
+      {
+        mode = OFFSET;
+      }
+      else if (mode == OFFSET)
+      {
+        mode = NORMAL;
+      }
+    }
+    prev_select_button = select_button;
+
+    debug(CTL_HAND_D, "i2cFunction: Current mode %d\n", mode);
+
+    uint8_t offset_mode = 0;
     switch (mode)
     {
       case NORMAL:
@@ -97,7 +118,26 @@ void* ControlHandler::i2cFunction(void* arg)
         ch->u_controller_->writeI2c(I2C_SERVO, (const uint8_t*)&angle, 1); 
         break;
       case OFFSET:
-        
+        if (speed > THRESHOLD_FOR_JOYSTICK)
+        {
+          offset_mode = I2C_MOTOR_OFFSET_INCREMENT;
+        } 
+        else if (speed < (-1 * THRESHOLD_FOR_JOYSTICK))
+        {
+          offset_mode = I2C_MOTOR_OFFSET_DECREMENT;
+        }
+        ch->u_controller_->writeI2c(I2C_CHANGE_OFFSET, (const uint8_t*)&offset_mode, 1);
+        offset_mode = 0;
+        if (angle > THRESHOLD_FOR_JOYSTICK)
+        {
+          offset_mode = I2C_SERVO_OFFSET_INCREMENT;
+        } 
+        else if (angle < (-1 * THRESHOLD_FOR_JOYSTICK))
+        {
+          offset_mode = I2C_SERVO_OFFSET_DECREMENT;
+        }
+        ch->u_controller_->writeI2c(I2C_CHANGE_OFFSET, (const uint8_t*)&offset_mode, 1);
+        break;
       default:
         debug(WARNING, "i2cFunction: Not knowing mode %d\n", mode);
     }

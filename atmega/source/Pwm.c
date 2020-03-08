@@ -17,8 +17,8 @@ static void pwmChangeOCR(volatile uint8_t* ORC1H, volatile uint8_t* ORC1L, uint1
 static void pwmChangePulseOfOCR(volatile uint8_t* ORC1H, volatile uint8_t* ORC1L, int8_t pulse);
 
 //---------------------------------------------------------------------
-extern int8_t  pwm_motor_offset;
-extern int8_t  pwm_servo_offset;
+extern int8_t  pwm_ocra_offset;
+extern int8_t  pwm_ocrb_offset;
 
 //---------------------------------------------------------------------
 void pwmInit()
@@ -84,11 +84,13 @@ __attribute__((unused))void pwmChangePulseOfOCR(volatile uint8_t* ORC1H, volatil
 //---------------------------------------------------------------------
 void pwmChangePulseOfOCRA(int8_t pulse)
 {
+  pulse += pwm_ocra_offset;
   pwmChangePulseOfOCR(&OCR1AH, &OCR1AL, pulse);
 }
 
 //---------------------------------------------------------------------
 void pwmChangePulseOfOCRB(int8_t pulse)
 {
+  pulse += pwm_ocrb_offset;
   pwmChangePulseOfOCR(&OCR1BH, &OCR1BL, pulse);
 }

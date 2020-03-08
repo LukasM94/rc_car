@@ -22,8 +22,8 @@ volatile uint32_t time_last_i2c;
 uint32_t time_threshold;
 
 uint8_t pwm_running;
-int8_t  pwm_motor_offset;
-int8_t  pwm_servo_offset;
+int8_t  pwm_ocra_offset;
+int8_t  pwm_ocrb_offset;
 
 //---------------------------------------------------------------------
 void initUsart();
@@ -38,6 +38,7 @@ void requestFunction();
 void timer();
 
 void changeControlRegister(uint8_t value);
+void changePwmOffset(uint8_t value);
 
 //---------------------------------------------------------------------
 int main()
@@ -81,17 +82,8 @@ int main()
         case I2C_CONTROL_REGISTER:
           changeControlRegister(value);
           break;
-        case I2C_MOTOR_OFFSET_INCREMENT:
-          (pwm_servo_offset < 0x100) ? ++pwm_motor_offset : 0;
-          break;
-        case I2C_MOTOR_OFFSET_DECREMENT:
-          (pwm_servo_offset > -0x100) ? --pwm_motor_offset : 0;
-          break;
-        case I2C_SERVO_OFFSET_INCREMENT:
-          (pwm_servo_offset < 0x100) ? ++pwm_servo_offset : 0;
-          break;
-        case I2C_SERVO_OFFSET_DECREMENT:
-          (pwm_servo_offset > -0x100) ? --pwm_servo_offset : 0;
+        case I2C_CHANGE_OFFSET:
+          changePwmOffset(value);
           break;
         default:
           Printf_print("Not used register %d\n", received_register);
@@ -198,4 +190,33 @@ void changeControlRegister(uint8_t value)
   {
     Printf_print("changeControlRegister: %d\n", value);
   }
+}
+
+//---------------------------------------------------------------------
+void changePwmOffset(uint8_t value)
+{
+  cli();
+  switch (value)
+  {
+    case I2C_MOTOR_OFFSET_INCREMENT:
+      (pwm_ocra_offset < 32) ? ++pwm_ocra_offset : 0;
+      pwmChangePulseOfOCRA(0);
+      break;
+    case I2C_MOTOR_OFFSET_DECREMENT:
+      (pwm_ocra_offset > -32) ? --pwm_ocra_offset : 0;
+      pwmChangePulseOfOCRA(0);
+      break;
+    case I2C_SERVO_OFFSET_INCREMENT:
+      (pwm_ocrb_offset < 32) ? ++pwm_ocrb_offset : 0;
+      pwmChangePulseOfOCRB(0);
+      break;
+    case I2C_SERVO_OFFSET_DECREMENT:
+      (pwm_ocrb_offset > -32) ? --pwm_ocrb_offset : 0;
+      pwmChangePulseOfOCRB(0);
+      break;
+    default:
+  }
+  sei();
+  Printf_print("changeControlRegister: ofa %d\n", pwm_ocra_offset);
+  Printf_print("changeControlRegister: ofb %d\n", pwm_ocrb_offset);
 }

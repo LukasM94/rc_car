@@ -25,6 +25,8 @@ class ControlHandler
     UController* u_controller_;
 
     enum I2C_MODE { NORMAL, OFFSET };
+
+    static const int8_t THRESHOLD_FOR_JOYSTICK = 50;
 };
 
 #endif
