@@ -12,9 +12,13 @@ class Peripherial
     ~Peripherial();
 
     int initGpio();
-    void initLed(uint8_t led_pin);
-    void initButton(uint8_t button_pin, void (*f_ptr)());
+    int initLedGreen(uint8_t led_pin);
+    int initLedRed(uint8_t led_pin);
+    int initButton(uint8_t button_pin, void (*f_ptr)());
     void heartBeat();
+    void turnRedLedOn();
+    void turnRedLedOff();
+    void toggleRedLed();
 
   private:
     Peripherial();

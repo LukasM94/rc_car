@@ -28,7 +28,8 @@ void ControlHandler::gpioInit()
 {
   debug(CTL_HANDLER, "gpioInit\n");
   Peripherial::instance()->initGpio();
-  Peripherial::instance()->initLed(RASPBERRY_LED);
+  Peripherial::instance()->initLedGreen(RASPBERRY_LED_GREEN);
+  Peripherial::instance()->initLedRed(RASPBERRY_LED_RED);
   Peripherial::instance()->initButton(RASPBERRY_BUTTON, &buttonCallback);
 }
 
@@ -92,6 +93,7 @@ void* ControlHandler::i2cFunction(void* arg)
     {
       uint8_t change_register = I2C_CONTROL_REGISTER_CHANGE_PWM_RUNNING;
       ch->u_controller_->writeI2c(I2C_CONTROL_REGISTER, (const uint8_t*)&change_register, 1); 
+      Peripherial::instance()->toggleRedLed();
     }
     prev_start_button = start_button;
 

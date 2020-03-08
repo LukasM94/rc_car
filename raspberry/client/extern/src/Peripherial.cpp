@@ -2,6 +2,7 @@
 #include <Peripherial.h>
 #include <debug.h>
 #include <Gpio.h>
+#include <unistd.h>
 
 Peripherial* Peripherial::instance_ = 0;
 
@@ -37,17 +38,39 @@ int Peripherial::initGpio()
   return 0;
 }
 
-void Peripherial::initLed(uint8_t led_pin)
+int Peripherial::initLedGreen(uint8_t led_pin)
 {
-  gpio_->initLed(led_pin);
+  return gpio_->initLedGreen(led_pin);
 }
 
-void Peripherial::initButton(uint8_t button_pin, void (*f_ptr)())
+int Peripherial::initLedRed(uint8_t led_pin)
 {
-  gpio_->initButton(button_pin, f_ptr);
+  return gpio_->initLedRed(led_pin);
+}
+
+int Peripherial::initButton(uint8_t button_pin, void (*f_ptr)())
+{
+  return gpio_->initButton(button_pin, f_ptr);
 }
 
 void Peripherial::heartBeat()
 {
-  gpio_->heartBeat();
+  gpio_->onGreenLed();
+  sleep(1);
+  gpio_->offGreenLed();
+  sleep(1);
+}
+void Peripherial::turnRedLedOn()
+{
+  gpio_->onRedLed();
+}
+
+void Peripherial::turnRedLedOff()
+{
+  gpio_->offRedLed();
+}
+
+void Peripherial::toggleRedLed()
+{
+  gpio_->toggleRedLed();
 }
