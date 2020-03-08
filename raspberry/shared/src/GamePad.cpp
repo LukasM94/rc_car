@@ -52,59 +52,71 @@ const char GamePad::STRING_RT[]    = "rt";
 const char GamePad::STRING_BCNT[]  = "bcnt";
 const char GamePad::STRING_BTN[]   = "bnt";
 
-GamePad* GamePad::getFromString(GamePad* game_pad, const char* str)
+int GamePad::getFromString(GamePad* game_pad, const char* str)
 {
   debug(GAME_PAD, "getFromString\n");
 
-  game_pad->lock();
-  Json::Value  root;
-  Json::Reader reader;
-  Json::Value  left;
-  Json::Value  right;
-  Json::Value  buttons;
-
-  int ret = reader.parse(str, root);
-  if (ret == 0)
+  try
   {
-    debug(ERROR, "GamePad::getMsg: parsing not successful\n");
+    game_pad->lock();
+    Json::Value  root;
+    Json::Reader reader;
+    Json::Value  left;
+    Json::Value  right;
+    Json::Value  buttons;
+
+    int ret = reader.parse(str, root);
+    if (ret == 0)
+    {
+      debug(WARNING, "GamePad::getMsg: parsing not successful\n");
+      game_pad->unlock();
+      return -1;
+    }
+
+    buttons = root[STRING_BTN];
+    left    = root[STRING_LEFT];
+    right   = root[STRING_RIGHT];
+
+    unsigned int button_cnt = buttons.size();
+
+    if (game_pad->getButtonCnt() != button_cnt)
+    {
+      game_pad->allocateButtons(button_cnt);
+    }
+
+    game_pad->left_.x_  = left[0].asInt();  
+    game_pad->left_.y_  = left[1].asInt();  
+    game_pad->right_.x_ = right[0].asInt();  
+    game_pad->right_.y_ = right[1].asInt();  
+
+    game_pad->rt_ = root[STRING_RT].asBool();
+    game_pad->lt_ = root[STRING_LT].asBool();
+
+    for (int i = 0; i < button_cnt; ++i)
+    {
+      game_pad->buttons_[i] = buttons[i].asBool();
+    }
+
     game_pad->unlock();
-    return game_pad;
+    return 0;
   }
-
-  buttons = root[STRING_BTN];
-  left    = root[STRING_LEFT];
-  right   = root[STRING_RIGHT];
-
-  unsigned int button_cnt = buttons.size();
-
-  if (game_pad->getButtonCnt() != button_cnt)
+  catch (std::string const& msg)
   {
-    game_pad->allocateButtons(button_cnt);
+    debug(WARNING, "GamePad::getFromString: %s\n", msg.c_str());
+    return -1;
   }
-
-  game_pad->left_.x_  = left[0].asInt();  
-  game_pad->left_.y_  = left[1].asInt();  
-  game_pad->right_.x_ = right[0].asInt();  
-  game_pad->right_.y_ = right[1].asInt();  
-
-  game_pad->rt_ = root[STRING_RT].asBool();
-  game_pad->lt_ = root[STRING_LT].asBool();
-
-  for (int i = 0; i < button_cnt; ++i)
-  {
-    game_pad->buttons_[i] = buttons[i].asBool();
-  }
-
-  game_pad->unlock();
-  return game_pad;
 }
 
 int GamePad::getMsg(char* msg, unsigned int max_length)
 {
   debug(GAME_PAD, "getMsg\n");
 
+  int ret;
   Json::Value root;
-  getJson(root);
+  if ((ret = getJson(root)) != 0)
+  {
+    return ret;
+  }
 
   unsigned int length = root.toStyledString().length();
   if (length > max_length)
@@ -116,36 +128,48 @@ int GamePad::getMsg(char* msg, unsigned int max_length)
   return 0;
 }
 
-void GamePad::getJson(Json::Value& root)
+int GamePad::getJson(Json::Value& root)
 {
-  Json::Value left;
-  Json::Value right;
-  Json::Value buttons;
-
-  left[0]  = left_.x_.load();
-  left[1]  = left_.y_.load();
-  right[0] = right_.x_.load();
-  right[1] = right_.y_.load();
-
-  root[STRING_LEFT]  = left;
-  root[STRING_RIGHT] = right;
-  root[STRING_LT]    = lt_.load()? 1 : 0;
-  root[STRING_RT]    = rt_.load()? 1 : 0;
-  // root[STRING_BCNT]       = buttons_count_.load();
-
-  for (int i = 0; i < buttons_count_; ++i)
+  try
   {
-    buttons[i] = buttons_[i].load()? 1 : 0;
+    Json::Value left;
+    Json::Value right;
+    Json::Value buttons;
+
+    left[0]  = left_.x_.load();
+    left[1]  = left_.y_.load();
+    right[0] = right_.x_.load();
+    right[1] = right_.y_.load();
+
+    root[STRING_LEFT]  = left;
+    root[STRING_RIGHT] = right;
+    root[STRING_LT]    = lt_.load()? 1 : 0;
+    root[STRING_RT]    = rt_.load()? 1 : 0;
+
+    for (int i = 0; i < buttons_count_; ++i)
+    {
+      buttons[i] = buttons_[i].load()? 1 : 0;
+    }
+    root[STRING_BTN] = buttons;
+    return 0;
   }
-  root[STRING_BTN] = buttons;
+  catch (std::string const& msg)
+  {
+    debug(WARNING, "GamePad::getjson: %s\n", msg.c_str());
+    return -1;
+  }
 }
 
-void GamePad::getMsg(char** msg, unsigned int* length)
+int GamePad::getMsg(char** msg, unsigned int* length)
 {
   debug(GAME_PAD, "getMsg: Start\n");
 
+  int ret;
   Json::Value root;
-  getJson(root);
+  if ((ret = getJson(root)) != 0)
+  {
+    return ret;
+  }
 
   *length = root.toStyledString().length();
   *msg    = new char[*length];
@@ -156,8 +180,9 @@ void GamePad::getMsg(char** msg, unsigned int* length)
     std::string temp = root.toStyledString();
     temp.erase(std::remove(temp.begin(), temp.end(), '\n'), temp.end());
     temp.erase(std::remove(temp.begin(), temp.end(), '\t'), temp.end());
-    debug(GAME_PAD, "%s\n", temp.c_str());
+    debug(GAME_PAD, "GamePad::getjson: %s\n", temp.c_str());
   }
+  return 0;
 }
 
 void GamePad::allocateButtons(unsigned int button_ctn)

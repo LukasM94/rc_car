@@ -145,7 +145,10 @@ void GamePadClient::run()
       str.erase(std::remove(str.begin(), str.end(), 0), str.end());
       debug(GP_CLIENT_D, "run: string is %s\n", str.c_str());
 
-      GamePad::getFromString(GamePadInstance::instance()->getGamePad(), str.c_str());
+      if (GamePad::getFromString(GamePadInstance::instance()->getGamePad(), str.c_str()) != 0)
+      {
+        // not successful
+      }
     }
     GamePadInstance::instance()->exitGamePadClient();
   }

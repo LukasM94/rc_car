@@ -25,9 +25,9 @@ class GamePad
     GamePad(uint8_t button_count);
     ~GamePad();
 
-    static GamePad* getFromString(GamePad* game_pad, const char* str);
+    static int getFromString(GamePad* game_pad, const char* str);
 
-    void getMsg(char** msg, unsigned int* length);
+    int getMsg(char** msg, unsigned int* length);
     inline void freeMsg(const char* msg)
     {
       delete msg;
@@ -127,7 +127,7 @@ class GamePad
     static const unsigned int BUTTON_CIRCLE = 8;
 
   private:
-    void getJson(Json::Value& root);
+    int  getJson(Json::Value& root);
     void fromPackage(const char* package);
     void allocateButtons(unsigned int button_ctn);
 
