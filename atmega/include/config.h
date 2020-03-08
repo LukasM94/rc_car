@@ -21,4 +21,9 @@ typedef uint8_t boolean;
 #define LED_OFF     LED_PORT &= ~(1 << LED_PIN)
 #define LED_TOOGLE  LED_PORT ^= (1 << LED_PIN)
 
+#define RESET_PORT   PORTD
+#define RESET_DDR    DDRD
+#define RESET_PIN    PD2
+#define RESET_ATMEGA RESET_PORT |= (1 << RESET_PIN)
+
 #endif // CONFIG_H

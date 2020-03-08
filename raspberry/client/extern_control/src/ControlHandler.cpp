@@ -72,6 +72,13 @@ void* ControlHandler::i2cFunction(void* arg)
   
   int8_t speed;
   int8_t angle;
+  
+  uint8_t single_register;
+
+  debug(CTL_HANDLER, "i2cFunction: Reset atmega and sleep for 1 second\n");
+  single_register = I2C_CONTROL_REGISTER_RESET;
+  ch->u_controller_->writeI2c(I2C_CONTROL_REGISTER, (const uint8_t*)&single_register, 1); 
+
 
   debug(CTL_HANDLER, "i2cFunction: Start\n");
   while (1)
@@ -91,8 +98,8 @@ void* ControlHandler::i2cFunction(void* arg)
 
     if (start_button && !prev_start_button)
     {
-      uint8_t change_register = I2C_CONTROL_REGISTER_CHANGE_PWM_RUNNING;
-      ch->u_controller_->writeI2c(I2C_CONTROL_REGISTER, (const uint8_t*)&change_register, 1); 
+      single_register = I2C_CONTROL_REGISTER_CHANGE_PWM_RUNNING;
+      ch->u_controller_->writeI2c(I2C_CONTROL_REGISTER, (const uint8_t*)&single_register, 1); 
       Peripherial::instance()->toggleRedLed();
     }
     prev_start_button = start_button;
@@ -112,7 +119,7 @@ void* ControlHandler::i2cFunction(void* arg)
 
     debug(CTL_HAND_D, "i2cFunction: Current mode %d\n", mode);
 
-    uint8_t offset_mode = 0;
+    single_register = 0;
     switch (mode)
     {
       case NORMAL:
@@ -122,23 +129,23 @@ void* ControlHandler::i2cFunction(void* arg)
       case OFFSET:
         if (speed > THRESHOLD_FOR_JOYSTICK)
         {
-          offset_mode = I2C_MOTOR_OFFSET_INCREMENT;
+          single_register = I2C_MOTOR_OFFSET_INCREMENT;
         } 
         else if (speed < (-1 * THRESHOLD_FOR_JOYSTICK))
         {
-          offset_mode = I2C_MOTOR_OFFSET_DECREMENT;
+          single_register = I2C_MOTOR_OFFSET_DECREMENT;
         }
-        ch->u_controller_->writeI2c(I2C_CHANGE_OFFSET, (const uint8_t*)&offset_mode, 1);
-        offset_mode = 0;
+        ch->u_controller_->writeI2c(I2C_CHANGE_OFFSET, (const uint8_t*)&single_register, 1);
+        single_register = 0;
         if (angle > THRESHOLD_FOR_JOYSTICK)
         {
-          offset_mode = I2C_SERVO_OFFSET_INCREMENT;
+          single_register = I2C_SERVO_OFFSET_INCREMENT;
         } 
         else if (angle < (-1 * THRESHOLD_FOR_JOYSTICK))
         {
-          offset_mode = I2C_SERVO_OFFSET_DECREMENT;
+          single_register = I2C_SERVO_OFFSET_DECREMENT;
         }
-        ch->u_controller_->writeI2c(I2C_CHANGE_OFFSET, (const uint8_t*)&offset_mode, 1);
+        ch->u_controller_->writeI2c(I2C_CHANGE_OFFSET, (const uint8_t*)&single_register, 1);
         break;
       default:
         debug(WARNING, "i2cFunction: Not knowing mode %d\n", mode);

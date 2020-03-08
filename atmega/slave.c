@@ -28,6 +28,7 @@ int8_t  pwm_ocrb_offset;
 //---------------------------------------------------------------------
 void initUsart();
 void initLed();
+void initResetPin();
 void initI2c();
 void initTimer();
 void initPwm();
@@ -50,11 +51,12 @@ int main()
 
   initUsart();
   initLed();
+  initResetPin();
   initI2c();
   initTimer();
   initPwm();
   Printf_print("main: slave\n");
-  pwmStart();
+  // pwmStart();
 
   sei();
 
@@ -108,6 +110,12 @@ void initUsart()
 void initLed()
 {
   LED_DDR |= (1 << LED_PIN);
+}
+
+//---------------------------------------------------------------------
+void initResetPin()
+{
+  RESET_DDR |= (1 << RESET_PIN);
 }
 
 //---------------------------------------------------------------------
@@ -180,6 +188,10 @@ void changeControlRegister(uint8_t value)
         pwm_running = 1;
         pwmStart();
       }
+      break;
+    case I2C_CONTROL_REGISTER_RESET:
+      Printf_print("atmega gets reset\n");
+      RESET_ATMEGA;
       break;
     default:
       failure = 1;
