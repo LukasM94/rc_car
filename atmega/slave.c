@@ -21,6 +21,10 @@ volatile uint32_t time_last_i2c;
 
 uint32_t time_threshold;
 
+uint8_t pwm_running;
+int8_t  pwm_motor_offset;
+int8_t  pwm_servo_offset;
+
 //---------------------------------------------------------------------
 void initUsart();
 void initLed();
@@ -32,6 +36,8 @@ void receiveFunction(uint8_t* data, uint8_t length, uint8_t reg);
 void requestFunction();
 
 void timer();
+
+void changeControlRegister(uint8_t value);
 
 //---------------------------------------------------------------------
 int main()
@@ -64,13 +70,32 @@ int main()
       const char* register_name = getNameOfRegister(received_register);
       int8_t value = (int8_t)buffer[received_register];
       Printf_print("main: <%s> <%d>\n", register_name, value);
-      if (received_register == I2C_MOTOR)
+      switch (received_register)
       {
-        pwmChangePulseOfOCRA(value);
-      }
-      else if (received_register == I2C_SERVO)
-      {
-        pwmChangePulseOfOCRB(value);
+        case I2C_MOTOR:
+          pwmChangePulseOfOCRA(value);
+          break;
+        case I2C_SERVO:
+          pwmChangePulseOfOCRB(value);
+          break;
+        case I2C_CONTROL_REGISTER:
+          changeControlRegister(value);
+          break;
+        case I2C_MOTOR_OFFSET_INCREMENT:
+          (pwm_servo_offset < 0x100) ? ++pwm_motor_offset : 0;
+          break;
+        case I2C_MOTOR_OFFSET_DECREMENT:
+          (pwm_servo_offset > -0x100) ? --pwm_motor_offset : 0;
+          break;
+        case I2C_SERVO_OFFSET_INCREMENT:
+          (pwm_servo_offset < 0x100) ? ++pwm_servo_offset : 0;
+          break;
+        case I2C_SERVO_OFFSET_DECREMENT:
+          (pwm_servo_offset > -0x100) ? --pwm_servo_offset : 0;
+          break;
+        default:
+          Printf_print("Not used register %d\n", received_register);
+          break;
       }
     }
     if (lost_i2c)
@@ -143,4 +168,34 @@ void requestFunction()
 void timer()
 {
   ++time_last_i2c;
+}
+
+//---------------------------------------------------------------------
+void changeControlRegister(uint8_t value)
+{
+  uint8_t failure = 0;
+  cli();
+  switch (value)
+  {
+    case I2C_CONTROL_REGISTER_CHANGE_PWM_RUNNING:
+      if (pwm_running)
+      {
+        pwm_running = 0;
+        pwmStop();
+      }
+      else
+      {
+        pwm_running = 1;
+        pwmStart();
+      }
+      break;
+    default:
+      failure = 1;
+      break;
+  }
+  sei();
+  if (failure == 1)
+  {
+    Printf_print("changeControlRegister: %d\n", value);
+  }
 }

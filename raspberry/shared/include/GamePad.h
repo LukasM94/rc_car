@@ -116,6 +116,16 @@ class GamePad
 
     void reset();
 
+    static const unsigned int BUTTON_A      = 0;
+    static const unsigned int BUTTON_B      = 1;
+    static const unsigned int BUTTON_X      = 2;
+    static const unsigned int BUTTON_Y      = 3;
+    static const unsigned int BUTTON_LB     = 4;
+    static const unsigned int BUTTON_RB     = 5;
+    static const unsigned int BUTTON_SELECT = 6;
+    static const unsigned int BUTTON_START  = 7;
+    static const unsigned int BUTTON_CIRCLE = 8;
+
   private:
     void getJson(Json::Value& root);
     void fromPackage(const char* package);

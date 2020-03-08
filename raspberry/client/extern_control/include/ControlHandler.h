@@ -23,6 +23,8 @@ class ControlHandler
     ControlHandler(const ControlHandler&);
 
     UController* u_controller_;
+
+    enum I2C_MODE { NORMAL, OFFSET };
 };
 
 #endif

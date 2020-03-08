@@ -64,18 +64,43 @@ void* ControlHandler::i2cFunction(void* arg)
 {
   ControlHandler* ch = (ControlHandler*)arg;
 
+  bool old_start_button = false;
+
+  enum I2C_MODE mode = NORMAL;
+
   debug(CTL_HANDLER, "i2cFunction: Start\n");
   while (1)
   {
     GamePad* game_pad = GamePadInstance::instance()->getGamePad();
 
+    debug(CTL_HANDLER, "i2cFunction: Get data of game_pad\n");
     game_pad->lock();
+    bool start_button = game_pad->getButton(GamePad::BUTTON_START);
+    
     int8_t speed = game_pad->getLeftAxisY();
     int8_t angle = game_pad->getLeftAxisX();
     game_pad->unlock();
 
-    ch->u_controller_->writeI2c(I2C_MOTOR, (const uint8_t*)&speed, 1); 
-    ch->u_controller_->writeI2c(I2C_SERVO, (const uint8_t*)&angle, 1); 
+    debug(CTL_HANDLER, "i2cFunction: Check button action\n");
+    if (start_button && !old_start_button)
+    {
+      uint8_t change_register = I2C_CONTROL_REGISTER_CHANGE_PWM_RUNNING;
+      ch->u_controller_->writeI2c(I2C_CONTROL_REGISTER, (const uint8_t*)&change_register, 1); 
+    }
+    old_start_button = start_button;
+
+    debug(CTL_HANDLER, "i2cFunction: Current mode %d\n", mode);
+    switch (mode)
+    {
+      case NORMAL:
+        ch->u_controller_->writeI2c(I2C_MOTOR, (const uint8_t*)&speed, 1); 
+        ch->u_controller_->writeI2c(I2C_SERVO, (const uint8_t*)&angle, 1); 
+        break;
+      case OFFSET:
+        
+      default:
+        debug(WARNING, "i2cFunction: Not knowing mode %d\n", mode);
+    }
 
     usleep(I2C_SLEEP_TIME); 
   }
