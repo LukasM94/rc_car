@@ -69,7 +69,7 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
     if (ret == 0)
     {
       debug(WARNING, "GamePad::getFromString: parsing not successful\n");
-      debug(WARNING, "GamePad::getFromString: %s\n", str);
+      // debug(WARNING, "GamePad::getFromString: %s\n", str);
       goto GET_FROM_STRING_ERROR;
     }
 
@@ -128,13 +128,7 @@ int GamePad::getMsg(char* msg, unsigned int max_length)
     return -1;
   }
 
-  std::string str = root.toStyledString();
-  str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
-  str.erase(std::remove(str.begin(), str.end(), '\t'), str.end());
-  str.erase(std::remove(str.begin(), str.end(), 0), str.end());
-
-  memcpy(msg, str.c_str(), length);
-  // memcpy(msg, root.toStyledString().c_str(), length);
+  memcpy(msg, root.toStyledString().c_str(), length);
   return 0;
 }
 
