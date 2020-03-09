@@ -1,26 +1,12 @@
 #include <avr/eeprom.h> 
 #include <Eeprom.h>
 
-#define EEPROM_OFFSET_ADDRESS_A 0x00
-#define EEPROM_OFFSET_ADDRESS_B 0x10
-
-
-int8_t readOffsetA()
+uint8_t readEEPROM(uint8_t address)
 {
-  return (int8_t)eeprom_read_byte((const uint8_t*)EEPROM_OFFSET_ADDRESS_A);
+  return (uint8_t)eeprom_read_byte((const uint8_t*)address);
 }
 
-int8_t readOffsetB()
+void writeEEPROM(uint8_t data, uint8_t address)
 {
-  return (int8_t)eeprom_read_byte((const uint8_t*)EEPROM_OFFSET_ADDRESS_B);
-}
-
-void writeOffsetA(int8_t data)
-{
-  eeprom_write_byte((uint8_t*)EEPROM_OFFSET_ADDRESS_A, data);
-}
-
-void writeOffsetB(int8_t data)
-{
-  eeprom_write_byte((uint8_t*)EEPROM_OFFSET_ADDRESS_B, data);
+  eeprom_write_byte((uint8_t*)address, data);
 }

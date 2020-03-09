@@ -11,6 +11,16 @@
 
 #define BUFFER_SIZE 256
 
+#define CR_PWM_RUNNING       0x00
+#define CR_SET_PWM_RUNNING   do { control_register |= (1 << CR_PWM_RUNNING); } while(0)
+#define CR_RESET_PWM_RUNNING do { control_register &= ~(1 << CR_PWM_RUNNING); } while(0)
+#define CR_GET_PWM_RUNNING   (control_register & (1 << CR_PWM_RUNNING))
+
+#define CR_RESET       0x01
+#define CR_SET_RESET   do { control_register |= (1 << CR_RESET); } while (0)
+#define CR_RESET_RESET do { control_register &= ~(1 << CR_RESET); } while (0)
+#define CR_GET_RESET   (control_register & (1 << CR_RESET))
+
 //---------------------------------------------------------------------
 struct Usart usart;
 
@@ -22,7 +32,7 @@ volatile uint32_t time_last_i2c;
 
 uint32_t time_threshold;
 
-uint8_t pwm_running;
+uint8_t control_register;
 int8_t  pwm_ocra_offset;
 int8_t  pwm_ocrb_offset;
 
@@ -34,12 +44,21 @@ void initI2c();
 void initTimer();
 void initPwm();
 
+int8_t readOffsetA();
+int8_t readOffsetB();
+void writeOffsetA(int8_t data);
+void writeOffsetB(int8_t data);
+
+void loadControlRegister();
+void storeControlRegister();
+void controlRegisteAction();
+
 void receiveFunction(uint8_t* data, uint8_t length, uint8_t reg);
 void requestFunction();
 
 void timer();
 
-void changeControlRegister(uint8_t value);
+int changeControlRegister(uint8_t value);
 void changePwmOffset(uint8_t value);
 
 //---------------------------------------------------------------------
@@ -61,7 +80,10 @@ int main()
 
   pwm_ocra_offset = readOffsetA();
   pwm_ocrb_offset = readOffsetB();
-  // pwmStart();
+
+  loadControlRegister();
+  CR_RESET_RESET;
+  controlRegisteAction();
 
   sei();
 
@@ -87,7 +109,10 @@ int main()
           pwmChangePulseOfOCRB(value);
           break;
         case I2C_CONTROL_REGISTER:
-          changeControlRegister(value);
+          if (changeControlRegister(value) == 0)
+          {
+            controlRegisteAction();
+          }
           break;
         case I2C_CHANGE_OFFSET:
           changePwmOffset(value);
@@ -157,6 +182,62 @@ void initPwm()
 }
 
 //---------------------------------------------------------------------
+int8_t readOffsetA()
+{
+  return (int8_t)readEEPROM(EEPROM_OFFSET_ADDRESS_A);
+}
+
+//---------------------------------------------------------------------
+int8_t readOffsetB()
+{
+  return (int8_t)readEEPROM(EEPROM_OFFSET_ADDRESS_B);
+}
+
+//---------------------------------------------------------------------
+void writeOffsetA(int8_t data)
+{
+  writeEEPROM(EEPROM_OFFSET_ADDRESS_A, data);
+}
+
+//---------------------------------------------------------------------
+void writeOffsetB(int8_t data)
+{
+  writeEEPROM(EEPROM_OFFSET_ADDRESS_B, data);
+}
+
+//---------------------------------------------------------------------
+void storeControlRegister()
+{
+  writeEEPROM(EEPROM_CONTROL_REGISTER_ADDRESS, control_register);
+}
+
+//---------------------------------------------------------------------
+void loadControlRegister()
+{
+  control_register = readEEPROM(EEPROM_CONTROL_REGISTER_ADDRESS);
+}
+
+//---------------------------------------------------------------------
+void controlRegisteAction()
+{
+  if (CR_GET_PWM_RUNNING)
+  {
+    pwmStart();
+  }
+  else
+  {
+    pwmStop();
+  }
+  if (CR_GET_RESET)
+  {
+    Printf_print("atmega gets reset\n");
+    RESET_ATMEGA;
+    while (1);
+  }
+  storeControlRegister();
+}
+
+//---------------------------------------------------------------------
 void receiveFunction(uint8_t* data, uint8_t length, uint8_t reg)
 {
   if (length > 2)
@@ -186,27 +267,24 @@ void timer()
 }
 
 //---------------------------------------------------------------------
-void changeControlRegister(uint8_t value)
+int changeControlRegister(uint8_t value)
 {
   uint8_t failure = 0;
   cli();
   switch (value)
   {
     case I2C_CONTROL_REGISTER_CHANGE_PWM_RUNNING:
-      if (pwm_running)
+      if (CR_GET_PWM_RUNNING)
       {
-        pwm_running = 0;
-        pwmStop();
+        CR_RESET_PWM_RUNNING;
       }
       else
       {
-        pwm_running = 1;
-        pwmStart();
+        CR_SET_PWM_RUNNING;
       }
       break;
     case I2C_CONTROL_REGISTER_RESET:
-      Printf_print("atmega gets reset\n");
-      RESET_ATMEGA;
+      CR_SET_RESET;
       break;
     default:
       failure = 1;
@@ -216,9 +294,10 @@ void changeControlRegister(uint8_t value)
   if (failure == 1)
   {
     Printf_print("changeControlRegister: %d\n", value);
+    return 1;
   }
+  return 0;
 }
-
 
 static const int8_t MAX_OFFSET = 32;
 //---------------------------------------------------------------------

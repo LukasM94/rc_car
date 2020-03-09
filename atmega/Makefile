@@ -30,7 +30,7 @@ CFLAGS += -DF_CPU=$(FREQUENCY)UL
 CFLAGS += -DADDRESS=$(I2C_ADDRESS)
 CFLAGS += -O$(OPTIMIZATION) 
 CFLAGS += -Wall
-CFLAGS += -Werror
+# CFLAGS += -Werror
 CFLAGS += -Wundef
 CFLAGS += -std=gnu$(GNU)
 CFLAGS += -funsigned-char
