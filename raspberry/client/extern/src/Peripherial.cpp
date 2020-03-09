@@ -40,17 +40,35 @@ int Peripherial::initGpio()
 
 int Peripherial::initLedGreen(uint8_t led_pin)
 {
-  return gpio_->initLedGreen(led_pin);
+  return (gpio_->initLedGreen(led_pin) || 
+          gpio_->offGreenLed());
 }
 
 int Peripherial::initLedRed(uint8_t led_pin)
 {
-  return gpio_->initLedRed(led_pin);
+  return (gpio_->initLedRed(led_pin) ||
+          gpio_->offRedLed());
+}
+
+int Peripherial::initResetButton(uint8_t reset_pin)
+{
+  return (gpio_->initReset(reset_pin) || 
+          gpio_->setResetPin());
 }
 
 int Peripherial::initButton(uint8_t button_pin, void (*f_ptr)())
 {
   return gpio_->initButton(button_pin, f_ptr);
+}
+
+void Peripherial::resetResetPin()
+{
+  gpio_->resetResetPin();
+}
+
+void Peripherial::setResetPin()
+{
+  gpio_->setResetPin();
 }
 
 void Peripherial::heartBeat()
@@ -60,6 +78,12 @@ void Peripherial::heartBeat()
   gpio_->offGreenLed();
   sleep(1);
 }
+
+void Peripherial::turnGreenLedOff()
+{
+  gpio_->offGreenLed();
+}
+
 void Peripherial::turnRedLedOn()
 {
   gpio_->onRedLed();

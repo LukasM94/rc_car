@@ -13,44 +13,54 @@ class Gpio
     int initLedGreen(uint8_t led_pin);
     int initLedRed(uint8_t led_pin);
     int initButton(uint8_t button_pin, void (*f_ptr)());
-    inline void toggleGreenLed()
+    int initReset(uint8_t reset_pin);
+    inline int toggleGreenLed()
     {
-      toggleLed(led_green_pin_);
+      return togglePin(led_green_pin_);
     }
-    inline void toggleRedLed()
+    inline int toggleRedLed()
     {
-      toggleLed(led_red_pin_);
+      return togglePin(led_red_pin_);
     }
-    inline void onGreenLed()
+    inline int onGreenLed()
     {
-      onLed(led_green_pin_);
+      return setPin(led_green_pin_);
     }
-    inline void onRedLed()
+    inline int onRedLed()
     {
-      onLed(led_red_pin_);
+      return setPin(led_red_pin_);
     }
-    inline void offGreenLed()
+    inline int offGreenLed()
     {
-      offLed(led_green_pin_);
+      return resetPin(led_green_pin_);
     }
-    inline void offRedLed()
+    inline int offRedLed()
     {
-      offLed(led_red_pin_);
+      return resetPin(led_red_pin_);
+    }
+    inline int resetResetPin()
+    {
+      return resetPin(reset_pin_);
+    }
+    inline int setResetPin()
+    {
+      return setPin(reset_pin_);
     }
 
   private:
     Gpio();
 
     int initLed(uint8_t led_pin);
-    void toggleLed(uint8_t led_pin);
-    void onLed(uint8_t led_pin);
-    void offLed(uint8_t led_pin);
+    int togglePin(uint8_t pin);
+    int setPin(uint8_t pin);
+    int resetPin(uint8_t pin);
 
     std::string name_;
 
     uint8_t led_green_pin_;
     uint8_t led_red_pin_;
     uint8_t button_pin_;
+    uint8_t reset_pin_;
 };
 
 #endif

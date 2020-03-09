@@ -1,8 +1,6 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
-int control(int argv, char* argc[]);
-
 #include <string>
 #include <atomic>
 #include <map>
@@ -30,6 +28,7 @@ class Control
     }
 
     void init();
+    void deinit();
     inline void lock()
     {
       lock_.lock();

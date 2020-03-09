@@ -12,7 +12,8 @@ Gpio::Gpio(std::string name) :
   name_(name),
   led_green_pin_(-1), 
   led_red_pin_(-1), 
-  button_pin_(-1)
+  button_pin_(-1),
+  reset_pin_(-1)
 {
   debug(GPIO, "ctor\n");
 #if defined(__arm__)
@@ -59,6 +60,21 @@ int Gpio::initLed(uint8_t led_pin)
   return 0;
 }
 
+int Gpio::initReset(uint8_t reset_pin)
+{
+  reset_pin_ = reset_pin;
+  if (gpioTestAndSet(reset_pin_))
+  {
+    debug(ERROR, "Gpio::initReset: Pin %d is already taken\n", reset_pin_);
+    return -1;
+  }
+#if defined(__arm__)
+  pinMode(reset_pin_, OUTPUT);
+#endif
+  debug(GPIO, "initReset: Pin %d is OUTPUT\n", reset_pin_);
+  return 0;
+}
+
 int Gpio::initButton(uint8_t button_pin, void (*f_ptr)())
 {
   button_pin_ = button_pin;
@@ -75,30 +91,48 @@ int Gpio::initButton(uint8_t button_pin, void (*f_ptr)())
   return 0;
 }
 
-void Gpio::toggleLed(uint8_t led_pin)
+int Gpio::togglePin(uint8_t pin)
 {
-#if defined(__arm__)
-  if (digitalRead(led_pin))
+  if (pin == -1)
   {
-    digitalWrite(led_pin, LOW);
+    debug(WARNING, "Gpio::togglePin: Pin %d is not initialized\n", pin);
+    return -1;
+  }
+#if defined(__arm__)
+  if (digitalRead(pin))
+  {
+    digitalWrite(pin, LOW);
   }
   else
   {
-    digitalWrite(led_pin, HIGH);
+    digitalWrite(pin, HIGH);
   }
 #endif
+  return 0;
 }
 
-void Gpio::onLed(uint8_t led_pin)
+int Gpio::setPin(uint8_t pin)
 {
+  if (pin == -1)
+  {
+    debug(WARNING, "Gpio::setPin: Pin %d is not initialized\n", pin);
+    return -1;
+  }
 #if defined(__arm__)
-  digitalWrite(led_pin, HIGH);
+  digitalWrite(pin, HIGH);
 #endif
+return 0;
 }
 
-void Gpio::offLed(uint8_t led_pin)
+int Gpio::resetPin(uint8_t pin)
 {
+  if (pin == -1)
+  {
+    debug(WARNING, "Gpio::setPin: Pin %d is not initialized\n", pin);
+    return -1;
+  }
 #if defined(__arm__)
-  digitalWrite(led_pin, LOW);
+  digitalWrite(pin, LOW);
 #endif
+  return 0;
 }

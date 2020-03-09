@@ -33,6 +33,13 @@ void Control::init()
 }
 
 //--------------------------------------------------------------------
+void Control::deinit()
+{
+  debug(CONTROL, "deinit\n");
+  control_handler_.gpioDeInit();
+}
+
+//--------------------------------------------------------------------
 void* Control::wrapperStart(void* args)
 {
   const char*     primary_key     = ((struct start_arg*)args)->primary_key_;

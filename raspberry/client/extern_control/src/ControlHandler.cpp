@@ -31,6 +31,16 @@ void ControlHandler::gpioInit()
   Peripherial::instance()->initLedGreen(RASPBERRY_LED_GREEN);
   Peripherial::instance()->initLedRed(RASPBERRY_LED_RED);
   Peripherial::instance()->initButton(RASPBERRY_BUTTON, &buttonCallback);
+  Peripherial::instance()->initResetButton(RASPBERRY_RESET);
+}
+
+//--------------------------------------------------------------------
+void ControlHandler::gpioDeInit()
+{
+  debug(CTL_HANDLER, "gpioDeInit\n");
+  Peripherial::instance()->resetResetPin();
+  Peripherial::instance()->turnRedLedOff();
+  Peripherial::instance()->turnGreenLedOff();
 }
 
 //--------------------------------------------------------------------

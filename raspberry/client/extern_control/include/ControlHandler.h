@@ -11,6 +11,7 @@ class ControlHandler
     ~ControlHandler();
 
     void gpioInit();
+    void gpioDeInit();
     void i2cInit();
 
     static void buttonCallback(); 

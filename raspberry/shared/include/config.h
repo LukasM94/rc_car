@@ -19,6 +19,7 @@
 #define RASPBERRY_LED_GREEN 0
 #define RASPBERRY_LED_RED   5
 #define RASPBERRY_BUTTON    1
+#define RASPBERRY_RESET     6
 
 #define RASPBERRY_I2C_SDA   2
 #define RASPBERRY_I2C_SCL   3
