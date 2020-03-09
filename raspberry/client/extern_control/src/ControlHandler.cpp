@@ -116,7 +116,7 @@ void* ControlHandler::i2cFunction(void* arg)
 
     debug(CTL_HAND_D, "i2cFunction: Get data of game_pad\n");
     game_pad->lock();
-    bool start_button = game_pad->getButton(GamePad::BUTTON_START);
+    bool start_button  = game_pad->getButton(GamePad::BUTTON_START);
     bool select_button = game_pad->getButton(GamePad::BUTTON_SELECT);
     
     speed = game_pad->getLeftAxisY();
@@ -198,7 +198,7 @@ void ControlHandler::writeI2c(ControlHandler* ch, uint8_t reg, const uint8_t* da
   }
   if (ch->i2c_error_ > I2C_ERROR_THRESHOLD)
   {
-    debug(WARNING, "ControlHandler::writeI2c: %d errors on the i2c line\n", ch->i2c_error_);
+    debug(WARNING, "ControlHandler::writeI2c: %d errors on the i2c line\n", ch->i2c_error_.load());
     ch->i2c_running_ = false;
   }
 }

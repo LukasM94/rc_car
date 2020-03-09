@@ -134,7 +134,7 @@ int main()
       {
         RESET_ATMEGA;
       }
-      _delay_ms(2000);
+      _delay_ms(200);
     } 
     else if (no_i2c)
     {
