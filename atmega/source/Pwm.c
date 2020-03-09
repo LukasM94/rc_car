@@ -10,6 +10,8 @@ static uint16_t pwm_middle;
 __attribute__((unused))static uint16_t pwm_border_under;
 __attribute__((unused))static uint16_t pwm_border_up;
 
+static uint8_t pwm_running = 0;
+
 //---------------------------------------------------------------------
 static void pwmChangeOCRA(uint16_t new_ocra);
 static void pwmChangeOCRB(uint16_t new_ocrb);
@@ -46,13 +48,21 @@ void pwmInit()
 //---------------------------------------------------------------------
 void pwmStart()
 {
+  pwm_running = 1;
   TCCR1A |= (1 << COM1A1) | (1 << COM1B1);
 }
 
 //---------------------------------------------------------------------
 void pwmStop()
 {
+  pwm_running = 0;
   TCCR1A &= ~((1 << COM1A1) | (1 << COM1B1));
+}
+
+//---------------------------------------------------------------------
+uint8_t getPwmRunning()
+{
+  return pwm_running;
 }
 
 //---------------------------------------------------------------------

@@ -12,7 +12,9 @@
 
 //--------------------------------------------------------------------
 ControlHandler::ControlHandler(UController* u_controller) : 
-  u_controller_(u_controller)
+  u_controller_(u_controller),
+  i2c_running_(false),
+  i2c_error_(0)
 {
   debug(CTL_HANDLER, "ctor: u_controller <%p>\n", u_controller);
 }
@@ -70,6 +72,18 @@ void* ControlHandler::gpioFunction(void* arg)
   return 0;
 }
 
+static const uint8_t seconds = 3;
+//--------------------------------------------------------------------
+void ControlHandler::resetUController()
+{
+  debug(CTL_HANDLER, "i2cFunction: Reset u controller hard\n");
+  Peripherial::instance()->resetResetPin();
+  usleep(10000);
+  Peripherial::instance()->setResetPin();
+  debug(CTL_HANDLER, "i2cFunction: Wait %d seconds\n", seconds);
+  sleep(seconds);
+}
+
 //--------------------------------------------------------------------
 void* ControlHandler::i2cFunction(void* arg)
 {
@@ -84,14 +98,19 @@ void* ControlHandler::i2cFunction(void* arg)
   int8_t angle;
   
   uint8_t single_register;
+  ch->resetUController();
+  // debug(CTL_HANDLER, "i2cFunction: Reset u controller soft\n");
+  // single_register = I2C_CONTROL_REGISTER_RESET;
+  // if (ch->u_controller_->writeI2c(I2C_CONTROL_REGISTER, (const uint8_t*)&single_register, 1))
+  // {
+  //   debug(WARNING, "ControlHandler::i2cFunction: Could not write data via i2c\n");
+  //   return 0;
+  // }
 
-  debug(CTL_HANDLER, "i2cFunction: Reset atmega and sleep for 1 second\n");
-  single_register = I2C_CONTROL_REGISTER_RESET;
-  ch->u_controller_->writeI2c(I2C_CONTROL_REGISTER, (const uint8_t*)&single_register, 1); 
-
-
+  ch->i2c_running_ = true;
+  ch->i2c_error_   = 0;
   debug(CTL_HANDLER, "i2cFunction: Start\n");
-  while (1)
+  while (ch->i2c_running_)
   {
     GamePad* game_pad = GamePadInstance::instance()->getGamePad();
 
@@ -109,7 +128,7 @@ void* ControlHandler::i2cFunction(void* arg)
     if (start_button && !prev_start_button)
     {
       single_register = I2C_CONTROL_REGISTER_CHANGE_PWM_RUNNING;
-      ch->u_controller_->writeI2c(I2C_CONTROL_REGISTER, (const uint8_t*)&single_register, 1); 
+      writeI2c(ch, I2C_CONTROL_REGISTER, (const uint8_t*)&single_register, 1); 
       Peripherial::instance()->toggleRedLed();
     }
     prev_start_button = start_button;
@@ -133,8 +152,8 @@ void* ControlHandler::i2cFunction(void* arg)
     switch (mode)
     {
       case NORMAL:
-        ch->u_controller_->writeI2c(I2C_MOTOR, (const uint8_t*)&speed, 1); 
-        ch->u_controller_->writeI2c(I2C_SERVO, (const uint8_t*)&angle, 1); 
+        writeI2c(ch, I2C_MOTOR, (const uint8_t*)&speed, 1); 
+        writeI2c(ch, I2C_SERVO, (const uint8_t*)&angle, 1); 
         break;
       case OFFSET:
         if (speed > THRESHOLD_FOR_JOYSTICK)
@@ -145,7 +164,7 @@ void* ControlHandler::i2cFunction(void* arg)
         {
           single_register = I2C_MOTOR_OFFSET_DECREMENT;
         }
-        ch->u_controller_->writeI2c(I2C_CHANGE_OFFSET, (const uint8_t*)&single_register, 1);
+        writeI2c(ch, I2C_CHANGE_OFFSET, (const uint8_t*)&single_register, 1);
         single_register = 0;
         if (angle > THRESHOLD_FOR_JOYSTICK)
         {
@@ -155,14 +174,31 @@ void* ControlHandler::i2cFunction(void* arg)
         {
           single_register = I2C_SERVO_OFFSET_DECREMENT;
         }
-        ch->u_controller_->writeI2c(I2C_CHANGE_OFFSET, (const uint8_t*)&single_register, 1);
+        writeI2c(ch, I2C_CHANGE_OFFSET, (const uint8_t*)&single_register, 1);
         break;
       default:
-        debug(WARNING, "i2cFunction: Not knowing mode %d\n", mode);
+        debug(WARNING, "ControlHandler::i2cFunction: Not knowing mode %d\n", mode);
     }
 
     usleep(I2C_SLEEP_TIME); 
   }
   debug(CTL_HANDLER, "i2cFunction: Exit\n");
   return 0;
+}
+
+void ControlHandler::writeI2c(ControlHandler* ch, uint8_t reg, const uint8_t* data, int length)
+{
+  if (ch->u_controller_->writeI2c(reg, data, length) == 0)
+  {
+    ch->i2c_error_ = 0;
+  }
+  else 
+  {
+    ch->i2c_error_++;
+  }
+  if (ch->i2c_error_ > I2C_ERROR_THRESHOLD)
+  {
+    debug(WARNING, "ControlHandler::writeI2c: %d errors on the i2c line\n", ch->i2c_error_);
+    ch->i2c_running_ = false;
+  }
 }

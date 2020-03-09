@@ -66,9 +66,10 @@ int main()
 {
   cli();
 
-  uint8_t old_flag = 0;
-  uint8_t lost_i2c = 0;
-  uint8_t no_i2c   = 0;
+  uint8_t old_flag    = 0;
+  uint8_t lost_i2c    = 0;
+  uint8_t no_i2c      = 0;
+  uint8_t pwm_was_running = 0;;
 
   initUsart();
   initLed();
@@ -124,15 +125,23 @@ int main()
     }
     if (lost_i2c)
     {
+      pwm_was_running = getPwmRunning();
       pwmStop();
       no_i2c = 1;
       Printf_print("main: lost i2c connection\n");
       Printf_print("main: %d time\n", lost_i2c);
+      if (lost_i2c == 10)
+      {
+        RESET_ATMEGA;
+      }
       _delay_ms(2000);
     } 
     else if (no_i2c)
     {
-      pwmStart();
+      if (pwm_was_running)
+      {
+        pwmStart();
+      }
       no_i2c = 0;
       Printf_print("main: got connected again\n");
     }

@@ -40,6 +40,7 @@ class Control
 
     int setTid(const char* primary_key, int tid);
     int removeTid(const char* primary_key);
+    bool findTid(const char* primary_key);
 
   private:
     Control();

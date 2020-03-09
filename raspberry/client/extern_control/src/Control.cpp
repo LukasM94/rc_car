@@ -84,13 +84,20 @@ int Control::removeTid(const char* primary_key)
 }
 
 //--------------------------------------------------------------------
+bool Control::findTid(const char* primary_key)
+{
+  auto it = tids_.find(primary_key);
+  return (it != tids_.end());
+}
+
+//--------------------------------------------------------------------
 void Control::run()
 {
   pthread_t tid_i2c;
   pthread_t tid_gpio;
 
-  struct start_arg  args_i2c  = {this, I2C, 0, &ControlHandler::i2cFunction};
-  struct start_arg  args_gpio = {this, GPIO, 0,  &ControlHandler::gpioFunction};
+  struct start_arg args_i2c  = {this, I2C, 0, &ControlHandler::i2cFunction};
+  struct start_arg args_gpio = {this, GPIO, 0,  &ControlHandler::gpioFunction};
 
   init();
 
@@ -107,16 +114,29 @@ void Control::run()
   while (running_)
   {
     lock();
-    if (tids_.size() == 0)
+    if (tids_.size() != 2)
     {
+      if (findTid(args_gpio.primary_key_) == false)
+      {
+        pthread_create(&tid_gpio, 0, Control::wrapperStart, &args_gpio);
+        setTid(args_gpio.primary_key_, tid_gpio);
+        debug(CONTROL, "run: Restart gpio\n");
+      }
+      if (findTid(args_i2c.primary_key_) == false)
+      {
+        pthread_create(&tid_i2c, 0, Control::wrapperStart, &args_i2c);
+        setTid(args_i2c.primary_key_, tid_i2c);
+        debug(CONTROL, "run: Restart i2c\n");
+      }
       unlock();
-      break;
     }
-    printTidEntries();
-    unlock();
-
-    debug(CONTROL, "run: Nothing to do\n");
-    sleep(5);
+    else
+    {
+      printTidEntries();
+      unlock();
+      debug(CONTROL, "run: Nothing to do\n");
+      sleep(5);
+    }
   }
 
   debug(CONTROL, "run: Exit\n");
