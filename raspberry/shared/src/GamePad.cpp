@@ -68,7 +68,8 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
     int ret = reader.parse(str, root);
     if (ret == 0)
     {
-      debug(WARNING, "GamePad::getMsg: parsing not successful\n");
+      debug(WARNING, "GamePad::getFromString: parsing not successful\n");
+      debug(WARNING, "GamePad::getFromString: %s\n", str);
       goto GET_FROM_STRING_ERROR;
     }
 
@@ -127,7 +128,13 @@ int GamePad::getMsg(char* msg, unsigned int max_length)
     return -1;
   }
 
-  memcpy(msg, root.toStyledString().c_str(), length);
+  std::string str = root.toStyledString();
+  str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
+  str.erase(std::remove(str.begin(), str.end(), '\t'), str.end());
+  str.erase(std::remove(str.begin(), str.end(), 0), str.end());
+
+  memcpy(msg, str.c_str(), length);
+  // memcpy(msg, root.toStyledString().c_str(), length);
   return 0;
 }
 
@@ -168,31 +175,6 @@ int GamePad::getJson(Json::Value& root)
 GET_JSON_ERROR:
   unlock();
   return -1;
-}
-
-int GamePad::getMsg(char** msg, unsigned int* length)
-{
-  debug(GAME_PAD, "getMsg: Start\n");
-
-  int ret;
-  Json::Value root;
-  if ((ret = getJson(root)) != 0)
-  {
-    return ret;
-  }
-
-  *length = root.toStyledString().length();
-  *msg    = new char[*length];
-  memcpy(*msg, root.toStyledString().c_str(), *length);
-
-  if (OUTPUT_ENABLED & OUTPUT_ENABLED)
-  {
-    std::string temp = root.toStyledString();
-    temp.erase(std::remove(temp.begin(), temp.end(), '\n'), temp.end());
-    temp.erase(std::remove(temp.begin(), temp.end(), '\t'), temp.end());
-    debug(GAME_PAD, "GamePad::getjson: %s\n", temp.c_str());
-  }
-  return 0;
 }
 
 void GamePad::allocateButtons(unsigned int button_ctn)

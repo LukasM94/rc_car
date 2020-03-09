@@ -27,11 +27,6 @@ class GamePad
 
     static int getFromString(GamePad* game_pad, const char* str);
 
-    int getMsg(char** msg, unsigned int* length);
-    inline void freeMsg(const char* msg)
-    {
-      delete msg;
-    }
     int getMsg(char* msg, unsigned int max_length);
 
     int setButton(uint8_t button_no, bool state)
