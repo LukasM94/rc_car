@@ -126,7 +126,7 @@ int Server::transmit()
 	int ret;
 	// debug(SERVER, "transmit: Want to send message\n");
 
-	ret = send(client_socket_, buffer_, sizeof(buffer_), MSG_NOSIGNAL); 
+	ret = send(client_socket_, buffer_, strlen(buffer_), MSG_NOSIGNAL); 
 	if (ret < 0)
 	{
 		debug(SERVER, "transmit: Quit connection with ret %d\n", ret); 
