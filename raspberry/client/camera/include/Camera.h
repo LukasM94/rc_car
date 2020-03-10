@@ -27,7 +27,6 @@ class Camera : public WorkingThread
 
     int catchImage();
     int startCapture();
-    int stopCapture();
 
   private:
     Camera(const Camera&);
@@ -35,7 +34,6 @@ class Camera : public WorkingThread
     static void* pictureCallBack(void* arg);
 
     static int initCamera(raspicam::RaspiCam* camera, struct CameraInfo& info);
-    static int setCallbackFunction(raspicam::RaspiCam* camera, void (*f_ptr)(void*), void* arg);
 
     raspicam::RaspiCam* camera_;
 

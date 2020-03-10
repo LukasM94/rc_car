@@ -102,5 +102,6 @@ target_link_libraries(
   -lwiringPi
   -lrt
   -ljsoncpp
+  -lraspicam 
 )
 endif()
