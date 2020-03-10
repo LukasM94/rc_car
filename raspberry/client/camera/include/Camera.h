@@ -3,20 +3,24 @@
 
 #include <WorkingThread.h>
 
+namespace raspicam
+{
+  class RaspiCam;
+}
+
 class Camera : public WorkingThread
 {
   public:
-    Camera(unsigned int port);
+    Camera();
     ~Camera();
 
     virtual void run();
-    void init();
+    int init();
 
   private:
-    Camera();
     Camera(const Camera&);
 
-    unsigned int port_;
+    raspicam::RaspiCam* camera_;
 };
 
 #endif
