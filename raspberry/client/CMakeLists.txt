@@ -45,7 +45,7 @@ add_library(
 add_subdirectory(extern) 
 add_subdirectory(shared) 
 add_subdirectory(extern_control) 
-# add_subdirectory(camera)
+add_subdirectory(camera)
 add_subdirectory(game_pad_client) 
 add_subdirectory(raspberry) 
 
@@ -61,7 +61,7 @@ target_link_libraries(
   extern_control
   peripherial
   control_handler
-  # camera
+  camera
   game_pad_client
   working_thread
   gpio
@@ -85,7 +85,7 @@ target_link_libraries(
   extern_control
   peripherial
   control_handler
-  # camera
+  camera
   game_pad_client
   working_thread
   gpio

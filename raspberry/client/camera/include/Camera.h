@@ -1,7 +1,9 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-class Camera
+#include <WorkingThread.h>
+
+class Camera : public WorkingThread
 {
   public:
     Camera(unsigned int port);
