@@ -1,7 +1,7 @@
 
 #include <Control.h>
 #include <Atmega.h>
-#include <camera.h>
+// #include <camera.h>
 #include <unistd.h>
 #include <debug.h>
 #include <sys/wait.h>

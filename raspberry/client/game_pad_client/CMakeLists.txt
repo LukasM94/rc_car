@@ -1,13 +1,3 @@
-add_library(
-  game_pad
-  SHARED
-  ../../shared/src/GamePad.cpp
-)
-add_library(
-  socket
-  SHARED
-  ../../shared/src/Socket.cpp
-)
 add_library( 
   game_pad_client
   SHARED

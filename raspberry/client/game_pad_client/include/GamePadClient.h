@@ -1,13 +1,12 @@
 #ifndef GAME_PAD_CLIENT
 #define GAME_PAD_CLIENT
 
-#include <string>
-#include <atomic>
 #include <Socket.h>
+#include <WorkingThread.h>
 
 class GamePad;
 
-class GamePadClient : public Socket
+class GamePadClient : public Socket, public WorkingThread
 {
   public:
     GamePadClient(unsigned int server_port, const char* server_ip);
@@ -18,11 +17,7 @@ class GamePadClient : public Socket
       reinterpret_cast<GamePadClient*>(arg)->run();
       return 0;
     }
-    void run();
-    inline void cancel()
-    {
-      running_ = 0;
-    }
+    virtual void run();
 
     virtual int init();
     virtual int receive();
@@ -34,8 +29,6 @@ class GamePadClient : public Socket
     GamePadClient(const GamePadClient&);
 
     int server_socket_;
-
-    std::atomic_bool running_;
 
     static const char HELLO[];
 };

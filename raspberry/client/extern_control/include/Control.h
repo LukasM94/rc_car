@@ -1,16 +1,15 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
-#include <string>
-#include <atomic>
 #include <map>
 #include <ControlHandler.h>
 #include <Lock.h>
+#include <WorkingThread.h>
 
 class GamePad;
 class UController;
 
-class Control
+class Control : public WorkingThread
 {
   public:
     Control(UController* u_controller);
@@ -21,11 +20,7 @@ class Control
       reinterpret_cast<Control*>(arg)->run();
       return 0;
     }
-    void run();
-    inline void cancel()
-    {
-      running_ = 0;
-    }
+    virtual void run();
 
     void init();
     void deinit();
@@ -61,8 +56,6 @@ class Control
     ControlHandler control_handler_;
     std::map<const char*, int> tids_;
     Lock lock_;
-
-    std::atomic_bool running_;
 
     static const int LED_PIN = 0;
     static const char I2C[];

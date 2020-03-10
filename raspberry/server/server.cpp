@@ -36,10 +36,8 @@ int main(int argc, char* argv[])
   pthread_t tid_server;
 
   debug(MAIN, "main: Initialize the instances\n");
-  XboxController xc(XboxController::DEFAULT_PATH);
-  Server server(SERVER_PORT_INT, xc.getJoystickData());
-  xc.setName(XBOX_CONTROLLER);
-  server.setName(SERVER_NAME);
+  XboxController xc(XboxController::DEFAULT_PATH, XBOX_CONTROLLER);
+  Server server(SERVER_PORT_INT, xc.getJoystickData(), SERVER_NAME);
 
   lockTids();
   debug(MAIN, "main: Create threads\n");

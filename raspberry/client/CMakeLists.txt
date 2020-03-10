@@ -26,10 +26,26 @@ include_directories(
   game_pad_client/include
 )
 
+add_library( 
+  working_thread
+  SHARED
+  ../shared/src/WorkingThread.cpp
+)
+add_library( 
+  socket
+  SHARED
+  ../shared/src/Socket.cpp
+)
+add_library( 
+  game_pad
+  SHARED
+  ../shared/src/GamePad.cpp
+)
+
 add_subdirectory(extern) 
 add_subdirectory(shared) 
 add_subdirectory(extern_control) 
-add_subdirectory(camera)
+# add_subdirectory(camera)
 add_subdirectory(game_pad_client) 
 add_subdirectory(raspberry) 
 
@@ -45,8 +61,9 @@ target_link_libraries(
   extern_control
   peripherial
   control_handler
-  camera
+  # camera
   game_pad_client
+  working_thread
   gpio
   i2c
   atmega
@@ -68,8 +85,9 @@ target_link_libraries(
   extern_control
   peripherial
   control_handler
-  camera
+  # camera
   game_pad_client
+  working_thread
   gpio
   i2c
   atmega

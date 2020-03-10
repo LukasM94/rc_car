@@ -10,10 +10,10 @@ const char Control::GPIO[] = "gpio";
 
 //--------------------------------------------------------------------
 Control::Control(UController* u_controller) :
+  WorkingThread("Control"),
   control_handler_(u_controller),
   tids_(),
-  lock_("Control::lock_"),
-  running_(1)
+  lock_("Control::lock_")
 {
   debug(CONTROL, "ctor\n");
 }

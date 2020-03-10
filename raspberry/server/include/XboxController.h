@@ -3,18 +3,17 @@
 
 #include <stddef.h>
 #include <linux/joystick.h>
-#include <atomic>
-#include <string>
+#include <WorkingThread.h>
 
 class GamePad;
 
-class XboxController
+class XboxController : public WorkingThread
 {
   public:
     static const char DEFAULT_PATH[];
 
     XboxController();
-    XboxController(const char* path);
+    XboxController(const char* path, const char* name);
     ~XboxController();
 
     inline static void* runWrapper(void* arg)
@@ -22,11 +21,7 @@ class XboxController
       reinterpret_cast<XboxController*>(arg)->run();
       return 0;
     }
-    void run();
-    inline void cancel()
-    {
-      running_ = 0;
-    }
+    virtual void run();
 
     void print();
     inline static void print(XboxController* c)
@@ -39,11 +34,6 @@ class XboxController
     GamePad* getJoystickData() const
     {
       return gamepad_;
-    }
-
-    void setName(const char* name)
-    {
-      name_ = name;
     }
 
     void init();
@@ -67,8 +57,6 @@ class XboxController
     int refreshButton();
     int refreshJoystick();
 
-    std::atomic_bool running_;
-
     const char* path_;
 
     int fd_;
@@ -76,8 +64,6 @@ class XboxController
     GamePad* gamepad_;
 
     struct js_event event_;
-
-    std::string name_;
 
     static const unsigned char LT_THRESHOLD = 64;
     static const unsigned char RT_THRESHOLD = 64;

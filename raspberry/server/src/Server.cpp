@@ -15,10 +15,10 @@
 extern void atExit(const char* name);
 
 //-------------------------------------------------
-Server::Server(unsigned int port, GamePad* gamepad) : 
+Server::Server(unsigned int port, GamePad* gamepad, const char* name) : 
 	Socket(port, "127.0.0.1"),
-  gamepad_(gamepad),
-	running_(1)
+	WorkingThread(name),
+  gamepad_(gamepad)
 {
   debug(SERVER, "ctor:\n");
 }
