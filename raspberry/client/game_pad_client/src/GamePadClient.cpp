@@ -27,7 +27,7 @@ GamePadClient::~GamePadClient()
 }
 
 //-------------------------------------------------
-int GamePadClient::init()
+int GamePadClient::initSocket()
 {
   int valread = 0; 
 
@@ -111,7 +111,7 @@ void GamePadClient::run()
   debug(GP_CLIENT, "run: Start\n");
   while (running_)
   {
-    if (init())
+    if (initSocket())
     {
       exit(-1);
     }

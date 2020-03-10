@@ -9,6 +9,9 @@ class Camera : public WorkingThread
     Camera(unsigned int port);
     ~Camera();
 
+    virtual void run();
+    void init();
+
   private:
     Camera();
     Camera(const Camera&);

@@ -10,7 +10,7 @@ class Socket
   public:
     Socket(unsigned int port, const char* ip_address);
     ~Socket();
-    virtual int init() = 0;
+    virtual int initSocket() = 0;
     virtual int transmit() = 0;
     virtual int receive() = 0;;
 

@@ -19,7 +19,7 @@ class GamePadClient : public Socket, public WorkingThread
     }
     virtual void run();
 
-    virtual int init();
+    virtual int initSocket();
     virtual int receive();
     virtual int transmit();
     int connectToServer();

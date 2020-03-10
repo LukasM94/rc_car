@@ -12,3 +12,14 @@ Camera::~Camera()
 {
   debug(CAMERA, "dtor\n");
 }
+
+void Camera::run()
+{
+  debug(CAMERA, "run: Start\n");
+  debug(CAMERA, "run: Exit\n");
+}
+
+void Camera::init()
+{
+  debug(CAMERA, "init\n");
+}

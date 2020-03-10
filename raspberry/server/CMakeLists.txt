@@ -22,18 +22,42 @@ set(warnings "-Wall -Wextra")
 
 add_executable(${PROJECT_NAME} server.cpp)
 
+# shared
+add_library( 
+  gamepad
+  SHARED
+  ../shared/src/GamePad.cpp
+)
+add_library( 
+  socket
+  SHARED
+  ../shared/src/Socket.cpp
+)
+add_library(
+  working_thread
+  SHARED
+  ../shared/src/WorkingThread.cpp
+)
+
+# this project
 add_library( 
   xbox_controller
+  SHARED
   src/XboxController.cpp
+)
+add_dependencies(
+  xbox_controller
+  gamepad
 )
 add_library( 
   socket_server
-  ../shared/src/Socket.cpp
+  SHARED
   src/Server.cpp
 )
-add_library( 
-  gamepad
-  ../shared/src/GamePad.cpp
+add_dependencies(
+  socket_server
+  socket
+  working_thread
 )
 
 target_link_libraries(
@@ -41,6 +65,8 @@ target_link_libraries(
   xbox_controller
   socket_server
   gamepad
+  socket
+  working_thread
   -pthread
   -ljsoncpp
 )

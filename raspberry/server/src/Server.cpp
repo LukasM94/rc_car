@@ -35,7 +35,7 @@ void Server::run()
 	int ret = 0;
 
   debug(SERVER, "run: Start\n");
-  if (init())
+  if (initSocket())
   {
     exit(-1);
   }
@@ -68,7 +68,7 @@ void Server::run()
 }
 
 //-------------------------------------------------
-int Server::init()
+int Server::initSocket()
 {
 	int opt = 1; 
 
