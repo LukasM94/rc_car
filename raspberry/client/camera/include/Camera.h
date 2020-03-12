@@ -4,6 +4,8 @@
 #include <WorkingThread.h>
 #include <Lock.h>
 
+class Image;
+
 namespace raspicam
 {
   class RaspiCam;
@@ -24,22 +26,34 @@ class Camera : public WorkingThread
 
     virtual void run();
     int init();
-
-    int catchImage();
-    int startCapture();
+    int grab();
+    unsigned int getWidth();
+    unsigned int getHeight();
+    unsigned char* getData();
+    unsigned int getSize();
+    inline Image* getImage()
+    {
+      return image_;
+    }
+    inline void lock()
+    {
+      lock_.lock();
+    }
+    inline void unlock()
+    {
+      lock_.unlock();
+    }
 
   private:
     Camera(const Camera&);
 
-    static void* pictureCallBack(void* arg);
-
     static int initCamera(raspicam::RaspiCam* camera, struct CameraInfo& info);
 
-    raspicam::RaspiCam* camera_;
+    raspicam::RaspiCam* raspi_cam_;
 
-    unsigned char* data_;
+    Image* image_;
 
-    Lock  lock_;
+    Lock lock_;
 
     static const unsigned int QVGA_WIDTH  = 320;
     static const unsigned int QVGA_HEIGHT = 240;

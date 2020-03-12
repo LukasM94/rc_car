@@ -11,6 +11,9 @@
 #include <GamePadClient.h>
 #include <GamePadInstance.h>
 #include <pthread.h>
+#include <fstream>
+#include <Camera.h>
+#include <Image.h>
 
 pthread_t tid_gp_client;
 pthread_t tid_ucontroller;
@@ -30,6 +33,27 @@ int main(int argc, char* argv[])
 
   const char* ip_addr = SERVER_IP;
   const char* port_no = SERVER_PORT;
+
+  Camera c;
+  c.init();
+
+  c.lock();
+	sleep(3);
+  c.grab();
+  Image* i = c.getImage();
+  i->lock();
+  c.unlock();
+  std::ofstream outFile ("raspicam_image.ppm",std::ios::binary);
+	outFile << "P6\n" << i->getWidth() <<" "<< i->getHeight() << " 255\n";
+  outFile.write((char*)i->getData(), i->getSize());
+  i->unlock();
+  delete i;
+  return 0;
+
+
+
+
+
 
   debug(MAIN, "main: Initialize the instances\n");
   game_pad  = GamePadInstance::instance()->getGamePad();

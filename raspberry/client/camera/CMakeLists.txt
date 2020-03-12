@@ -1,3 +1,8 @@
+add_library(
+  image
+  SHARED
+  src/Image.cpp
+)
 add_library( 
   camera
   SHARED
@@ -6,4 +11,5 @@ add_library(
 add_dependencies(
   camera
   working_thread
+  image
 )
