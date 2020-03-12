@@ -48,10 +48,14 @@ int Camera::grab()
   {
     return -1;
   }
-  image_ = new Image(raspi_cam_->getImageBufferData(),
-                     raspi_cam_->getImageTypeSize(raspicam::RASPICAM_FORMAT_RGB),
+  // image_ = new Image(raspi_cam_->getImageBufferData(),
+  //                    raspi_cam_->getImageTypeSize(raspicam::RASPICAM_FORMAT_RGB),
+  //                    raspi_cam_->getWidth(),
+  //                    raspi_cam_->getHeight());
+  image_ = new Image(raspi_cam_->getImageTypeSize(raspicam::RASPICAM_FORMAT_RGB),
                      raspi_cam_->getWidth(),
                      raspi_cam_->getHeight());
+  raspi_cam_->retrieve(image_->getData());
 #endif
   return -1;
 }
@@ -83,17 +87,17 @@ int Camera::init()
     return -1;
   }
 
-  // struct CameraInfo info;
-  // info.width_       = QVGA_WIDTH;
-  // info.height_      = QVGA_HEIGHT;
-  // info.frame_rate_  = FRAME_RATE;
-  // int ret;
-  // if ((ret = initCamera(raspi_cam_, info)) != 0)
-  // {
-  //   debug(WARNING, "Camera::run: Something seems to be wrong %d\n", ret);
-  //   lock_.unlock(); 
-  //   return -1;
-  // }
+  struct CameraInfo info;
+  info.width_       = VGA_WIDTH;
+  info.height_      = VGA_HEIGHT;
+  info.frame_rate_  = FRAME_RATE;
+  int ret;
+  if ((ret = initCamera(raspi_cam_, info)) != 0)
+  {
+    debug(WARNING, "Camera::run: Something seems to be wrong %d\n", ret);
+    lock_.unlock(); 
+    return -1;
+  }
   lock_.unlock(); 
 #endif
   return 0;

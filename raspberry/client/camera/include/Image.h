@@ -6,6 +6,9 @@
 class Image
 {
   public:
+    Image(unsigned int size,
+          unsigned int width,
+          unsigned int height);
     Image(unsigned char* data, 
           unsigned int size,
           unsigned int width,
