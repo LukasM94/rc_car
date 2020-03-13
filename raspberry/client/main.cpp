@@ -14,16 +14,18 @@
 #include <fstream>
 #include <Camera.h>
 #include <Image.h>
+#include <ControlInstance.h>
 
 pthread_t tid_client_handler;
 pthread_t tid_ucontroller;
 pthread_t tid_camera;
 
-ClientHandler* client_handler;
-Control*       control;
-GamePad*       game_pad;
-Atmega*        atmega;
-Camera*        camera;
+ClientHandler*   client_handler;
+Control*         control;
+GamePad*         game_pad;
+Atmega*          atmega;
+Camera*          camera;
+ControlInstance* control_instance;
 
 void signalHandler(int signal_num);
 
@@ -37,11 +39,13 @@ int main(int argc, char* argv[])
   const char* port_no = SERVER_PORT;
 
   debug(MAIN, "main: Initialize the instances\n");
-  game_pad       = GamePadInstance::instance()->getGamePad();
-  atmega         = new Atmega();
-  control        = new Control(atmega);
-  camera         = new Camera();
-  client_handler = new ClientHandler(atoi(port_no), ip_addr);
+  game_pad         = GamePadInstance::instance()->getGamePad();
+  atmega           = new Atmega();
+  control          = new Control();
+  control_instance = ControlInstance::instance();
+  control_instance->setController(atmega);
+  camera           = new Camera();
+  client_handler   = new ClientHandler(atoi(port_no), ip_addr);
 
   debug(MAIN, "main: Catch the sigint signal\n");
   signal(SIGINT, signalHandler);  

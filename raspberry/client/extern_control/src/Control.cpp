@@ -4,14 +4,22 @@
 #include <Control.h>
 #include <GamePad.h>
 #include <unistd.h>
+#include <ControlInstance.h>
 
 const char Control::I2C[]  = "i2c";
 const char Control::GPIO[] = "gpio";
 
 //--------------------------------------------------------------------
-Control::Control(UController* u_controller) :
+// Control::Control(UController* u_controller) :
+//   WorkingThread("Control"),
+//   control_handler_(u_controller),
+//   tids_(),
+//   lock_("Control::lock_")
+// {
+//   debug(CONTROL, "ctor\n");
+// }
+Control::Control() :
   WorkingThread("Control"),
-  control_handler_(u_controller),
   tids_(),
   lock_("Control::lock_")
 {
@@ -28,27 +36,27 @@ Control::~Control()
 void Control::init()
 {
   debug(CONTROL, "init\n");
-  control_handler_.gpioInit();
-  control_handler_.i2cInit();
+  ControlInstance::instance()->gpioInit();
+  ControlInstance::instance()->i2cInit();
 }
 
 //--------------------------------------------------------------------
 void Control::deinit()
 {
   debug(CONTROL, "deinit\n");
-  control_handler_.gpioDeInit();
+  ControlInstance::instance()->gpioDeInit();
 }
 
 //--------------------------------------------------------------------
 void* Control::wrapperStart(void* args)
 {
-  const char*     primary_key     = ((struct start_arg*)args)->primary_key_;
-  Control*        control         = ((struct start_arg*)args)->control_;
-  ControlHandler* control_handler = &control->control_handler_;
+  const char*      primary_key      = ((struct start_arg*)args)->primary_key_;
+  Control*         control          = ((struct start_arg*)args)->control_;
+  ControlInstance* control_instance = ControlInstance::instance();
 
   debug(CONTROL, "wrapperStart: Primary key is %s\n", primary_key);
   debug(CONTROL, "wrapperStart: Go to f_ptr\n");
-  void* ret = ((struct start_arg*)args)->f_ptr_(control_handler);
+  void* ret = ((struct start_arg*)args)->f_ptr_(control_instance);
 
   control->lock();
   control->removeTid(primary_key);
@@ -96,8 +104,8 @@ void Control::run()
   pthread_t tid_i2c;
   pthread_t tid_gpio;
 
-  struct start_arg args_i2c  = {this, I2C, 0, &ControlHandler::i2cFunction};
-  struct start_arg args_gpio = {this, GPIO, 0,  &ControlHandler::gpioFunction};
+  struct start_arg args_i2c  = {this, I2C, 0, &ControlInstance::i2cFunction};
+  struct start_arg args_gpio = {this, GPIO, 0,  &ControlInstance::gpioFunction};
 
   init();
 

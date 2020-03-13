@@ -2,17 +2,15 @@
 #define CONTROL_H
 
 #include <map>
-#include <ControlHandler.h>
 #include <Lock.h>
 #include <WorkingThread.h>
 
 class GamePad;
-class UController;
 
 class Control : public WorkingThread
 {
   public:
-    Control(UController* u_controller);
+    Control();
     ~Control();
 
     inline static void* runWrapper(void* arg)
@@ -38,7 +36,6 @@ class Control : public WorkingThread
     bool findTid(const char* primary_key);
 
   private:
-    Control();
     Control(const Control&);
 
     struct start_arg
@@ -53,7 +50,6 @@ class Control : public WorkingThread
 
     void printTidEntries();
 
-    ControlHandler control_handler_;
     std::map<const char*, int> tids_;
     Lock lock_;
 
