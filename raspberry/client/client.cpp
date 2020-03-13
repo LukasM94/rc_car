@@ -8,7 +8,7 @@
 #include <sys/types.h>
 #include <csignal>
 #include <config.h>
-#include <GamePadClient.h>
+#include <ClientHandler.h>
 #include <GamePadInstance.h>
 #include <pthread.h>
 #include <fstream>
@@ -19,7 +19,7 @@ pthread_t tid_gp_client;
 pthread_t tid_ucontroller;
 pthread_t tid_camera;
 
-GamePadClient* gp_client;
+ClientHandler* client_handler;
 Control*       control;
 GamePad*       game_pad;
 Atmega*        atmega;
@@ -37,17 +37,17 @@ int main(int argc, char* argv[])
   const char* port_no = SERVER_PORT;
 
   debug(MAIN, "main: Initialize the instances\n");
-  game_pad  = GamePadInstance::instance()->getGamePad();
-  atmega    = new Atmega();
-  gp_client = new GamePadClient(atoi(port_no), ip_addr);
-  control   = new Control(atmega);
-  camera    = new Camera();
+  game_pad       = GamePadInstance::instance()->getGamePad();
+  atmega         = new Atmega();
+  client_handler = new ClientHandler(atoi(port_no), ip_addr);
+  control        = new Control(atmega);
+  camera         = new Camera();
 
   debug(MAIN, "main: Catch the sigint signal\n");
   signal(SIGINT, signalHandler);  
 
   debug(MAIN, "main: Create threads\n");
-  pthread_create(&tid_gp_client, 0, GamePadClient::runWrapper, gp_client);
+  pthread_create(&tid_gp_client, 0, ClientHandler::runWrapper, client_handler);
   pthread_create(&tid_ucontroller, 0, Control::runWrapper, control);
   pthread_create(&tid_camera, 0, Camera::runWrapper, camera);
 

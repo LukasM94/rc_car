@@ -29,6 +29,7 @@ const size_t SERVER      = Ansi_Blue    | OUTPUT_ENABLED;
 const size_t GP_CLIENT   = Ansi_Cyan    | OUTPUT_ENABLED;
 const size_t GP_CLIENT_D = Ansi_Blue;//    | OUTPUT_ENABLED;
 const size_t CLIENT_DATA = Ansi_Yellow;//  | OUTPUT_ENABLED;
+const size_t CLIENT_HAND = Ansi_Blue    | OUTPUT_ENABLED;
 const size_t SERVER_DATA = Ansi_Cyan;//    | OUTPUT_ENABLED;
 const size_t ERROR       = Ansi_Red     | OUTPUT_ENABLED;
 const size_t WARNING     = Ansi_Red     | OUTPUT_ENABLED;

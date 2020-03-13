@@ -1,3 +1,23 @@
+add_library(
+  client_handler
+  SHARED
+  src/ClientHandler.cpp
+)
+add_dependencies(
+  client_handler
+  socket
+  working_thread
+)
+add_library(
+  camera_client
+  SHARED
+  src/CameraClient.cpp
+)
+add_dependencies(
+  camera_client
+  working_thread
+  camera
+)
 add_library( 
   game_pad_client
   SHARED
@@ -5,7 +25,6 @@ add_library(
 )
 add_dependencies(
   game_pad_client
-  socket
   game_pad
 )
 add_library( 
