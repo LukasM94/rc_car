@@ -24,8 +24,6 @@ class GamePadClient : public WorkingThread
     GamePadClient(const GamePadClient&);
 
     ClientHandler* client_handler_;
-
-    static const char HELLO[];
 };
 
 #endif

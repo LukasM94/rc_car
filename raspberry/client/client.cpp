@@ -15,7 +15,7 @@
 #include <Camera.h>
 #include <Image.h>
 
-pthread_t tid_gp_client;
+pthread_t tid_client_handler;
 pthread_t tid_ucontroller;
 pthread_t tid_camera;
 
@@ -47,12 +47,12 @@ int main(int argc, char* argv[])
   signal(SIGINT, signalHandler);  
 
   debug(MAIN, "main: Create threads\n");
-  pthread_create(&tid_gp_client, 0, ClientHandler::runWrapper, client_handler);
+  pthread_create(&tid_client_handler, 0, ClientHandler::runWrapper, client_handler);
   pthread_create(&tid_ucontroller, 0, Control::runWrapper, control);
   pthread_create(&tid_camera, 0, Camera::runWrapper, camera);
 
   debug(MAIN, "main: Goes to sleep\n");
-  pthread_join(tid_gp_client, 0);
+  pthread_join(tid_client_handler, 0);
   pthread_join(tid_ucontroller, 0);
   pthread_join(tid_camera, 0);
 

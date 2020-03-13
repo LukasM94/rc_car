@@ -9,6 +9,7 @@
 #include <config.h>
 #include <debug.h>
 #include <GamePadClient.h>
+#include <CameraClient.h>
   
 const char ClientHandler::HELLO[] = "Hello from client";
 
@@ -56,19 +57,19 @@ int ClientHandler::receive()
 	ret = read(server_socket_ , buffer_, BUFFER_SIZE); 
 	if (ret <= 0)
 	{
-		debug(CLIENT_HAND, "receive: Quit connection with ret %d\n", ret);
+		debug(WARNING, "ClientHandler::receive: Quit connection with ret %d\n", ret);
 		connected_ = 0;
 	}
 	else
 	{
 		debug(CLIENT_DATA, "receive: Got message with length %d\n", ret);
-    std::string str(buffer_, BUFFER_SIZE);
-    str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
-    str.erase(std::remove(str.begin(), str.end(), '\t'), str.end());
-    str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
-    str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
-    str.erase(std::remove(str.begin(), str.end(), 0), str.end());
-		debug(CLIENT_DATA, "receive: msg %s\n", str.c_str()); 
+    // std::string str(buffer_, BUFFER_SIZE);
+    // str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
+    // str.erase(std::remove(str.begin(), str.end(), '\t'), str.end());
+    // str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
+    // str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
+    // str.erase(std::remove(str.begin(), str.end(), 0), str.end());
+		// debug(CLIENT_DATA, "receive: msg %s\n", str.c_str()); 
 	}
 	return ret;
 }
@@ -82,12 +83,12 @@ int ClientHandler::transmit()
 	ret = send(server_socket_, buffer_, sizeof(buffer_), MSG_NOSIGNAL); 
 	if (ret < 0)
 	{
-		debug(CLIENT_HAND, "transmit: Quit connection with ret %d\n", ret); 
+		debug(WARNING, "ClientHandler::transmit: Quit connection with ret %d\n", ret); 
 		connected_ = 0;
 	}
 	else
 	{
-		debug(CLIENT_HAND, "transmit: Successfully sent data to client\n"); 
+		debug(CLIENT_DATA, "transmit: Successfully sent data to client\n"); 
 	}
 	return ret;
 }
@@ -132,10 +133,13 @@ void ClientHandler::run()
 
     connected_ = 1;
     pthread_t tid_gp_client;
+    pthread_t tid_cam_client;
 
     GamePadClient* gp_client  = new GamePadClient(this);
+    CameraClient*  cam_client = new CameraClient(this);
 
     pthread_create(&tid_gp_client, 0, GamePadClient::runWrapper, gp_client);
+    pthread_create(&tid_cam_client, 0, CameraClient::runWrapper, cam_client);
 
     while (connected_)
     {
@@ -143,6 +147,8 @@ void ClientHandler::run()
       sleep(5);
     }
 
+    pthread_cancel(tid_cam_client);
+    pthread_join(tid_cam_client, 0);
     pthread_cancel(tid_gp_client);
     pthread_join(tid_gp_client, 0);
   }

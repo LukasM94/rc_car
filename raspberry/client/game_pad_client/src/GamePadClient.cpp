@@ -1,18 +1,12 @@
 
-#include <sys/socket.h> 
-#include <arpa/inet.h> 
-#include <unistd.h> 
 #include <string.h> 
 #include <string> 
 #include <algorithm> 
 #include <GamePadClient.h>
-#include <config.h>
 #include <debug.h>
 #include <GamePadInstance.h>
 #include <ClientHandler.h>
   
-const char GamePadClient::HELLO[] = "Hello from client";
-
 //-------------------------------------------------
 GamePadClient::GamePadClient(ClientHandler* client_handler) :
   WorkingThread("GamePadClient"),
@@ -31,14 +25,11 @@ GamePadClient::~GamePadClient()
 void GamePadClient::run()
 {
   int ret = 0;
+  unsigned int not_successful = 0;
 
   debug(GP_CLIENT, "run: Start\n");
 
   GamePadInstance::instance()->startGamePadClient();
-  // memset(buffer_, 0, BUFFER_SIZE);
-  // strncpy(buffer_, HELLO, BUFFER_SIZE - 1);
-  // buffer_[BUFFER_SIZE - 1] = 0;
-  // transmit();
   while (client_handler_->connected_)
   {
     ret = client_handler_->receive();
@@ -51,7 +42,16 @@ void GamePadClient::run()
 
     if (GamePad::getFromString(GamePadInstance::instance()->getGamePad(), str.c_str()) != 0)
     {
-      // not successful
+      not_successful++;
+      if (not_successful == 10)
+      {
+        debug(WARNING, "GamePadClient::run: 10 times in a row not successful\n");
+        client_handler_->connected_ = 0;
+      }
+    }
+    else
+    {
+      not_successful = 0;
     }
   }
   GamePadInstance::instance()->exitGamePadClient();
