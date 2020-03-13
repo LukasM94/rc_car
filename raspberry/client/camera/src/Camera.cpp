@@ -36,17 +36,32 @@ void Camera::run()
   debug(CAMERA, "run: Start\n");
   while (running_)
   {
+    debug(CAMERA, "run: Sleep 1 second\n");
+    sleep(1);
+
+    int ret;
     lock();
-    grab();
+    if ((ret = grab()) != 0)
+    {
+      debug(WARNING, "camera::run: grab returned %d\n", ret);
+    }
     debug(CAMERA, "run: Took picture\n");
+#if defined(__print_image)
     image_->lock();
+#endif
     unlock();
+#if defined(__print_image)
+    ImageJPEG* jpeg = (ImageJPEG*)image_;
+    image_          = new ImageRGB(image_);
+    debug(CAMERA, "grab: Got the rgb back %d to %d\n", jpeg->getSize(), image_->getSize());
+    delete jpeg;
     std::ofstream outFile ("raspicam_image.ppm",std::ios::binary);
 	  outFile << "P6\n" << image_->getWidth() <<" "<< image_->getHeight() << " 255\n";
     outFile.write((char*)image_->getData(), image_->getSize());
     image_->unlock();
     debug(CAMERA, "run: Wrote picture to file\n");
-    deleteImage();
+    image_->unlock();
+#endif
   }
   debug(CAMERA, "run: Exit\n");
 }
@@ -74,11 +89,13 @@ int Camera::grab()
   int ret = (raspi_cam_ != 0 &&
              raspi_cam_->isOpened() &&
              !raspi_cam_->grab());
-  debug(CAMERA, "grab: Sleep for 1 second\n");
-  sleep(1);
   if (ret != 0)
   {
-    return -1;
+    return ret;
+  }
+  if (image_ != 0)
+  {
+    deleteImage();
   }
   image_ = new ImageRGB();
   image_->set(raspi_cam_->getImageTypeSize(raspicam::RASPICAM_FORMAT_RGB),
@@ -87,15 +104,11 @@ int Camera::grab()
   raspi_cam_->retrieve(image_->getData());
 
   debug(CAMERA, "grab: Create now a jpeg\n");
-  ImageRGB* temp1 = (ImageRGB*)image_;
-  image_          = new ImageJPEG(image_);
-  debug(CAMERA, "grab: Reduced size from %d to %d\n", temp1->getSize(), image_->getSize());
-  delete temp1;
-  ImageJPEG* temp2 = (ImageJPEG*)image_;
-  image_           = new ImageRGB(image_);
-  debug(CAMERA, "grab: Got the rgb back %d to %d\n", temp2->getSize(), image_->getSize());
-  delete temp2;
-  
+  ImageRGB* rgb = (ImageRGB*)image_;
+  image_        = new ImageJPEG(image_);
+  debug(CAMERA, "grab: Reduced size from %d to %d\n", rgb->getSize(), image_->getSize());
+  delete rgb;
+  return 0;
 #endif
   return -1;
 }
