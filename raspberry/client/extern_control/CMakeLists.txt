@@ -6,7 +6,7 @@ add_library(
 add_library( 
   extern_control
   SHARED
-  src/Control.cpp
+  src/ControlHandler.cpp
 )
 add_dependencies(
   extern_control

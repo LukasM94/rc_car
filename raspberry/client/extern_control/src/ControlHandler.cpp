@@ -1,39 +1,39 @@
 #include <pthread.h>
 #include <sched.h>
 #include <debug.h>
-#include <Control.h>
+#include <ControlHandler.h>
 #include <GamePad.h>
 #include <unistd.h>
 #include <ControlInstance.h>
 
-const char Control::I2C[]  = "i2c";
-const char Control::GPIO[] = "gpio";
+const char ControlHandler::I2C[]  = "i2c";
+const char ControlHandler::GPIO[] = "gpio";
 
 //--------------------------------------------------------------------
-// Control::Control(UController* u_controller) :
-//   WorkingThread("Control"),
+// ControlHandler::ControlHandler(UController* u_controller) :
+//   WorkingThread("ControlHandler"),
 //   control_handler_(u_controller),
 //   tids_(),
-//   lock_("Control::lock_")
+//   lock_("ControlHandler::lock_")
 // {
 //   debug(CONTROL, "ctor\n");
 // }
-Control::Control() :
-  WorkingThread("Control"),
+ControlHandler::ControlHandler() :
+  WorkingThread("ControlHandler"),
   tids_(),
-  lock_("Control::lock_")
+  lock_("ControlHandler::lock_")
 {
   debug(CONTROL, "ctor\n");
 }
 
 //--------------------------------------------------------------------
-Control::~Control()
+ControlHandler::~ControlHandler()
 {
   debug(CONTROL, "dtor\n");
 }
 
 //--------------------------------------------------------------------
-void Control::init()
+void ControlHandler::init()
 {
   debug(CONTROL, "init\n");
   ControlInstance::instance()->gpioInit();
@@ -41,37 +41,37 @@ void Control::init()
 }
 
 //--------------------------------------------------------------------
-void Control::deinit()
+void ControlHandler::deinit()
 {
   debug(CONTROL, "deinit\n");
   ControlInstance::instance()->gpioDeInit();
 }
 
 //--------------------------------------------------------------------
-void* Control::wrapperStart(void* args)
+void* ControlHandler::wrapperStart(void* args)
 {
   const char*      primary_key      = ((struct start_arg*)args)->primary_key_;
-  Control*         control          = ((struct start_arg*)args)->control_;
+  ControlHandler*         control_handler          = ((struct start_arg*)args)->control_handler_;
   ControlInstance* control_instance = ControlInstance::instance();
 
   debug(CONTROL, "wrapperStart: Primary key is %s\n", primary_key);
   debug(CONTROL, "wrapperStart: Go to f_ptr\n");
   void* ret = ((struct start_arg*)args)->f_ptr_(control_instance);
 
-  control->lock();
-  control->removeTid(primary_key);
-  control->unlock();
+  control_handler->lock();
+  control_handler->removeTid(primary_key);
+  control_handler->unlock();
 
   return 0;
 }
 
 //--------------------------------------------------------------------
-int Control::setTid(const char* primary_key, int tid)
+int ControlHandler::setTid(const char* primary_key, int tid)
 {
   auto it = tids_.find(primary_key);
   if (it != tids_.end())
   {
-    debug(WARNING, "Control::setTid: %s is already in map\n", primary_key);
+    debug(WARNING, "ControlHandler::setTid: %s is already in map\n", primary_key);
     return -1;
   }
   tids_[primary_key] = tid;
@@ -79,12 +79,12 @@ int Control::setTid(const char* primary_key, int tid)
 }
 
 //--------------------------------------------------------------------
-int Control::removeTid(const char* primary_key)
+int ControlHandler::removeTid(const char* primary_key)
 {
   auto it = tids_.find(primary_key);
   if (it == tids_.end())
   {
-    debug(WARNING, "Control::removeTid: %s not found\n", primary_key);
+    debug(WARNING, "ControlHandler::removeTid: %s not found\n", primary_key);
     return -1;
   }
   tids_.erase(it);
@@ -92,14 +92,14 @@ int Control::removeTid(const char* primary_key)
 }
 
 //--------------------------------------------------------------------
-bool Control::findTid(const char* primary_key)
+bool ControlHandler::findTid(const char* primary_key)
 {
   auto it = tids_.find(primary_key);
   return (it != tids_.end());
 }
 
 //--------------------------------------------------------------------
-void Control::run()
+void ControlHandler::run()
 {
   pthread_t tid_i2c;
   pthread_t tid_gpio;
@@ -111,8 +111,8 @@ void Control::run()
 
   lock();
   debug(CONTROL, "run: Create threads\n");
-  pthread_create(&tid_gpio, 0, Control::wrapperStart, &args_gpio);
-  pthread_create(&tid_i2c, 0, Control::wrapperStart, &args_i2c);
+  pthread_create(&tid_gpio, 0, ControlHandler::wrapperStart, &args_gpio);
+  pthread_create(&tid_i2c, 0, ControlHandler::wrapperStart, &args_i2c);
   
   debug(CONTROL, "run: Set the tids\n");
   setTid(args_gpio.primary_key_, tid_gpio);
@@ -126,13 +126,13 @@ void Control::run()
     {
       if (findTid(args_gpio.primary_key_) == false)
       {
-        pthread_create(&tid_gpio, 0, Control::wrapperStart, &args_gpio);
+        pthread_create(&tid_gpio, 0, ControlHandler::wrapperStart, &args_gpio);
         setTid(args_gpio.primary_key_, tid_gpio);
         debug(CONTROL, "run: Restart gpio\n");
       }
       if (findTid(args_i2c.primary_key_) == false)
       {
-        pthread_create(&tid_i2c, 0, Control::wrapperStart, &args_i2c);
+        pthread_create(&tid_i2c, 0, ControlHandler::wrapperStart, &args_i2c);
         setTid(args_i2c.primary_key_, tid_i2c);
         debug(CONTROL, "run: Restart i2c\n");
       }
@@ -151,7 +151,7 @@ void Control::run()
 }
 
 //--------------------------------------------------------------------
-void Control::printTidEntries()
+void ControlHandler::printTidEntries()
 {
   std::string str;
   for (auto it = tids_.begin(); it != tids_.end(); ++it)

@@ -1,5 +1,5 @@
-#ifndef CONTROL_H
-#define CONTROL_H
+#ifndef CONTROL_HANDLER_H
+#define CONTROL_HANDLER_H
 
 #include <map>
 #include <Lock.h>
@@ -7,15 +7,15 @@
 
 class GamePad;
 
-class Control : public WorkingThread
+class ControlHandler : public WorkingThread
 {
   public:
-    Control();
-    ~Control();
+    ControlHandler();
+    ~ControlHandler();
 
     inline static void* runWrapper(void* arg)
     {
-      reinterpret_cast<Control*>(arg)->run();
+      reinterpret_cast<ControlHandler*>(arg)->run();
       return 0;
     }
     virtual void run();
@@ -36,14 +36,14 @@ class Control : public WorkingThread
     bool findTid(const char* primary_key);
 
   private:
-    Control(const Control&);
+    ControlHandler(const ControlHandler&);
 
     struct start_arg
     { 
-      Control*    control_;
-      const char* primary_key_;
-      void*       args_;
-      void*       (*f_ptr_)(void*);
+      ControlHandler* control_handler_;
+      const char*     primary_key_;
+      void*           args_;
+      void*           (*f_ptr_)(void*);
     };
 
     static void* wrapperStart(void* arg);
