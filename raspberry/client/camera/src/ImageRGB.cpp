@@ -60,5 +60,6 @@ ImageRGB::ImageRGB(const Image* image) :
   }
   jpeg_finish_decompress(&cinfo);
   jpeg_destroy_decompress(&cinfo);
+  
   debug(IMAGE_RGB, "ImageRGB(const Image* image): Finished decompressing\n");
 }

@@ -24,25 +24,22 @@ ImageJPEG::ImageJPEG(const Image* image) :
   struct jpeg_compress_struct cinfo;
   struct jpeg_error_mgr jerr;
 
-  JSAMPROW row_pointer[1];
-
   cinfo.err = jpeg_std_error(&jerr);
   jpeg_create_compress(&cinfo);
-
-  width_ = image->getWidth();
-  height_ = image->getHeight();
   jpeg_mem_dest(&cinfo, &data_, &size_);
 
   cinfo.image_width = image->getWidth();  
   cinfo.image_height = image->getHeight();
   cinfo.input_components = image->getSize() / (image->getWidth() * image->getHeight());
-
+  cinfo.in_color_space   = JCS_RGB;
   jpeg_set_defaults(&cinfo);
 
   debug(IMAGE_JPEG, "ImageJPEG(const Image* image): Start compression\n");
+  jpeg_set_quality (&cinfo, 75, true);
   jpeg_start_compress(&cinfo, TRUE);
   while (cinfo.next_scanline < cinfo.image_height)
   {
+    JSAMPROW row_pointer[1];
     row_pointer[0] = &data[cinfo.next_scanline * cinfo.image_width * cinfo.input_components];
     jpeg_write_scanlines(&cinfo, row_pointer, 1);
   }
