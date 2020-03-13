@@ -1,9 +1,9 @@
 #ifndef GAME_PAD_H
 #define GAME_PAD_H
 
-#include <pthread.h>
 #include <stdint.h>
 #include <string>
+#include <Lock.h>
 #include <atomic>
 #include <debug.h>
 
@@ -96,19 +96,14 @@ class GamePad
       return buttons_count_;
     }
 
-    inline void initLock()
-    {
-      pthread_mutex_init(&lock_, 0);
-    }
     inline void lock()
     {
-      pthread_mutex_lock(&lock_);
+      lock_.lock();
     }
     inline void unlock()
     {
-      pthread_mutex_unlock(&lock_);
+      lock_.unlock();
     }
-
     void reset();
 
     static const unsigned int BUTTON_A      = 0;
@@ -134,7 +129,7 @@ class GamePad
     std::atomic_uint8_t buttons_count_;
     std::atomic_bool*   buttons_;
 
-    pthread_mutex_t lock_;
+    Lock lock_;
 
     static const char STRING_LEFT[];
     static const char STRING_RIGHT[];

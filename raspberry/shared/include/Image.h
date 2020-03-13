@@ -14,6 +14,11 @@ class Image
   public:
     Image(enum ImageType);
     ~Image();
+
+    static int getFromString(Image* image, const char* str);
+    int getMsg(const char** msg, unsigned long* size);
+    int freeSpace();
+
     int set(unsigned int size,
             unsigned int width,
             unsigned int height);
@@ -55,6 +60,8 @@ class Image
     unsigned long  size_;
     unsigned int   width_;
     unsigned int   height_;
+
+    char* msg_;
 };
 
 #endif

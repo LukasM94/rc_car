@@ -61,6 +61,11 @@ add_library(
   SHARED
   ../shared/src/ImageJPEG.cpp
 )
+add_library(
+  lock
+  SHARED
+  ../shared/src/Lock.cpp
+)
 
 add_subdirectory(extern) 
 add_subdirectory(shared) 

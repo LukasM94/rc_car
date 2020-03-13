@@ -22,9 +22,9 @@ GamePad::GamePad() :
   lt_(0),
   rt_(0),
   buttons_count_(0),
-  buttons_(0)
+  buttons_(0),
+  lock_("GamePad::lock")
 {
-  initLock();
   debug(GAME_PAD, "ctor\n");
 }
 
@@ -33,9 +33,9 @@ GamePad::GamePad(uint8_t button_count) :
   lt_(0),
   rt_(0),
   buttons_count_(button_count),
-  buttons_(new std::atomic_bool[buttons_count_])
+  buttons_(new std::atomic_bool[buttons_count_]),
+  lock_("GamePad::lock")
 {
-  initLock();
   debug(GAME_PAD, "ctor: button_count <%d>\n", button_count);
 }
 

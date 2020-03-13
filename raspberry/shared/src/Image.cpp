@@ -4,6 +4,17 @@
 #include <debug.h>
 #include <ImageJPEG.h>
 #include <ImageRGB.h>
+#if defined(__x86_64)
+#include <json/json.h>
+#include <json/reader.h>
+#include <json/writer.h>
+#include <json/value.h>
+#else // if defined(__arm__)
+#include <jsoncpp/json/json.h>
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
+#include <jsoncpp/json/value.h>
+#endif
 
 Image::Image(enum ImageType type) :
   lock_("Image::lock"),
