@@ -54,6 +54,8 @@ class Camera : public WorkingThread
 
     static int initCamera(raspicam::RaspiCam* camera, struct CameraInfo& info);
 
+    void deleteImage();
+
     raspicam::RaspiCam* raspi_cam_;
 
     Image* image_;

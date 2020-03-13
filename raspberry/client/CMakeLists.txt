@@ -109,5 +109,6 @@ target_link_libraries(
   -lrt
   -ljsoncpp
   -lraspicam 
+  -ljpeg
 )
 endif()

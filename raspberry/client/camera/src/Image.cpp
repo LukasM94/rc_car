@@ -2,7 +2,8 @@
 #include <Image.h>
 #include <string.h>
 #include <debug.h>
-
+#include <ImageJPEG.h>
+#include <ImageRGB.h>
 
 Image::Image(enum ImageType type) :
   lock_("Image::lock"),
@@ -13,6 +14,12 @@ Image::Image(enum ImageType type) :
   type_(type)
 {
   debug(IMAGE, "ctor: with type %d\n", type);
+}
+
+Image::~Image()
+{
+  debug(IMAGE, "dtor\n");
+  delete data_;
 }
 
 int Image::set(unsigned int size, unsigned int width, unsigned int height)
@@ -27,10 +34,4 @@ int Image::set(unsigned int size, unsigned int width, unsigned int height)
   width_ = width;
   height_ = height;
   return 0;
-}
-
-Image::~Image()
-{
-  debug(IMAGE, "dtor\n");
-  delete data_;
 }

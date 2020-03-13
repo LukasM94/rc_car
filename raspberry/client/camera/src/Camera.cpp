@@ -5,6 +5,7 @@
 #include <ImageJPEG.h>
 #include <ImageRGB.h>
 #include <fstream>
+#include <unistd.h>
 #if defined(__arm__)
 #include <raspicam/raspicam.h>
 #endif
@@ -37,18 +38,32 @@ void Camera::run()
   {
     lock();
     grab();
-    Image* image = getImage();
     debug(CAMERA, "run: Took picture\n");
-    image->lock();
+    image_->lock();
     unlock();
     std::ofstream outFile ("raspicam_image.ppm",std::ios::binary);
-	  outFile << "P6\n" << image->getWidth() <<" "<< image->getHeight() << " 255\n";
-    outFile.write((char*)image->getData(), image->getSize());
-    image->unlock();
+	  outFile << "P6\n" << image_->getWidth() <<" "<< image_->getHeight() << " 255\n";
+    outFile.write((char*)image_->getData(), image_->getSize());
+    image_->unlock();
     debug(CAMERA, "run: Wrote picture to file\n");
-    delete image;
+    deleteImage();
   }
   debug(CAMERA, "run: Exit\n");
+}
+
+void Camera::deleteImage()
+{
+#if defined(__arm__)
+  switch (image_->getType())
+  {
+    case JPEG:
+      delete (ImageJPEG*)image_;
+      break;
+    case RGB:
+      delete (ImageRGB*)image_;
+      break;
+  }
+#endif
 }
 
 int Camera::grab()
@@ -59,6 +74,8 @@ int Camera::grab()
   int ret = (raspi_cam_ != 0 &&
              raspi_cam_->isOpened() &&
              !raspi_cam_->grab());
+  debug(CAMERA, "grab: Sleep for 1 second\n");
+  sleep(1);
   if (ret != 0)
   {
     return -1;
@@ -68,6 +85,17 @@ int Camera::grab()
               raspi_cam_->getWidth(),
               raspi_cam_->getHeight());
   raspi_cam_->retrieve(image_->getData());
+
+  debug(CAMERA, "grab: Create now a jpeg\n");
+  ImageRGB* temp1 = (ImageRGB*)image_;
+  image_          = new ImageJPEG(image_);
+  debug(CAMERA, "grab: Reduced size from %d to %d\n", temp1->getSize(), image_->getSize());
+  delete temp1;
+  ImageJPEG* temp2 = (ImageJPEG*)image_;
+  image_           = new ImageRGB(image_);
+  debug(CAMERA, "grab: Got the rgb back %d to %d\n", temp2->getSize(), image_->getSize());
+  delete temp2;
+  
 #endif
   return -1;
 }

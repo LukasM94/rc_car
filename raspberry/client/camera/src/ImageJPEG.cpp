@@ -1,6 +1,8 @@
 
-#include <ImageJPEG.h>
 #include <debug.h>
+#include <ImageJPEG.h>
+#include <jpeglib.h>
+#include <string.h>
 
 ImageJPEG::ImageJPEG() :
   Image(JPEG)
@@ -13,8 +15,41 @@ ImageJPEG::~ImageJPEG()
   debug(IMAGE_JPEG, "dtor\n");
 }
 
-int ImageJPEG::convertTo()
+ImageJPEG::ImageJPEG(const Image* image) :
+  Image(JPEG)
 {
-  debug(IMAGE_JPEG, "convertTo\n");
-  return -1;
+  debug(IMAGE_JPEG, "ImageJPEG(const Image* image)\n");
+  unsigned char* data = image->getData();
+
+  struct jpeg_compress_struct cinfo;
+  struct jpeg_error_mgr jerr;
+
+  JSAMPROW row_pointer[1];
+
+  cinfo.err = jpeg_std_error(&jerr);
+  jpeg_create_compress(&cinfo);
+
+  width_ = image->getWidth();
+  height_ = image->getHeight();
+  jpeg_mem_dest(&cinfo, &data_, &size_);
+
+  cinfo.image_width = image->getWidth();  
+  cinfo.image_height = image->getHeight();
+  cinfo.input_components = image->getSize() / (image->getWidth() * image->getHeight());
+
+  jpeg_set_defaults(&cinfo);
+
+  debug(IMAGE_JPEG, "ImageJPEG(const Image* image): Start compression\n");
+  jpeg_start_compress(&cinfo, TRUE);
+  while (cinfo.next_scanline < cinfo.image_height)
+  {
+    row_pointer[0] = &data[cinfo.next_scanline * cinfo.image_width * cinfo.input_components];
+    jpeg_write_scanlines(&cinfo, row_pointer, 1);
+  }
+
+  debug(IMAGE_JPEG, "ImageJPEG(const Image* image): Finish compression\n");
+  jpeg_finish_compress(&cinfo);
+  jpeg_destroy_compress(&cinfo);
+
+  debug(IMAGE_JPEG, "ImageJPEG(const Image* image): Finished\n");
 }

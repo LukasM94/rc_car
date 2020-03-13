@@ -8,7 +8,7 @@ class ImageJPEG : public Image
   public:
     ImageJPEG();
     ~ImageJPEG();
-    virtual int convertTo();
+    ImageJPEG(const Image* image);
 };
 
 #endif

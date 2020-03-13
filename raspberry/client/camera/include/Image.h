@@ -17,22 +17,25 @@ class Image
     int set(unsigned int size,
             unsigned int width,
             unsigned int height);
-    virtual int convertTo() = 0;
-    inline unsigned char* getData()
+    inline unsigned char* getData() const
     {
       return data_;
     }
-    inline unsigned int getSize()
+    inline unsigned long getSize() const
     {
       return size_;
     }
-    inline unsigned int getWidth()
+    inline unsigned int getWidth() const  
     {
       return width_;
     }
-    inline unsigned int getHeight()
+    inline unsigned int getHeight() const
     {
       return height_;
+    }
+    inline enum ImageType getType() const
+    {
+      return type_;
     }
     inline void lock()
     {
@@ -49,9 +52,9 @@ class Image
     
     Lock lock_;
     unsigned char* data_;
-    unsigned int size_;
-    unsigned int width_;
-    unsigned int height_;
+    unsigned long  size_;
+    unsigned int   width_;
+    unsigned int   height_;
 };
 
 #endif
