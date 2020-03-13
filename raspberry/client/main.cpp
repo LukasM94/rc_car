@@ -39,9 +39,9 @@ int main(int argc, char* argv[])
   debug(MAIN, "main: Initialize the instances\n");
   game_pad       = GamePadInstance::instance()->getGamePad();
   atmega         = new Atmega();
-  client_handler = new ClientHandler(atoi(port_no), ip_addr);
   control        = new Control(atmega);
   camera         = new Camera();
+  client_handler = new ClientHandler(atoi(port_no), ip_addr);
 
   debug(MAIN, "main: Catch the sigint signal\n");
   signal(SIGINT, signalHandler);  

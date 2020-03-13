@@ -26,7 +26,9 @@ ImageJPEG::ImageJPEG(const Image* image) :
 
   cinfo.err = jpeg_std_error(&jerr);
   jpeg_create_compress(&cinfo);
-  jpeg_mem_dest(&cinfo, &data_, &size_);
+  unsigned long size;
+  jpeg_mem_dest(&cinfo, &data_, &size);
+  size_ = (unsigned int)size;
 
   cinfo.image_width = image->getWidth();  
   cinfo.image_height = image->getHeight();

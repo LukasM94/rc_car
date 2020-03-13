@@ -9,15 +9,29 @@ enum ImageType
   JPEG,
 };
 
+namespace Json
+{
+  class Value;
+}
+
 class Image
 {
   public:
     Image(enum ImageType);
     ~Image();
 
-    static int getFromString(Image* image, const char* str);
-    int getMsg(const char** msg, unsigned long* size);
-    int freeSpace();
+    struct JsonData
+    {
+      char*        header_;
+      unsigned int header_length_;
+      char*        body_;
+      unsigned int body_lenght_;
+    };
+
+    static int getFromString(Image* image, const char* body);
+    static int getSizeOfBody(const char* header, unsigned int* size);
+    int getMsg(struct JsonData* data);
+    int freeSpace(struct JsonData* data);
 
     int set(unsigned int size,
             unsigned int width,
@@ -51,17 +65,30 @@ class Image
       lock_.unlock();
     }
 
+    static const unsigned int PACKAGE_LENGTH = 256;
+
   protected:
     Image();
+    
+    int getHeader(char** header, unsigned int size);
+    int getBody(char** body, unsigned int* size);
+
     enum ImageType type_;
     
     Lock lock_;
     unsigned char* data_;
-    unsigned long  size_;
+    unsigned int   size_;
     unsigned int   width_;
     unsigned int   height_;
 
     char* msg_;
+
+    static const char STRING_HEADER[];
+    static const char STRING_BODY[];
+    static const char STRING_DATA[];
+    static const char STRING_SIZE[];
+    static const char STRING_WIDTH[];
+    static const char STRING_HEIGHT[];
 };
 
 #endif

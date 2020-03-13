@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(client)
+project(main)
 
 if (NOT CONFIGURED_ONCE)
     set(CMAKE_CXX_FLAGS "${warnings}"
@@ -24,7 +24,7 @@ include_directories(
   raspberry/include
   extern_control/include
   camera/include
-  game_pad_client/include
+  client/include
 )
 
 add_library( 
@@ -71,13 +71,13 @@ add_subdirectory(extern)
 add_subdirectory(shared) 
 add_subdirectory(extern_control) 
 add_subdirectory(camera)
-add_subdirectory(game_pad_client) 
+add_subdirectory(client) 
 add_subdirectory(raspberry) 
 
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(${PROJECT_NAME} client.cpp)
+add_executable(${PROJECT_NAME} main.cpp)
 
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "amd64.*|x86_64.*|AMD64.*")
 target_link_libraries(

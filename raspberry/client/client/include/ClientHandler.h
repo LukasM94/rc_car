@@ -25,7 +25,7 @@ class ClientHandler : public Socket, public WorkingThread
   private:
     friend class GamePadClient;
     friend class CameraClient;
-    
+
     ClientHandler();
     ClientHandler(const ClientHandler&);
 
