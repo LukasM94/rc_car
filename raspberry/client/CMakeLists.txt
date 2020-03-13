@@ -41,6 +41,25 @@ add_library(
   SHARED
   ../shared/src/GamePad.cpp
 )
+add_library(
+  image
+  SHARED
+  ../shared/src/Image.cpp
+)
+add_library(
+  image_rgb
+  SHARED
+  ../shared/src/ImageRGB.cpp
+)
+add_dependencies(
+  image_rgb
+  image
+)
+add_library(
+  image_jpeg
+  SHARED
+  ../shared/src/ImageJPEG.cpp
+)
 
 add_subdirectory(extern) 
 add_subdirectory(shared) 
