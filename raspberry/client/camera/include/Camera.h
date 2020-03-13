@@ -24,6 +24,11 @@ class Camera : public WorkingThread
     Camera();
     ~Camera();
 
+    inline static void* runWrapper(void* arg)
+    {
+      reinterpret_cast<Camera*>(arg)->run();
+      return 0;
+    }
     virtual void run();
     int init();
     int grab();

@@ -17,11 +17,13 @@
 
 pthread_t tid_gp_client;
 pthread_t tid_ucontroller;
+pthread_t tid_camera;
 
 GamePadClient* gp_client;
 Control*       control;
 GamePad*       game_pad;
 Atmega*        atmega;
+Camera*        camera;
 
 void signalHandler(int signal_num);
 
@@ -34,32 +36,12 @@ int main(int argc, char* argv[])
   const char* ip_addr = SERVER_IP;
   const char* port_no = SERVER_PORT;
 
-  Camera c;
-  c.init();
-
-  c.lock();
-	sleep(3);
-  c.grab();
-  Image* i = c.getImage();
-  i->lock();
-  c.unlock();
-  std::ofstream outFile ("raspicam_image.ppm",std::ios::binary);
-	outFile << "P6\n" << i->getWidth() <<" "<< i->getHeight() << " 255\n";
-  outFile.write((char*)i->getData(), i->getSize());
-  i->unlock();
-  delete i;
-  return 0;
-
-
-
-
-
-
   debug(MAIN, "main: Initialize the instances\n");
   game_pad  = GamePadInstance::instance()->getGamePad();
   atmega    = new Atmega();
   gp_client = new GamePadClient(atoi(port_no), ip_addr);
   control   = new Control(atmega);
+  camera    = new Camera();
 
   debug(MAIN, "main: Catch the sigint signal\n");
   signal(SIGINT, signalHandler);  
@@ -67,10 +49,12 @@ int main(int argc, char* argv[])
   debug(MAIN, "main: Create threads\n");
   pthread_create(&tid_gp_client, 0, GamePadClient::runWrapper, gp_client);
   pthread_create(&tid_ucontroller, 0, Control::runWrapper, control);
+  pthread_create(&tid_camera, 0, Camera::runWrapper, camera);
 
   debug(MAIN, "main: Goes to sleep\n");
   pthread_join(tid_gp_client, 0);
   pthread_join(tid_ucontroller, 0);
+  pthread_join(tid_camera, 0);
 
   debug(MAIN, "main: Exits\n");
   return 0;

@@ -48,3 +48,5 @@ const size_t UCONTROLLER = Ansi_Magenta | OUTPUT_ENABLED;
 const size_t GP_INSTANCE = Ansi_Yellow;//  | OUTPUT_ENABLED;
 const size_t WORKING_TH  = Ansi_Magenta | OUTPUT_ENABLED;
 const size_t IMAGE       = Ansi_Green   | OUTPUT_ENABLED;
+const size_t IMAGE_JPEG  = Ansi_Blue    | OUTPUT_ENABLED;
+const size_t IMAGE_RGB   = Ansi_Magenta | OUTPUT_ENABLED;

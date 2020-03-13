@@ -3,17 +3,21 @@
 
 #include <Lock.h>
 
+enum ImageType
+{
+  RGB,
+  JPEG,
+};
+
 class Image
 {
   public:
-    Image(unsigned int size,
-          unsigned int width,
-          unsigned int height);
-    Image(unsigned char* data, 
-          unsigned int size,
-          unsigned int width,
-          unsigned int height);
+    Image(enum ImageType);
     ~Image();
+    int set(unsigned int size,
+            unsigned int width,
+            unsigned int height);
+    virtual int convertTo() = 0;
     inline unsigned char* getData()
     {
       return data_;
@@ -39,14 +43,15 @@ class Image
       lock_.unlock();
     }
 
-    private:
-      Image();
-      
-      Lock lock_;
-      unsigned char* data_;
-      unsigned int size_;
-      unsigned int width_;
-      unsigned int height_;
+  protected:
+    Image();
+    enum ImageType type_;
+    
+    Lock lock_;
+    unsigned char* data_;
+    unsigned int size_;
+    unsigned int width_;
+    unsigned int height_;
 };
 
 #endif

@@ -75,6 +75,8 @@ target_link_libraries(
   socket
   game_pad
   image
+  image_rgb
+  image_jpeg
   -pthread
   -lrt
   -ljsoncpp
@@ -100,6 +102,8 @@ target_link_libraries(
   socket
   game_pad
   image
+  image_rgb
+  image_jpeg
   -pthread
   -lwiringPi
   -lrt

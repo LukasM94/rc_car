@@ -3,6 +3,24 @@ add_library(
   SHARED
   src/Image.cpp
 )
+add_library(
+  image_rgb
+  SHARED
+  src/ImageRGB.cpp
+)
+add_dependencies(
+  image_rgb
+  image
+)
+add_library(
+  image_jpeg
+  SHARED
+  src/ImageJPEG.cpp
+)
+add_dependencies(
+  image_jpeg
+  image
+)
 add_library( 
   camera
   SHARED

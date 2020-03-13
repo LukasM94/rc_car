@@ -2,6 +2,9 @@
 #include <Camera.h>
 #include <string.h>
 #include <Image.h>
+#include <ImageJPEG.h>
+#include <ImageRGB.h>
+#include <fstream>
 #if defined(__arm__)
 #include <raspicam/raspicam.h>
 #endif
@@ -28,10 +31,22 @@ Camera::~Camera()
 
 void Camera::run()
 {
+  init();
   debug(CAMERA, "run: Start\n");
   while (running_)
   {
-
+    lock();
+    grab();
+    Image* image = getImage();
+    debug(CAMERA, "run: Took picture\n");
+    image->lock();
+    unlock();
+    std::ofstream outFile ("raspicam_image.ppm",std::ios::binary);
+	  outFile << "P6\n" << image->getWidth() <<" "<< image->getHeight() << " 255\n";
+    outFile.write((char*)image->getData(), image->getSize());
+    image->unlock();
+    debug(CAMERA, "run: Wrote picture to file\n");
+    delete image;
   }
   debug(CAMERA, "run: Exit\n");
 }
@@ -48,13 +63,10 @@ int Camera::grab()
   {
     return -1;
   }
-  // image_ = new Image(raspi_cam_->getImageBufferData(),
-  //                    raspi_cam_->getImageTypeSize(raspicam::RASPICAM_FORMAT_RGB),
-  //                    raspi_cam_->getWidth(),
-  //                    raspi_cam_->getHeight());
-  image_ = new Image(raspi_cam_->getImageTypeSize(raspicam::RASPICAM_FORMAT_RGB),
-                     raspi_cam_->getWidth(),
-                     raspi_cam_->getHeight());
+  image_ = new ImageRGB();
+  image_->set(raspi_cam_->getImageTypeSize(raspicam::RASPICAM_FORMAT_RGB),
+              raspi_cam_->getWidth(),
+              raspi_cam_->getHeight());
   raspi_cam_->retrieve(image_->getData());
 #endif
   return -1;
