@@ -75,8 +75,9 @@ int Camera::grab()
   raspi_cam_->retrieve(image->getData());
 
   debug(CAMERA, "grab: Create now a jpeg\n");
+  // image->print();
   ImageRGB* rgb = (ImageRGB*)image;
-  image        = new ImageJPEG(image);
+  image         = new ImageJPEG(image);
   debug(CAMERA, "grab: Reduced size from %d to %d\n", rgb->getSize(), image->getSize());
   delete rgb;
 

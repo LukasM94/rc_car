@@ -28,10 +28,9 @@ ImageJPEG::ImageJPEG(const Image* image) :
   jpeg_create_compress(&cinfo);
   unsigned long size;
   jpeg_mem_dest(&cinfo, &data_, &size);
-  size_ = (unsigned int)size;
 
-  cinfo.image_width = image->getWidth();  
-  cinfo.image_height = image->getHeight();
+  cinfo.image_width      = image->getWidth();  
+  cinfo.image_height     = image->getHeight();
   cinfo.input_components = image->getSize() / (image->getWidth() * image->getHeight());
   cinfo.in_color_space   = JCS_RGB;
   jpeg_set_defaults(&cinfo);
@@ -49,6 +48,7 @@ ImageJPEG::ImageJPEG(const Image* image) :
   debug(IMAGE_JPEG, "ImageJPEG(const Image* image): Finish compression\n");
   jpeg_finish_compress(&cinfo);
   jpeg_destroy_compress(&cinfo);
+  size_ = (unsigned int)size;
 
   debug(IMAGE_JPEG, "ImageJPEG(const Image* image): Finished\n");
 }

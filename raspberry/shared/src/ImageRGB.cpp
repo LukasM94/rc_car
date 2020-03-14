@@ -49,15 +49,13 @@ ImageRGB::ImageRGB(const Image* image) :
   size_   = width_ * height_ * cinfo.output_components;
   data_   = new unsigned char[size_];
 
-  row_stride = width_ * cinfo.output_components;
-
   debug(IMAGE_RGB, "ImageRGB(const Image* image): Start decompressing\n");
 
   while (cinfo.output_scanline < cinfo.output_height)
   {
-    unsigned char *buffer_array[1];
-    buffer_array[0] = data_ + (cinfo.output_scanline) * row_stride;
-    jpeg_read_scanlines(&cinfo, buffer_array, 1);
+    JSAMPROW row_pointer[1];
+    row_pointer[0] = &data_[cinfo.output_scanline * cinfo.output_width * cinfo.output_components];
+    jpeg_read_scanlines(&cinfo, row_pointer, 1);
   }
   jpeg_finish_decompress(&cinfo);
   jpeg_destroy_decompress(&cinfo);
