@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(server)
+project(main)
 
 if (NOT CONFIGURED_ONCE)
     set(CMAKE_CXX_FLAGS "${warnings}"
@@ -13,14 +13,16 @@ add_compile_options(-std=c++11)
 set(__cplusplus 1)
 
 include_directories(
-  include
+  camera/include
+  server/include
+  xbox/include
   shared
   ../shared/include
 )
 
 set(warnings "-Wall -Wextra")
 
-add_executable(${PROJECT_NAME} server.cpp)
+add_executable(${PROJECT_NAME} main.cpp)
 
 # shared
 add_library( 
@@ -44,31 +46,9 @@ add_library(
   ../shared/src/Lock.cpp
 )
 
-# this project
-add_library( 
-  xbox_controller
-  SHARED
-  src/XboxController.cpp
-)
-add_dependencies(
-  xbox_controller
-  gamepad
-)
-add_library( 
-  server_handler
-  SHARED
-  src/ServerHandler.cpp
-)
-add_dependencies(
-  server_handler
-  socket
-  working_thread
-)
-add_library(
-  xc_service
-  SHARED
-  src/XboxControllerService.cpp
-)
+add_subdirectory(camera) 
+add_subdirectory(server) 
+add_subdirectory(xbox) 
 
 target_link_libraries(
   ${PROJECT_NAME}

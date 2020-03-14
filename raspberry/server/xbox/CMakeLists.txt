@@ -1,0 +1,9 @@
+add_library( 
+  xbox_controller
+  SHARED
+  src/XboxController.cpp
+)
+add_dependencies(
+  xbox_controller
+  gamepad
+)

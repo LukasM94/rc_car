@@ -1,0 +1,15 @@
+add_library( 
+  server_handler
+  SHARED
+  src/ServerHandler.cpp
+)
+add_dependencies(
+  server_handler
+  socket
+  working_thread
+)
+add_library(
+  xc_service
+  SHARED
+  src/XboxControllerService.cpp
+)
