@@ -53,13 +53,12 @@ void Server::run()
 			sleep(2);
 			continue;
 		}
-		// receive();
 		connected_ = 1;
 		while (connected_)
 		{
 			usleep(SERVER_SEND_DATA);
-			memset(buffer_, 0, BUFFER_SIZE);
-			gamepad_->getMsg(buffer_, BUFFER_SIZE);
+			memset(output_buffer_, 0, BUFFER_SIZE);
+			gamepad_->getMsg(output_buffer_, BUFFER_SIZE);
 			transmit();
 		}
   }
@@ -104,9 +103,9 @@ int Server::initSocket()
 //-------------------------------------------------
 int Server::receive()
 {
-  memset(buffer_, 0, BUFFER_SIZE);
+  memset(input_buffer_, 0, BUFFER_SIZE);
 	int ret;
-	ret = recv(client_socket_, buffer_, BUFFER_SIZE - 1, MSG_DONTWAIT | MSG_NOSIGNAL); 
+	ret = recv(client_socket_, input_buffer_, BUFFER_SIZE - 1, MSG_DONTWAIT | MSG_NOSIGNAL); 
 	if (ret < 0)
 	{
 		debug(SERVER, "receive: Quit connection with ret %d\n", ret); 
@@ -115,7 +114,7 @@ int Server::receive()
 	else
 	{
 		debug(SERVER, "receive: Got message with length %d\n", ret);
-		debug(SERVER_DATA, "receive: msg <%s>\n", buffer_); 
+		// debug(SERVER_DATA, "receive: msg <%s>\n", input_buffer_); 
 	}
 	return ret;
 }
@@ -126,7 +125,7 @@ int Server::transmit()
 	int ret;
 	// debug(SERVER, "transmit: Want to send message\n");
 
-	ret = send(client_socket_, buffer_, strlen(buffer_), MSG_NOSIGNAL); 
+	ret = send(client_socket_, output_buffer_, strlen(output_buffer_), MSG_NOSIGNAL); 
 	if (ret < 0)
 	{
 		debug(SERVER, "transmit: Quit connection with ret %d\n", ret); 

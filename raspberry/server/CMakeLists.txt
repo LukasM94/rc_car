@@ -38,6 +38,11 @@ add_library(
   SHARED
   ../shared/src/WorkingThread.cpp
 )
+add_library(
+  lock
+  SHARED
+  ../shared/src/Lock.cpp
+)
 
 # this project
 add_library( 
@@ -67,6 +72,7 @@ target_link_libraries(
   gamepad
   socket
   working_thread
+  lock
   -pthread
   -ljsoncpp
 )
