@@ -55,24 +55,30 @@ add_dependencies(
   gamepad
 )
 add_library( 
-  socket_server
+  server_handler
   SHARED
-  src/Server.cpp
+  src/ServerHandler.cpp
 )
 add_dependencies(
-  socket_server
+  server_handler
   socket
   working_thread
+)
+add_library(
+  xc_service
+  SHARED
+  src/XboxControllerService.cpp
 )
 
 target_link_libraries(
   ${PROJECT_NAME}
   xbox_controller
-  socket_server
+  server_handler
   gamepad
   socket
   working_thread
   lock
+  xc_service
   -pthread
   -ljsoncpp
 )

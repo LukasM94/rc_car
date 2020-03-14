@@ -1,21 +1,22 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef SERVER_HANDLER_H
+#define SERVER_HANDLER_H
 
 #include <netinet/in.h> 
 #include <Socket.h>
 #include <WorkingThread.h>
 
 class GamePad;
+class XboxControllerService;
 
-class Server : public Socket, public WorkingThread
+class ServerHandler : public Socket, public WorkingThread
 {
   public:
-    Server(unsigned int port, GamePad* gamepad, const char* name);
-    ~Server();
+    ServerHandler(unsigned int port, GamePad* gamepad, const char* name);
+    ~ServerHandler();
 
     inline static void* runWrapper(void* arg)
     {
-      reinterpret_cast<Server*>(arg)->run();
+      reinterpret_cast<ServerHandler*>(arg)->run();
       return 0;
     }
     virtual void run();
@@ -26,8 +27,10 @@ class Server : public Socket, public WorkingThread
     int listenAndAccept();
 
   private:
-    Server();
-    Server(const Server&);
+    friend class XboxControllerService;
+
+    ServerHandler();
+    ServerHandler(const ServerHandler&);
 
     int socket_;
     int client_socket_;

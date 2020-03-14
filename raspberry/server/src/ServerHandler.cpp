@@ -1,5 +1,5 @@
 
-#include <Server.h>
+#include <ServerHandler.h>
 #include <unistd.h> 
 #include <stdio.h> 
 #include <sys/socket.h> 
@@ -9,37 +9,38 @@
 #include <GamePad.h>
 #include <exception>
 #include <config.h>
+#include <XboxControllerService.h>
 
 #define HELLO "Hello from server"
 
 extern void atExit(const char* name);
 
 //-------------------------------------------------
-Server::Server(unsigned int port, GamePad* gamepad, const char* name) : 
+ServerHandler::ServerHandler(unsigned int port, GamePad* gamepad, const char* name) : 
 	Socket(port, "127.0.0.1"),
 	WorkingThread(name),
   gamepad_(gamepad)
 {
-  debug(SERVER, "ctor:\n");
+  debug(SERVER_HAND, "ctor:\n");
 }
 
 //-------------------------------------------------
-Server::~Server()
+ServerHandler::~ServerHandler()
 {
-  debug(SERVER, "dtor:\n");
+  debug(SERVER_HAND, "dtor:\n");
 }
 
 //-------------------------------------------------
-void Server::run()
+void ServerHandler::run()
 {
 	int ret = 0;
 
-  debug(SERVER, "run: Start\n");
+  debug(SERVER_HAND, "run: Start\n");
   if (initSocket())
   {
     exit(-1);
   }
-  debug(SERVER, "run: Successfully initialized and binded\n");
+  debug(SERVER_HAND, "run: Successfully initialized and binded\n");
 
   while (running_)
   {
@@ -49,25 +50,33 @@ void Server::run()
     }
 		else if (ret > 0)
 		{
-  		debug(SERVER, "run: Wait 2 sec and try again\n");
+  		debug(SERVER_HAND, "run: Wait 2 sec and try again\n");
 			sleep(2);
 			continue;
 		}
 		connected_ = 1;
+
+		pthread_t tid_xc_service;
+
+		XboxControllerService* xc_service = new XboxControllerService(this, gamepad_);
+
+		pthread_create(&tid_xc_service, 0, XboxControllerService::runWrapper, xc_service);	
+
 		while (connected_)
 		{
-			usleep(SERVER_SEND_DATA);
-			memset(output_buffer_, 0, BUFFER_SIZE);
-			gamepad_->getMsg(output_buffer_, BUFFER_SIZE);
-			transmit();
+      debug(SERVER_HAND, "run: Nothing to do\n");
+      sleep(5);
 		}
+
+    pthread_cancel(tid_xc_service);
+    pthread_join(tid_xc_service, 0);
   }
 	atExit(name_.c_str());
-  debug(SERVER, "run: Exit with ret %d\n", ret);
+  debug(SERVER_HAND, "run: Exit with ret %d\n", ret);
 }
 
 //-------------------------------------------------
-int Server::initSocket()
+int ServerHandler::initSocket()
 {
 	int opt = 1; 
 
@@ -101,45 +110,45 @@ int Server::initSocket()
 }
 
 //-------------------------------------------------
-int Server::receive()
+int ServerHandler::receive()
 {
   memset(input_buffer_, 0, BUFFER_SIZE);
 	int ret;
 	ret = recv(client_socket_, input_buffer_, BUFFER_SIZE - 1, MSG_DONTWAIT | MSG_NOSIGNAL); 
 	if (ret < 0)
 	{
-		debug(SERVER, "receive: Quit connection with ret %d\n", ret); 
+		debug(SERVER_HAND, "receive: Quit connection with ret %d\n", ret); 
 		connected_ = 0;
 	}
 	else
 	{
-		debug(SERVER, "receive: Got message with length %d\n", ret);
+		debug(SERVER_HAND, "receive: Got message with length %d\n", ret);
 		// debug(SERVER_DATA, "receive: msg <%s>\n", input_buffer_); 
 	}
 	return ret;
 }
 
 //-------------------------------------------------
-int Server::transmit()
+int ServerHandler::transmit()
 {
 	int ret;
-	// debug(SERVER, "transmit: Want to send message\n");
+	// debug(SERVER_HAND, "transmit: Want to send message\n");
 
 	ret = send(client_socket_, output_buffer_, strlen(output_buffer_), MSG_NOSIGNAL); 
 	if (ret < 0)
 	{
-		debug(SERVER, "transmit: Quit connection with ret %d\n", ret); 
+		debug(SERVER_HAND, "transmit: Quit connection with ret %d\n", ret); 
 		connected_ = 0;
 	}
 	else
 	{
-		// debug(SERVER, "transmit: Successfully sent data to client\n"); 
+		// debug(SERVER_HAND, "transmit: Successfully sent data to client\n"); 
 	}
 	return ret;
 }
 
 //-------------------------------------------------
-int Server::listenAndAccept()
+int ServerHandler::listenAndAccept()
 {
 	int addrlen = sizeof(address_); 
 
@@ -149,7 +158,7 @@ int Server::listenAndAccept()
 		return -1; 
 	} 
 
-	debug(SERVER, "listenAndAccept: Wait at acceptence\n"); 
+	debug(SERVER_HAND, "listenAndAccept: Wait at acceptence\n"); 
 	if ((client_socket_ = accept(socket_, (struct sockaddr *)&address_,  
 					   (socklen_t*)&addrlen)) < 0) 
 	{ 

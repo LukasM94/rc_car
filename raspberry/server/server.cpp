@@ -2,7 +2,7 @@
 #include <pthread.h>
 #include <config.h>
 #include <debug.h>
-#include <Server.h>
+#include <ServerHandler.h>
 #include <signal.h>
 #include <atomic>
 #include <map>
@@ -10,7 +10,7 @@
 #include <string.h>
 
 static const char XBOX_CONTROLLER[] = "Xbox controller";
-static const char SERVER_NAME[]     = "Server";
+static const char SERVER_NAME[]     = "ServerHandler";
 
 pthread_mutex_t tids_lock = PTHREAD_MUTEX_INITIALIZER;
 struct cmp_str
@@ -37,13 +37,13 @@ int main(int argc, char* argv[])
 
   debug(MAIN, "main: Initialize the instances\n");
   XboxController xc(XboxController::DEFAULT_PATH, XBOX_CONTROLLER);
-  Server server(SERVER_PORT_INT, xc.getJoystickData(), SERVER_NAME);
+  ServerHandler server(SERVER_PORT_INT, xc.getJoystickData(), SERVER_NAME);
 
   lockTids();
   debug(MAIN, "main: Create threads\n");
   pthread_create(&tid_xc, 0, XboxController::runWrapper, &xc);
   pthread_detach(tid_xc);
-  pthread_create(&tid_server, 0, Server::runWrapper, &server);
+  pthread_create(&tid_server, 0, ServerHandler::runWrapper, &server);
   pthread_detach(tid_server);
 
   debug(MAIN, "main: Add tids to the tidmap\n");
@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
       if (!isInTids(SERVER_NAME))
       {
         debug(MAIN, "main: Restart %s thread\n", SERVER_NAME);
-        pthread_create(&tid_server, 0, Server::runWrapper, &server);
+        pthread_create(&tid_server, 0, ServerHandler::runWrapper, &server);
         pthread_detach(tid_server);
         debug(MAIN, "main: Add %s to the tidmap\n", SERVER_NAME);
         addToTids(SERVER_NAME, tid_server);

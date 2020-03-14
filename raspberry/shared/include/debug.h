@@ -25,7 +25,8 @@ enum AnsiColor
 const size_t MAIN        = Ansi_Green   | OUTPUT_ENABLED;
 const size_t XBOX_CONTR  = Ansi_White   | OUTPUT_ENABLED;
 const size_t XBOX_DATA   = Ansi_Yellow  | OUTPUT_ENABLED;
-const size_t SERVER      = Ansi_Blue    | OUTPUT_ENABLED;
+const size_t XB_SERVICE  = Ansi_Magenta | OUTPUT_ENABLED;
+const size_t SERVER_HAND = Ansi_Blue    | OUTPUT_ENABLED;
 const size_t CAM_CLIENT  = Ansi_Yellow  | OUTPUT_ENABLED;
 const size_t GP_CLIENT   = Ansi_Cyan    | OUTPUT_ENABLED;
 const size_t GP_CLIENT_D = Ansi_Blue;//    | OUTPUT_ENABLED;
