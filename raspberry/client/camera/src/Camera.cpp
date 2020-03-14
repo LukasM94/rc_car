@@ -4,8 +4,6 @@
 #include <Image.h>
 #include <ImageJPEG.h>
 #include <ImageRGB.h>
-#include <fstream>
-#include <unistd.h>
 #if defined(__arm__)
 #include <raspicam/raspicam.h>
 #endif
@@ -15,7 +13,8 @@ Camera* Camera::instance_ = 0;
 Camera::Camera() :
   image_(0),
   raspi_cam_(0),
-  lock_("Camera::lock_")
+  lock_("Camera::lock_"),
+  cond_("Camera::cond_")
 {
   debug(CAMERA, "ctor\n");
 }
@@ -60,6 +59,8 @@ int Camera::grab()
   debug(CAMERA, "grab\n");
 
 #if defined(__arm__)
+  Image* image;
+
   int ret = (raspi_cam_ != 0 &&
              raspi_cam_->isOpened() &&
              !raspi_cam_->grab());
@@ -67,21 +68,29 @@ int Camera::grab()
   {
     return ret;
   }
+  image = new ImageRGB();
+  image->set(raspi_cam_->getImageTypeSize(raspicam::RASPICAM_FORMAT_RGB),
+             raspi_cam_->getWidth(),
+             raspi_cam_->getHeight());
+  raspi_cam_->retrieve(image->getData());
+
+  debug(CAMERA, "grab: Create now a jpeg\n");
+  ImageRGB* rgb = (ImageRGB*)image;
+  image        = new ImageJPEG(image);
+  debug(CAMERA, "grab: Reduced size from %d to %d\n", rgb->getSize(), image->getSize());
+  delete rgb;
+
+  lock();
   if (image_ != 0)
   {
     deleteImage();
   }
-  image_ = new ImageRGB();
-  image_->set(raspi_cam_->getImageTypeSize(raspicam::RASPICAM_FORMAT_RGB),
-              raspi_cam_->getWidth(),
-              raspi_cam_->getHeight());
-  raspi_cam_->retrieve(image_->getData());
+  image_ = image;
+  condLock();
+  unlock();
+  wake();
+  condUnlock();
 
-  debug(CAMERA, "grab: Create now a jpeg\n");
-  ImageRGB* rgb = (ImageRGB*)image_;
-  image_        = new ImageJPEG(image_);
-  debug(CAMERA, "grab: Reduced size from %d to %d\n", rgb->getSize(), image_->getSize());
-  delete rgb;
   return 0;
 #endif
   return -1;

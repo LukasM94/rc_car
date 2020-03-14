@@ -1,7 +1,6 @@
 
 #include <ControlHandler.h>
 #include <Atmega.h>
-// #include <camera_handler.h>
 #include <unistd.h>
 #include <debug.h>
 #include <sys/wait.h>
@@ -15,6 +14,7 @@
 #include <CameraHandler.h>
 #include <Image.h>
 #include <Control.h>
+#include <Camera.h>
 
 pthread_t tid_client_handler;
 pthread_t tid_control_handler;
@@ -24,8 +24,9 @@ ClientHandler*   client_handler;
 ControlHandler*  control_handler;
 GamePad*         game_pad;
 Atmega*          atmega;
-CameraHandler*          camera_handler;
-Control* control;
+CameraHandler*   camera_handler;
+Control*         control;
+Camera*          camera;
 
 void signalHandler(int signal_num);
 
@@ -40,11 +41,12 @@ int main(int argc, char* argv[])
 
   debug(MAIN, "main: Initialize the instances\n");
   game_pad         = GamePadInstance::instance()->getGamePad();
+  camera           = Camera::instance();
   atmega           = new Atmega();
   control_handler  = new ControlHandler();
   control = Control::instance();
   control->setController(atmega);
-  camera_handler           = new CameraHandler();
+  camera_handler   = new CameraHandler();
   client_handler   = new ClientHandler(atoi(port_no), ip_addr);
 
   debug(MAIN, "main: Catch the sigint signal\n");

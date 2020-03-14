@@ -66,6 +66,11 @@ add_library(
   SHARED
   ../shared/src/Lock.cpp
 )
+add_library(
+  cond
+  SHARED
+  ../shared/src/Cond.cpp
+)
 
 add_subdirectory(extern) 
 add_subdirectory(shared) 
@@ -105,6 +110,7 @@ target_link_libraries(
   client_handler
   camera_client
   camera
+  cond
   -pthread
   -lrt
   -ljsoncpp
@@ -135,6 +141,7 @@ target_link_libraries(
   client_handler
   camera_client
   camera
+  cond
   -pthread
   -lwiringPi
   -lrt

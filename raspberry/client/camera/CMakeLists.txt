@@ -3,6 +3,11 @@ add_library(
   SHARED
   src/Camera.cpp
 )
+add_dependencies(
+  camera
+  cond
+  lock
+)
 add_library( 
   camera_handler
   SHARED

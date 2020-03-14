@@ -4,6 +4,8 @@
 #include <debug.h>
 #include <ImageJPEG.h>
 #include <ImageRGB.h>
+#include <string>
+#include <unistd.h>
 #if defined(__x86_64)
 #include <json/json.h>
 #include <json/reader.h>
@@ -57,6 +59,7 @@ const char Image::STRING_HEIGHT[] = "h";
 int Image::getHeader(char** header_str, unsigned int size)
 {
   debug(IMAGE, "getHeader: Start\n");
+  debug(IMAGE, "getHeader: Size of body is %d\n", size);
   Json::Value header;
 
   try
@@ -76,18 +79,18 @@ int Image::getHeader(char** header_str, unsigned int size)
     return 2;
   }
 
-  *header_str = new char[length];
+  *header_str = new char[PACKAGE_LENGTH];
   memset(*header_str, 0, PACKAGE_LENGTH);
   memcpy(*header_str, header.toStyledString().c_str(), length);
-  debug(IMAGE, "getHeader: Finished with length of %d\n", length);
+  debug(IMAGE, "getHeader: Finished with header length of %d\n", length);
   return 0;
 }
 
 int Image::getBody(char** body_str, unsigned int* size)
 {
-  debug(IMAGE, "getHeader: Start\n");
+  debug(IMAGE, "getBody: Start\n");
   Json::Value body;
-  Json::Value data((const char*)data_, (const char*)(data_ + size_));
+  Json::Value data = Json::Value((const char*)data_, (const char*)(data_ + size_));
 
   try
   {
@@ -118,15 +121,12 @@ int Image::getMsg(struct JsonData* data)
 {
   debug(IMAGE, "getMsg: data <%p>\n", data);
   int ret;
-  lock();
   data->header_length_ = PACKAGE_LENGTH;
   if ((ret = (getBody(&data->body_, &data->body_lenght_) ||
               getHeader(&data->header_, data->body_lenght_))) != 0)
   {
-    unlock();
     return ret;
   }
-  unlock();
 
   return 0;
 }

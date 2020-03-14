@@ -25,13 +25,11 @@ void CameraHandler::run()
     sleep(1);
 
     int ret;
-    camera->lock();
     if ((ret = camera->grab()) != 0)
     {
       debug(WARNING, "camera_handler::run: grab returned %d\n", ret);
     }
     debug(CAMERA, "run: Took picture\n");
-    camera->unlock();
   }
   debug(CAMERA, "run: Exit\n");
 }
