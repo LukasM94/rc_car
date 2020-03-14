@@ -1,6 +1,7 @@
-add_dependencies(
-  image_jpeg
-  image
+add_library(
+  camera
+  SHARED
+  src/Camera.cpp
 )
 add_library( 
   camera_handler
@@ -11,4 +12,6 @@ add_dependencies(
   camera_handler
   working_thread
   image
+  camera
 )
+

@@ -104,6 +104,7 @@ target_link_libraries(
   image_jpeg
   client_handler
   camera_client
+  camera
   -pthread
   -lrt
   -ljsoncpp
@@ -133,6 +134,7 @@ target_link_libraries(
   image_jpeg
   client_handler
   camera_client
+  camera
   -pthread
   -lwiringPi
   -lrt
