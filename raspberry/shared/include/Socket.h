@@ -4,6 +4,7 @@
 #include <atomic>
 #include <netinet/in.h> 
 #include <string>
+#include <config.h>
 
 class Socket
 {
@@ -18,7 +19,7 @@ class Socket
     Socket();
     Socket(const Socket&);
 
-    static const int BUFFER_SIZE = 1024;
+    static const int BUFFER_SIZE = COMMON_PACKAGE_SIZE;
 
     char output_buffer_[BUFFER_SIZE];
     char input_buffer_[BUFFER_SIZE];

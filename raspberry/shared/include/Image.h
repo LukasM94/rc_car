@@ -2,6 +2,7 @@
 #define IMAGE_H
 
 #include <Lock.h>
+#include <config.h>
 
 enum ImageType
 {
@@ -67,7 +68,7 @@ class Image
     }
     virtual void print();
 
-    static const unsigned int PACKAGE_LENGTH = 256;
+    static const unsigned int PACKAGE_LENGTH = COMMON_PACKAGE_SIZE;
 
   protected:
     Image();

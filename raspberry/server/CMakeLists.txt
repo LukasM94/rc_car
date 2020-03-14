@@ -26,6 +26,11 @@ add_executable(${PROJECT_NAME} main.cpp)
 
 # shared
 add_library( 
+  image
+  SHARED
+  ../shared/src/Image.cpp
+)
+add_library( 
   gamepad
   SHARED
   ../shared/src/GamePad.cpp
@@ -60,6 +65,7 @@ target_link_libraries(
   lock
   xc_service
   camera_service
+  image
   -pthread
   -ljsoncpp
 )

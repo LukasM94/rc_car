@@ -18,3 +18,7 @@ add_library(
   SHARED
   src/CameraService.cpp
 )
+add_dependencies(
+  camera_service
+  image
+)

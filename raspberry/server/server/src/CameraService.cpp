@@ -3,6 +3,7 @@
 #include <debug.h>
 #include <Image.h>
 #include <ServerHandler.h>
+#include <string.h>
 
 CameraService::CameraService(ServerHandler* server_handler) :
   WorkingThread("CameraService"),
@@ -35,16 +36,29 @@ void CameraService::stateStart()
     image_json_data_->body_lenght_ = -1;
   }
   state_ = HEADER;
+  debug(CAM_SERVICE, "stateStart: Goto state header\n");
 }
 
 void CameraService::stateHeader()
 {
-  
+  int ret;
+  if ((ret = server_handler_->receive()) != 0)
+  {
+    return;
+  }
+  ret = Image::getSizeOfBody(server_handler_->input_buffer_, &image_json_data_->body_lenght_);
+  if (ret != 0)
+  {
+    return;
+  }
+  memcpy(image_json_data_->header_, server_handler_->input_buffer_, server_handler_->BUFFER_SIZE);
+  state_ = BODY;
+  debug(CAM_SERVICE, "stateHeader: Goto state body\n");
 }
 
 void CameraService::stateBody()
 {
-
+  int count = image_json_data_->body_lenght_ / server_handler_->BUFFER_SIZE;
 }
 
 void CameraService::stateEnd()
