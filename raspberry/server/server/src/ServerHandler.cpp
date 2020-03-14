@@ -128,7 +128,7 @@ int ServerHandler::receive()
 	}
 	else
 	{
-		debug(SERVER_HAND, "receive: Got message with length %d\n", ret);
+		debug(SERVER_DATA, "receive: Got message with length %d\n", ret);
 		// debug(SERVER_DATA, "receive: msg <%s>\n", input_buffer_); 
 	}
 	return ret;

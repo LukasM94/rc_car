@@ -14,6 +14,14 @@ namespace Json
   class Value;
 }
 
+struct ImageJsonData
+{
+  char* header_;
+  int   header_length_;
+  char* body_;
+  int   body_lenght_;
+};
+
 class Image
 {
   public:
@@ -21,18 +29,10 @@ class Image
     Image(const Image* image, enum ImageType);
     ~Image();
 
-    struct JsonData
-    {
-      char* header_;
-      int   header_length_;
-      char* body_;
-      int   body_lenght_;
-    };
-
     static int getFromString(Image* image, const char* body);
     static int getSizeOfBody(const char* header, int* size);
-    int getMsg(struct JsonData* data);
-    int freeSpace(struct JsonData* data);
+    int getMsg(struct ImageJsonData* data);
+    int freeSpace(struct ImageJsonData* data);
 
     int set(unsigned int size,
             unsigned int width,

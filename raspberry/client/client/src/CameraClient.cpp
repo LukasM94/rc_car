@@ -32,7 +32,7 @@ void CameraClient::run()
   Camera* camera = Camera::instance();
   Image*  image;
 
-  struct Image::JsonData image_data;
+  struct Image::ImageJsonData image_data;
 
   debug(CAM_CLIENT, "run: Start\n");
 

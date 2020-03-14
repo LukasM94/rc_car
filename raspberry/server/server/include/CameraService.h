@@ -5,6 +5,7 @@
 
 class ServerHandler;
 class Image;
+struct ImageJsonData;
 
 class CameraService : public WorkingThread
 {
@@ -23,8 +24,24 @@ class CameraService : public WorkingThread
     CameraService();
     CameraService(const CameraService&);
 
-    ServerHandler* server_handler_;
-    Image*         image_;
+    void stateStart();
+    void stateHeader();
+    void stateBody();
+    void stateEnd();
+
+    enum State
+    {
+      START,
+      HEADER,
+      BODY,
+      END
+    };
+
+    struct ImageJsonData* image_json_data_;
+
+    enum State      state_;
+    ServerHandler*  server_handler_;
+    Image*          image_;
 };
 
 #endif

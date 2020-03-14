@@ -134,7 +134,7 @@ int Image::getBody(char** body_str, int* size)
   return 0;
 }
 
-int Image::getMsg(struct JsonData* data)
+int Image::getMsg(struct ImageJsonData* data)
 {
   debug(IMAGE, "getMsg: data <%p>\n", data);
   int ret;
@@ -148,7 +148,7 @@ int Image::getMsg(struct JsonData* data)
   return 0;
 }
 
-int Image::freeSpace(struct JsonData* data)
+int Image::freeSpace(struct ImageJsonData* data)
 {
   debug(IMAGE, "freeSpace: data <%p>\n", data);
   delete data->body_;
