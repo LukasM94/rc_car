@@ -71,12 +71,24 @@ int Image::getHeader(char** header_str, unsigned int size)
 {
   debug(IMAGE, "getHeader: Start\n");
   debug(IMAGE, "getHeader: Size of body is %d\n", size);
-  Json::Value header;
+  unsigned int length = -1;
 
   try
   {
+    Json::Value header;
+
     header[0] = STRING_HEADER;
     header[1] = size;
+
+    length = header.toStyledString().length();
+    if (length > PACKAGE_LENGTH)
+    {
+      return 2;
+    }
+    
+    *header_str = new char[PACKAGE_LENGTH];
+    memset(*header_str, 0, PACKAGE_LENGTH);
+    memcpy(*header_str, header.toStyledString().c_str(), length);
   }
   catch (Json::Exception& e)
   {
@@ -84,15 +96,6 @@ int Image::getHeader(char** header_str, unsigned int size)
     return 1;
   }
 
-  unsigned int length = header.toStyledString().length();
-  if (length > PACKAGE_LENGTH)
-  {
-    return 2;
-  }
-
-  *header_str = new char[PACKAGE_LENGTH];
-  memset(*header_str, 0, PACKAGE_LENGTH);
-  memcpy(*header_str, header.toStyledString().c_str(), length);
   debug(IMAGE, "getHeader: Finished with header length of %d\n", length);
   return 0;
 }
@@ -100,29 +103,32 @@ int Image::getHeader(char** header_str, unsigned int size)
 int Image::getBody(char** body_str, unsigned int* size)
 {
   debug(IMAGE, "getBody: Start\n");
-  Json::Value body;
-  Json::Value data = Json::Value((const char*)data_, (const char*)(data_ + size_));
 
   try
   {
+    Json::Value body;
+    Json::Value data;
+
+    data[STRING_SIZE]   = size_;
+    data[STRING_WIDTH]  = width_;
+    data[STRING_HEIGHT] = height_;
+    data[STRING_DATA]   = Json::Value((const char*)data_, (const char*)(data_ + size_));
+
     body[0] = STRING_BODY;
-    body[1] = width_;
-    body[2] = height_;
-    body[3] = size_;
-    body[4] = data;
+    body[1] = data;
+
+    *size = body.toStyledString().length();
+    *size = ((((*size) / PACKAGE_LENGTH) + 1) * PACKAGE_LENGTH);
+
+    *body_str = new char[*size];
+    memset(*body_str, 0, *size);
+    memcpy(*body_str, body.toStyledString().c_str(), body.toStyledString().length());
   }
   catch (Json::Exception& e)
   {
     debug(WARNING, "Image::getBody: %s\n", e.what());
     return 4;
   }
-
-  *size = body.toStyledString().length();
-  *size = ((((*size) / PACKAGE_LENGTH) + 1) * PACKAGE_LENGTH);
-
-  *body_str = new char[*size];
-  memset(*body_str, 0, *size);
-  memcpy(*body_str, body.toStyledString().c_str(), body.toStyledString().length());
 
   debug(IMAGE, "getBody: Finished with length of %d\n", *size);
   return 0;
@@ -173,6 +179,7 @@ int Image::getSizeOfBody(const char* header_str, unsigned int* size)
     }
 
     data = header[1].asUInt();
+    *size = data.asUInt();
   }
   catch (Json::Exception& e)
   {
@@ -184,18 +191,38 @@ int Image::getSizeOfBody(const char* header_str, unsigned int* size)
 
 int Image::getFromString(Image* image, const char* body_str)
 {
-  Json::Reader reader;
-  Json::Value  body;
-  Json::Value  data;
-
   try
   {
+    Json::Reader reader;
+    Json::Value  body;
+    Json::Value  data;
+
+    // debug(IMAGE, "getFromString: Start parse\n");
     int ret = reader.parse(body_str, body);
     if (ret == 0)
     {
       debug(WARNING, "Image::getSizeOfBody: parsing not successful\n");
-      return 8;
+      return 1;
     }
+
+    // debug(IMAGE, "getFromString: Get body value\n");
+    std::string body_value = body[0].asString();
+    if (body_value.compare(STRING_BODY) != 0)
+    {
+      debug(WARNING, "Image::getSizeOfBody: parsing not successful\n");
+      return 2;
+    }
+
+    data = body[1];
+
+    // debug(IMAGE, "getFromString: Get width\n");
+    image->width_  = data[STRING_WIDTH].asUInt();
+    // debug(IMAGE, "getFromString: Get size\n");
+    image->size_   = data[STRING_SIZE].asUInt();
+    // debug(IMAGE, "getFromString: Get height\n");
+    image->height_ = data[STRING_HEIGHT].asUInt();
+    // debug(IMAGE, "getFromString: Get data\n");
+    image->data_   = (unsigned char*)data[STRING_DATA].asCString();
   }
   catch (Json::Exception& e)
   {

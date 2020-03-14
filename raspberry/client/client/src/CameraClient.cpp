@@ -5,6 +5,8 @@
 #include <ClientHandler.h>
 #include <Camera.h>
 #include <Image.h>
+#include <ImageJPEG.h>
+#include <ImageRGB.h>
   
 //-------------------------------------------------
 CameraClient::CameraClient(ClientHandler* client_handler) :
@@ -43,16 +45,40 @@ void CameraClient::run()
     {
       debug(CAM_CLIENT, "run: New picture\n");
       image->getMsg(&image_data);
-      // TEST
-      printf("%s", image_data.header_);
-      printf("%s", image_data.body_);
 
-      // got header
+      // TEST
+      printf("data:\n");
+      unsigned char* data = image->getData();
+      for (int i = 0; i < image->getSize(); ++i)
+      {
+        printf("%c", data[i]);
+      }
+      printf("\n");
+      // printf("header:\n");
+      // printf("%s", image_data.header_);
+      // printf("body:\n");
+      // printf("%s", image_data.body_);
+
+      // get header
       unsigned int size;
       Image::getSizeOfBody(image_data.header_, &size);
       debug(CAM_CLIENT, "run: Size of body is %d\n", size);
-      Image test(ImageType::JPEG);
-      Image::getFromString(&test, image_data.body_);
+
+      // get body
+      Image* jpeg = new ImageJPEG();
+      Image::getFromString(jpeg, image_data.body_);
+      printf("data:\n");
+      data = jpeg->getData();
+      for (int i = 0; i < jpeg->getSize(); ++i)
+      {
+        printf("%c", data[i]);
+      }
+      printf("\n");
+
+      // get rgb image
+      Image* rgb = new ImageRGB(jpeg);
+      debug(CAM_CLIENT, "run: Got rgb back from %d to %d\n", jpeg->getSize(), rgb->getSize());
+
     }
     camera->unlock();
   }

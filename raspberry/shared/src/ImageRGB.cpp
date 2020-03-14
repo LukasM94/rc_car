@@ -16,7 +16,7 @@ ImageRGB::~ImageRGB()
 }
 
 ImageRGB::ImageRGB(const Image* image) : 
-  Image(RGB)
+  Image(image, RGB)
 {
   debug(IMAGE_RGB, "ImageRGB(const Image* image)\n");
   int ret;
