@@ -20,7 +20,8 @@ class Socket
 
     static const int BUFFER_SIZE = 1024;
 
-    char buffer_[BUFFER_SIZE];
+    char output_buffer_[BUFFER_SIZE];
+    char input_buffer_[BUFFER_SIZE];
     int  port_;
 
     std::string ip_address_;

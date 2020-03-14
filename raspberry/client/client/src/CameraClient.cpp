@@ -8,6 +8,7 @@
 #include <ImageJPEG.h>
 #include <ImageRGB.h>
 #include <string.h>
+#include <ClientHandler.h>
   
 //-------------------------------------------------
 CameraClient::CameraClient(ClientHandler* client_handler) :
@@ -46,6 +47,32 @@ void CameraClient::run()
     {
       debug(CAM_CLIENT, "run: New picture\n");
       image->getMsg(&image_data);
+      if (image_data.header_length_ > client_handler_->BUFFER_SIZE)
+      {
+        debug(ERROR, "CameraClient::run: image_data.header_length_ > client_handler_->BUFFER_SIZE\n");
+        exit(-1);
+      }
+      memset(client_handler_->output_buffer_, 0, client_handler_->BUFFER_SIZE);
+      memcpy(client_handler_->output_buffer_, image_data.header_, image_data.header_length_);
+      client_handler_->transmit();
+
+      int   length = image_data.body_lenght_;
+      char* buffer = image_data.body_;
+      while (length > 0)
+      {
+        if (length > client_handler_->BUFFER_SIZE)
+        {
+          memcpy(client_handler_->output_buffer_, buffer, client_handler_->BUFFER_SIZE);
+          buffer += client_handler_->BUFFER_SIZE;
+          length -= client_handler_->BUFFER_SIZE;
+        }
+        else
+        {
+          memset(client_handler_->output_buffer_, 0, client_handler_->BUFFER_SIZE);
+          memcpy(client_handler_->output_buffer_, buffer, length);
+        }
+        client_handler_->transmit();
+      }
 
       // TEST
       // printf("data:\n");
@@ -61,13 +88,13 @@ void CameraClient::run()
       // printf("%s", image_data.body_);
 
       // get header
-      unsigned int size;
-      Image::getSizeOfBody(image_data.header_, &size);
-      debug(CAM_CLIENT, "run: Size of body is %d\n", size);
+      // unsigned int size;
+      // Image::getSizeOfBody(image_data.header_, &size);
+      // debug(CAM_CLIENT, "run: Size of body is %d\n", size);
 
       // get body
-      Image* jpeg = new ImageJPEG();
-      Image::getFromString(jpeg, image_data.body_);
+      // Image* jpeg = new ImageJPEG();
+      // Image::getFromString(jpeg, image_data.body_);
       // printf("data:\n");
       // data = jpeg->getData();
       // for (int i = 0; i < jpeg->getSize(); ++i)
@@ -77,10 +104,10 @@ void CameraClient::run()
       // printf("\n");
 
       // get rgb image
-      Image* rgb = new ImageRGB(image);
+      // Image* rgb = new ImageRGB(image);
       // Image* rgb = new ImageRGB(jpeg);
-      debug(CAM_CLIENT, "run: Got rgb back from %d to %d\n", jpeg->getSize(), rgb->getSize());
-      rgb->print();
+      // debug(CAM_CLIENT, "run: Got rgb back from %d to %d\n", jpeg->getSize(), rgb->getSize());
+      // rgb->print();
     }
     camera->unlock();
   }

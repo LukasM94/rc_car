@@ -33,7 +33,7 @@ void GamePadClient::run()
   while (client_handler_->connected_)
   {
     ret = client_handler_->receive();
-    std::string str(client_handler_->buffer_, client_handler_->BUFFER_SIZE);
+    std::string str(client_handler_->input_buffer_, client_handler_->BUFFER_SIZE);
     str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
     str.erase(std::remove(str.begin(), str.end(), '\t'), str.end());
     str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());

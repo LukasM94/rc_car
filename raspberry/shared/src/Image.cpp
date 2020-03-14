@@ -67,7 +67,7 @@ const char Image::STRING_SIZE[]   = "size";
 const char Image::STRING_WIDTH[]  = "w";
 const char Image::STRING_HEIGHT[] = "h";
 
-int Image::getHeader(char** header_str, unsigned int size)
+int Image::getHeader(char** header_str, int size)
 {
   debug(IMAGE, "getHeader: Start\n");
   debug(IMAGE, "getHeader: Size of body is %d\n", size);
@@ -100,7 +100,7 @@ int Image::getHeader(char** header_str, unsigned int size)
   return 0;
 }
 
-int Image::getBody(char** body_str, unsigned int* size)
+int Image::getBody(char** body_str, int* size)
 {
   debug(IMAGE, "getBody: Start\n");
 
@@ -156,7 +156,7 @@ int Image::freeSpace(struct JsonData* data)
   return 0;
 }
 
-int Image::getSizeOfBody(const char* header_str, unsigned int* size)
+int Image::getSizeOfBody(const char* header_str, int* size)
 {
   Json::Reader reader;
   Json::Value  header;

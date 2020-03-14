@@ -52,9 +52,9 @@ int ClientHandler::initSocket()
 //-------------------------------------------------
 int ClientHandler::receive()
 {
-  memset(buffer_, 0, BUFFER_SIZE);
+  memset(input_buffer_, 0, BUFFER_SIZE);
 	int ret;
-	ret = read(server_socket_ , buffer_, BUFFER_SIZE); 
+	ret = read(server_socket_ , input_buffer_, BUFFER_SIZE); 
 	if (ret <= 0)
 	{
 		debug(WARNING, "ClientHandler::receive: Quit connection with ret %d\n", ret);
@@ -63,13 +63,6 @@ int ClientHandler::receive()
 	else
 	{
 		debug(CLIENT_DATA, "receive: Got message with length %d\n", ret);
-    // std::string str(buffer_, BUFFER_SIZE);
-    // str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
-    // str.erase(std::remove(str.begin(), str.end(), '\t'), str.end());
-    // str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
-    // str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
-    // str.erase(std::remove(str.begin(), str.end(), 0), str.end());
-		// debug(CLIENT_DATA, "receive: msg %s\n", str.c_str()); 
 	}
 	return ret;
 }
@@ -80,7 +73,7 @@ int ClientHandler::transmit()
   int ret;
 	debug(CLIENT_HAND, "transmit: Want to send message\n");
 
-	ret = send(server_socket_, buffer_, sizeof(buffer_), MSG_NOSIGNAL); 
+	ret = send(server_socket_, output_buffer_, strlen(output_buffer_), MSG_NOSIGNAL); 
 	if (ret < 0)
 	{
 		debug(WARNING, "ClientHandler::transmit: Quit connection with ret %d\n", ret); 

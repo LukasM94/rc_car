@@ -23,14 +23,14 @@ class Image
 
     struct JsonData
     {
-      char*        header_;
-      unsigned int header_length_;
-      char*        body_;
-      unsigned int body_lenght_;
+      char* header_;
+      int   header_length_;
+      char* body_;
+      int   body_lenght_;
     };
 
     static int getFromString(Image* image, const char* body);
-    static int getSizeOfBody(const char* header, unsigned int* size);
+    static int getSizeOfBody(const char* header, int* size);
     int getMsg(struct JsonData* data);
     int freeSpace(struct JsonData* data);
 
@@ -72,8 +72,8 @@ class Image
   protected:
     Image();
     
-    int getHeader(char** header, unsigned int size);
-    int getBody(char** body, unsigned int* size);
+    int getHeader(char** header, int size);
+    int getBody(char** body, int* size);
 
     enum ImageType type_;
     
