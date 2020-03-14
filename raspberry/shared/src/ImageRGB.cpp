@@ -3,6 +3,7 @@
 #include <debug.h>
 #include <jpeglib.h>
 #include <string.h>
+#include <fstream>
 
 ImageRGB::ImageRGB() :
   Image(RGB)
@@ -62,4 +63,11 @@ ImageRGB::ImageRGB(const Image* image) :
   jpeg_destroy_decompress(&cinfo);
   
   debug(IMAGE_RGB, "ImageRGB(const Image* image): Finished decompressing\n");
+}
+
+void ImageRGB::print()
+{
+  std::ofstream outFile ("raspicam_image.ppm", std::ios::binary);
+  outFile << "P6\n" << width_ <<" "<< height_ << " 255\n";
+  outFile.write((char*)data_, size_);
 }

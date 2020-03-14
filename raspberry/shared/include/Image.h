@@ -65,6 +65,7 @@ class Image
     {
       lock_.unlock();
     }
+    virtual void print();
 
     static const unsigned int PACKAGE_LENGTH = 256;
 

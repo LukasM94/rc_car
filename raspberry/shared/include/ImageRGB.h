@@ -10,6 +10,7 @@ class ImageRGB : public Image
     ImageRGB();
     ~ImageRGB();
     ImageRGB(const Image* image);
+    virtual void print();
 };
 
 #endif

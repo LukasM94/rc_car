@@ -48,13 +48,13 @@ void CameraClient::run()
       image->getMsg(&image_data);
 
       // TEST
-      printf("data:\n");
-      unsigned char* data = image->getData();
-      for (int i = 0; i < image->getSize(); ++i)
-      {
-        printf("%d, ", data[i]);
-      }
-      printf("\n");
+      // printf("data:\n");
+      // unsigned char* data = image->getData();
+      // for (int i = 0; i < image->getSize(); ++i)
+      // {
+      //   printf("%d, ", data[i]);
+      // }
+      // printf("\n");
       // printf("header:\n");
       // printf("%s", image_data.header_);
       // printf("body:\n");
@@ -68,18 +68,19 @@ void CameraClient::run()
       // get body
       Image* jpeg = new ImageJPEG();
       Image::getFromString(jpeg, image_data.body_);
-      printf("data:\n");
-      data = jpeg->getData();
-      for (int i = 0; i < jpeg->getSize(); ++i)
-      {
-        printf("%d, ", data[i]);
-      }
-      printf("\n");
+      // printf("data:\n");
+      // data = jpeg->getData();
+      // for (int i = 0; i < jpeg->getSize(); ++i)
+      // {
+      //   printf("%d, ", data[i]);
+      // }
+      // printf("\n");
 
       // get rgb image
-      Image* rgb = new ImageRGB(jpeg);
+      Image* rgb = new ImageRGB(image);
+      // Image* rgb = new ImageRGB(jpeg);
       debug(CAM_CLIENT, "run: Got rgb back from %d to %d\n", jpeg->getSize(), rgb->getSize());
-
+      rgb->print();
     }
     camera->unlock();
   }

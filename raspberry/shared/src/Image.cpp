@@ -234,3 +234,7 @@ int Image::getFromString(Image* image, const char* body_str)
   return -1;
 }
 
+void Image::print()
+{
+  debug(WARNING, "Image::print: Not possible for Image!!!!\n");
+}

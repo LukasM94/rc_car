@@ -52,3 +52,8 @@ ImageJPEG::ImageJPEG(const Image* image) :
 
   debug(IMAGE_JPEG, "ImageJPEG(const Image* image): Finished\n");
 }
+
+void ImageJPEG::print()
+{
+  debug(WARNING, "ImageJPEG::print: Not possible for now\n");
+}
