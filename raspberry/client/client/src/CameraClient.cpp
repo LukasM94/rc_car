@@ -43,6 +43,16 @@ void CameraClient::run()
     {
       debug(CAM_CLIENT, "run: New picture\n");
       image->getMsg(&image_data);
+      // TEST
+      printf("%s", image_data.header_);
+      printf("%s", image_data.body_);
+
+      // got header
+      unsigned int size;
+      Image::getSizeOfBody(image_data.header_, &size);
+      debug(CAM_CLIENT, "run: Size of body is %d\n", size);
+      Image test(ImageType::JPEG);
+      Image::getFromString(&test, image_data.body_);
     }
     camera->unlock();
   }

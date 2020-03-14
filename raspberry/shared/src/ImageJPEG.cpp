@@ -16,7 +16,7 @@ ImageJPEG::~ImageJPEG()
 }
 
 ImageJPEG::ImageJPEG(const Image* image) :
-  Image(JPEG)
+  Image(image, JPEG)
 {
   debug(IMAGE_JPEG, "ImageJPEG(const Image* image)\n");
   unsigned char* data = image->getData();

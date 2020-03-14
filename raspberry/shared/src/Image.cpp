@@ -26,7 +26,18 @@ Image::Image(enum ImageType type) :
   height_(-1),
   type_(type)
 {
-  debug(IMAGE, "ctor: with type %d\n", type);
+  debug(IMAGE, "ctor: Type <%d>\n", type);
+}
+
+Image::Image(const Image* image, enum ImageType type) :
+  lock_("Image::lock"),
+  data_(0),
+  size_(-1),
+  width_(image->width_),
+  height_(image->height_),
+  type_(type)
+{
+  debug(IMAGE, "ctor: Width <%d>, height <%d>, type <%d>\n", width_, height_, type_);
 }
 
 Image::~Image()
@@ -94,7 +105,7 @@ int Image::getBody(char** body_str, unsigned int* size)
 
   try
   {
-    body[0] = STRING_HEADER;
+    body[0] = STRING_BODY;
     body[1] = width_;
     body[2] = height_;
     body[3] = size_;
