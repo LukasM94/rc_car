@@ -1,17 +1,17 @@
-#ifndef CONTROL_INSTANCE_H
-#define CONTROL_INSTANCE_H
+#ifndef CONTROL_H
+#define CONTROL_H
 
 #include <atomic>
 
 class UController;
 class GamePad;
 
-class ControlInstance
+class Control
 {
   public:
-    static ControlInstance* instance();
+    static Control* instance();
     void setController(UController* u_controller);
-    ~ControlInstance();
+    ~Control();
 
     void gpioInit();
     void gpioDeInit();
@@ -25,16 +25,16 @@ class ControlInstance
     static void* i2cFunction(void* arg);
 
   private:
-    ControlInstance();
-    ControlInstance(const ControlInstance&);
+    Control();
+    Control(const Control&);
 
-    static void writeI2c(ControlInstance* ch, uint8_t reg, const uint8_t* data, int length);
+    static void writeI2c(Control* ch, uint8_t reg, const uint8_t* data, int length);
 
     std::atomic_bool    i2c_running_;
     std::atomic_uint8_t i2c_error_;
     static const uint8_t I2C_ERROR_THRESHOLD = 5;
 
-    static ControlInstance* instance_;
+    static Control* instance_;
 
     UController* u_controller_;
 

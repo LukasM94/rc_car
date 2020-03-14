@@ -4,7 +4,7 @@
 #include <ControlHandler.h>
 #include <GamePad.h>
 #include <unistd.h>
-#include <ControlInstance.h>
+#include <Control.h>
 
 const char ControlHandler::I2C[]  = "i2c";
 const char ControlHandler::GPIO[] = "gpio";
@@ -36,15 +36,15 @@ ControlHandler::~ControlHandler()
 void ControlHandler::init()
 {
   debug(CONTROL, "init\n");
-  ControlInstance::instance()->gpioInit();
-  ControlInstance::instance()->i2cInit();
+  Control::instance()->gpioInit();
+  Control::instance()->i2cInit();
 }
 
 //--------------------------------------------------------------------
 void ControlHandler::deinit()
 {
   debug(CONTROL, "deinit\n");
-  ControlInstance::instance()->gpioDeInit();
+  Control::instance()->gpioDeInit();
 }
 
 //--------------------------------------------------------------------
@@ -52,11 +52,11 @@ void* ControlHandler::wrapperStart(void* args)
 {
   const char*      primary_key      = ((struct start_arg*)args)->primary_key_;
   ControlHandler*         control_handler          = ((struct start_arg*)args)->control_handler_;
-  ControlInstance* control_instance = ControlInstance::instance();
+  Control* control = Control::instance();
 
   debug(CONTROL, "wrapperStart: Primary key is %s\n", primary_key);
   debug(CONTROL, "wrapperStart: Go to f_ptr\n");
-  void* ret = ((struct start_arg*)args)->f_ptr_(control_instance);
+  void* ret = ((struct start_arg*)args)->f_ptr_(control);
 
   control_handler->lock();
   control_handler->removeTid(primary_key);
@@ -104,8 +104,8 @@ void ControlHandler::run()
   pthread_t tid_i2c;
   pthread_t tid_gpio;
 
-  struct start_arg args_i2c  = {this, I2C, 0, &ControlInstance::i2cFunction};
-  struct start_arg args_gpio = {this, GPIO, 0,  &ControlInstance::gpioFunction};
+  struct start_arg args_i2c  = {this, I2C, 0, &Control::i2cFunction};
+  struct start_arg args_gpio = {this, GPIO, 0,  &Control::gpioFunction};
 
   init();
 

@@ -85,8 +85,8 @@ target_link_libraries(
   communication
   extern_control
   peripherial
-  control_instance
-  camera
+  control
+  camera_handler
   game_pad_client
   working_thread
   gpio
@@ -114,8 +114,8 @@ target_link_libraries(
   communication
   extern_control
   peripherial
-  control_instance
-  camera
+  control
+  camera_handler
   game_pad_client
   working_thread
   gpio

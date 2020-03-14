@@ -16,7 +16,7 @@ add_library(
 add_dependencies(
   camera_client
   working_thread
-  camera
+  camera_handler
 )
 add_library( 
   game_pad_client

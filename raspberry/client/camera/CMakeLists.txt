@@ -3,12 +3,12 @@ add_dependencies(
   image
 )
 add_library( 
-  camera
+  camera_handler
   SHARED
-  src/Camera.cpp
+  src/CameraHandler.cpp
 )
 add_dependencies(
-  camera
+  camera_handler
   working_thread
   image
 )

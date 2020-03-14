@@ -1,7 +1,7 @@
 add_library( 
-  control_instance
+  control
   SHARED
-  src/ControlInstance.cpp
+  src/Control.cpp
 )
 add_library( 
   extern_control
@@ -10,7 +10,7 @@ add_library(
 )
 add_dependencies(
   extern_control
-  control_instance
+  control
   u_controller
   usart
   spi
