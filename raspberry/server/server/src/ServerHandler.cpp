@@ -114,7 +114,7 @@ int ServerHandler::receive()
 {
   memset(input_buffer_, 0, BUFFER_SIZE);
 	int ret;
-	ret = recv(client_socket_, input_buffer_, BUFFER_SIZE - 1, MSG_DONTWAIT | MSG_NOSIGNAL); 
+	ret = recv(client_socket_, input_buffer_, BUFFER_SIZE, MSG_NOSIGNAL); 
 	if (ret < 0)
 	{
 		debug(SERVER_HAND, "receive: Quit connection with ret %d\n", ret); 

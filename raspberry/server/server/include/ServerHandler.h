@@ -7,6 +7,7 @@
 
 class GamePad;
 class XboxControllerService;
+class CameraService;
 
 class ServerHandler : public Socket, public WorkingThread
 {
@@ -28,6 +29,7 @@ class ServerHandler : public Socket, public WorkingThread
 
   private:
     friend class XboxControllerService;
+    friend class CameraService;
 
     ServerHandler();
     ServerHandler(const ServerHandler&);
