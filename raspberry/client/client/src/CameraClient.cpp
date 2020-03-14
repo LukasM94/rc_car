@@ -71,7 +71,12 @@ void CameraClient::run()
           memset(client_handler_->output_buffer_, 0, client_handler_->BUFFER_SIZE);
           memcpy(client_handler_->output_buffer_, buffer, length);
         }
-        client_handler_->transmit();
+
+        int ret;
+        if ((ret = client_handler_->transmit()) < 0)
+        {
+          break;
+        }
       }
 
       // TEST
