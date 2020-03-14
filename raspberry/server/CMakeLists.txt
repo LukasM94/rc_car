@@ -59,6 +59,7 @@ target_link_libraries(
   working_thread
   lock
   xc_service
+  camera_service
   -pthread
   -ljsoncpp
 )
