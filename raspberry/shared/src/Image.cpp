@@ -222,7 +222,8 @@ int Image::getFromString(Image* image, const char* body_str)
     // debug(IMAGE, "getFromString: Get height\n");
     image->height_ = data[STRING_HEIGHT].asUInt();
     // debug(IMAGE, "getFromString: Get data\n");
-    image->data_   = (unsigned char*)data[STRING_DATA].asCString();
+    image->data_ = new unsigned char[image->size_];
+    memcpy(image->data_, (unsigned char*)data[STRING_DATA].asCString(), image->size_);
   }
   catch (Json::Exception& e)
   {

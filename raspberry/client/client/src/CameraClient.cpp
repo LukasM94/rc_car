@@ -7,6 +7,7 @@
 #include <Image.h>
 #include <ImageJPEG.h>
 #include <ImageRGB.h>
+#include <string.h>
   
 //-------------------------------------------------
 CameraClient::CameraClient(ClientHandler* client_handler) :
@@ -51,7 +52,7 @@ void CameraClient::run()
       unsigned char* data = image->getData();
       for (int i = 0; i < image->getSize(); ++i)
       {
-        printf("%c", data[i]);
+        printf("%d, ", data[i]);
       }
       printf("\n");
       // printf("header:\n");
@@ -71,7 +72,7 @@ void CameraClient::run()
       data = jpeg->getData();
       for (int i = 0; i < jpeg->getSize(); ++i)
       {
-        printf("%c", data[i]);
+        printf("%d, ", data[i]);
       }
       printf("\n");
 
