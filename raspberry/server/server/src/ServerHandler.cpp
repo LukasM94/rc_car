@@ -74,6 +74,8 @@ void ServerHandler::run()
 
     pthread_join(tid_camera_service, 0);
     pthread_join(tid_xc_service, 0);
+    
+		closeSocket();
   }
 	atExit(name_.c_str());
   debug(SERVER_HAND, "run: Exit with ret %d\n", ret);
@@ -170,4 +172,10 @@ int ServerHandler::listenAndAccept()
 		return 1; 
 	} 
   return 0;
+}
+
+//-------------------------------------------------
+int ServerHandler::closeSocket()
+{
+	return close(client_socket_);
 }

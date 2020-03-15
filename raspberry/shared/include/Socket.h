@@ -14,6 +14,7 @@ class Socket
     virtual int initSocket() = 0;
     virtual int transmit() = 0;
     virtual int receive() = 0;;
+    virtual int closeSocket() = 0;
 
   protected:
     Socket();

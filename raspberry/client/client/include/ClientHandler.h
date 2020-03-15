@@ -20,6 +20,8 @@ class ClientHandler : public Socket, public WorkingThread
     virtual int initSocket();
     virtual int receive();
     virtual int transmit();
+    virtual int closeSocket();
+
     int connectToServer();
 
   private:

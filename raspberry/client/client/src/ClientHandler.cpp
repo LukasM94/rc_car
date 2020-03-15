@@ -89,7 +89,7 @@ int ClientHandler::transmit()
 //-------------------------------------------------
 int ClientHandler::connectToServer()
 {
-  debug(CLIENT_DATA, "transmit: Wait for connection\n"); 
+  debug(CLIENT_HAND, "transmit: Wait for connection\n"); 
   if (connect(server_socket_, (struct sockaddr*)&address_, sizeof(address_)) < 0) 
   { 
     debug(WARNING, "ClientHandler::connectToServer: Connection Failed \n"); 
@@ -133,7 +133,7 @@ void ClientHandler::run()
     CameraClient*  cam_client = new CameraClient(this);
 
     pthread_create(&tid_gp_client, 0, GamePadClient::runWrapper, gp_client);
-    pthread_create(&tid_cam_client, 0, CameraClient::runWrapper, cam_client);
+    // pthread_create(&tid_cam_client, 0, CameraClient::runWrapper, cam_client);
 
     while (connected_)
     {
@@ -141,8 +141,16 @@ void ClientHandler::run()
       sleep(5);
     }
 
-    pthread_join(tid_cam_client, 0);
+    // pthread_join(tid_cam_client, 0);
     pthread_join(tid_gp_client, 0);
+
+    closeSocket();
   }
   debug(CLIENT_HAND, "run: Exit\n");
+}
+
+//-------------------------------------------------
+int ClientHandler::closeSocket()
+{
+	return close(server_socket_);
 }
