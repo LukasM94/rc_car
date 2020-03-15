@@ -71,7 +71,7 @@ int ClientHandler::receive()
 int ClientHandler::transmit()
 {
   int ret;
-	debug(CLIENT_HAND, "transmit: Want to send message\n");
+	// debug(CLIENT_HAND, "transmit: Want to send message\n");
 
 	ret = send(server_socket_, output_buffer_, strlen(output_buffer_), MSG_NOSIGNAL); 
 	if (ret < 0)
