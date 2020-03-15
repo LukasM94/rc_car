@@ -34,7 +34,8 @@ class CameraService : public WorkingThread
       START,
       HEADER,
       BODY,
-      END
+      END,
+      ERROR
     };
 
     struct ImageJsonData* image_json_data_;

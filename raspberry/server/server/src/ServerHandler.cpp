@@ -131,7 +131,7 @@ int ServerHandler::receive()
 		debug(SERVER_DATA, "receive: Got message with length %d\n", ret);
 		// debug(SERVER_DATA, "receive: msg <%s>\n", input_buffer_); 
 	}
-	return ret;
+	return 0;
 }
 
 //-------------------------------------------------
@@ -140,7 +140,7 @@ int ServerHandler::transmit()
 	int ret;
 	// debug(SERVER_HAND, "transmit: Want to send message\n");
 
-	ret = send(client_socket_, output_buffer_, strlen(output_buffer_), MSG_NOSIGNAL); 
+	ret = send(client_socket_, output_buffer_, BUFFER_SIZE, MSG_NOSIGNAL); 
 	if (ret < 0)
 	{
 		debug(SERVER_HAND, "transmit: Quit connection with ret %d\n", ret); 
@@ -150,7 +150,7 @@ int ServerHandler::transmit()
 	{
 		// debug(SERVER_HAND, "transmit: Successfully sent data to client\n"); 
 	}
-	return ret;
+	return 0;
 }
 
 //-------------------------------------------------

@@ -6,6 +6,7 @@
 #include <ImageRGB.h>
 #include <string>
 #include <unistd.h>
+#include <math.h>
 #if defined(__x86_64)
 #include <json/json.h>
 #include <json/reader.h>
@@ -138,9 +139,15 @@ int Image::getMsg(struct ImageJsonData* data)
 {
   debug(IMAGE, "getMsg: data <%p>\n", data);
   int ret;
+
   data->header_length_ = PACKAGE_LENGTH;
-  if ((ret = (getBody(&data->body_, &data->body_lenght_) ||
-              getHeader(&data->header_, data->body_lenght_))) != 0)
+  if ((ret = (getBody(&data->body_, &data->body_lenght_))) != 0)
+  {
+    return ret;
+  }
+
+  data->body_lenght_ = ((int)ceil((float)data->body_lenght_ / (float)PACKAGE_LENGTH)) * PACKAGE_LENGTH;
+  if ((ret = (getHeader(&data->header_, data->body_lenght_))) != 0)
   {
     return ret;
   }

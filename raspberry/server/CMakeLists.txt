@@ -22,6 +22,9 @@ include_directories(
 
 set(warnings "-Wall -Wextra")
 
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
+set(CMAKE_BUILD_TYPE Debug)
+
 add_executable(${PROJECT_NAME} main.cpp)
 
 # shared

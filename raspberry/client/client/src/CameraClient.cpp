@@ -68,6 +68,7 @@ void CameraClient::run()
         }
         else
         {
+          debug(ERROR, "CameraClient::run: wrong\n");
           memset(client_handler_->output_buffer_, 0, client_handler_->BUFFER_SIZE);
           memcpy(client_handler_->output_buffer_, buffer, length);
         }
