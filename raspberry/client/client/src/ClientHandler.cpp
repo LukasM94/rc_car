@@ -140,8 +140,6 @@ void ClientHandler::run()
       sleep(5);
     }
 
-    pthread_cancel(tid_cam_client);
-    pthread_cancel(tid_gp_client);
     pthread_join(tid_cam_client, 0);
     pthread_join(tid_gp_client, 0);
   }

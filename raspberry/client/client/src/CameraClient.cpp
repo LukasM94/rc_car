@@ -37,6 +37,7 @@ void CameraClient::run()
   while (client_handler_->connected_)
   {
     camera->condLock();
+    debug(CAM_CLIENT, "run: Sleep\n");
     camera->sleep();
     camera->lock();
     camera->condUnlock();
