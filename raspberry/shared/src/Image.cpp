@@ -248,3 +248,8 @@ void Image::print()
 {
   debug(WARNING, "Image::print: Not possible for Image!!!!\n");
 }
+
+void Image::printRaw()
+{
+  debug(WARNING, "Image::printRaw: Not possible for Image!!!!\n");
+}

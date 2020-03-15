@@ -66,3 +66,8 @@ void ImageJPEG::print()
 {
   debug(WARNING, "ImageJPEG::print: Not possible for now\n");
 }
+
+void ImageJPEG::printRaw()
+{
+  debug(WARNING, "ImageJPEG::printRaw: Not possible for now\n");
+}

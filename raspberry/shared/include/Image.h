@@ -68,6 +68,7 @@ class Image
       lock_.unlock();
     }
     virtual void print();
+    virtual void printRaw();
 
     static const unsigned int PACKAGE_LENGTH = COMMON_PACKAGE_SIZE;
 

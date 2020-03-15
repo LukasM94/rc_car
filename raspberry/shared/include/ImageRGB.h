@@ -11,6 +11,7 @@ class ImageRGB : public Image
     ~ImageRGB();
     ImageRGB(const Image* image);
     virtual void print();
+    void printRaw();
 };
 
 #endif

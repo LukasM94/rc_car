@@ -79,3 +79,17 @@ void ImageRGB::print()
   outFile << "P6\n" << width_ <<" "<< height_ << " 255\n";
   outFile.write((char*)data_, size_);
 }
+
+void ImageRGB::printRaw()
+{
+  debug(IMAGE_RGB, "ImageRGB: Print raw picture\n");
+  int i = 0;
+  for (int w = 0; w < width_; ++w)
+  {
+    for (int h = 0; h < height_; ++h)
+    {
+      printf("%c ", data_[i++]);
+    }
+    printf("\n");
+  }
+}

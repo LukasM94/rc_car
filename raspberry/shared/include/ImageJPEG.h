@@ -10,6 +10,7 @@ class ImageJPEG : public Image
     ~ImageJPEG();
     ImageJPEG(const Image* image);
     virtual void print();
+    virtual void printRaw();
 };
 
 #endif

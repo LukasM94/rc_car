@@ -10,7 +10,7 @@ Graphics::Graphics(const char* name) :
   WorkingThread(name),
   argv_(0),
   argc_(0),
-  app_(new QApplication(argv_, argc_)),
+  app_(0),
   graph_(0),
   label_(0),
   image_(0)
@@ -37,19 +37,28 @@ void Graphics::run()
   debug(GRAPHICS, "run: Start\n");
   debug(GRAPHICS, "run: Want to load a image\n");
 
-  image_ = ImageInstance::instance()->loadImage();
-  image_->print();
-  debug(GRAPHICS, "run: Create graphic\n");
-  graph_ = new QImage((uchar*)image_->getData(), image_->getWidth(), image_->getHeight(), QImage::Format_RGB888);
-  label_ = new QLabel();
-  label_->setPixmap(QPixmap::fromImage(*graph_));
-  label_->setFixedSize(image_->getWidth(), image_->getHeight());
-  label_->show();
-
-  while (running_)
-  {
-    sleep(10);
-  }
+  // image_ = ImageInstance::instance()->loadImage();
+  // int argc = 1;
+  // char* argv[] = {"./main", 0};
+  // QApplication app(argc, argv);
+  // QImage* graph = new QImage((const uchar *)image_->getData(), image_->getWidth(), image_->getHeight(), QImage::Format_RGB888);
+  // QLabel* label = new QLabel();
+  // label->setPixmap(QPixmap::fromImage(*graph));
+  // label->setFixedSize(image_->getWidth(), image_->getHeight());
+  // label->show();
+  // app.exec();
+  // if (fork() == 0)
+  // {
+  // }
+  // else
+  // {
+  //   while (running_)
+  //   {
+  //     image_ = ImageInstance::instance()->loadImage();
+  //     graph->loadFromData((const uchar*)image_->getData(), image_->getWidth() * image_->getHeight() * 3);
+  //     label->setPixmap(QPixmap::fromImage(*graph));
+  //   }
+  // }
   debug(GRAPHICS, "run: Exit\n");
 }
 
