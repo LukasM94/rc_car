@@ -134,7 +134,7 @@ void CameraService::run()
       }
       else
       {
-
+        break;
       }
     }
     debug(CAM_SERVICE, "run: Got message\n");

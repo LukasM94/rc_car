@@ -130,7 +130,7 @@ void ClientHandler::run()
     pthread_t tid_cam_client;
 
     GamePadClient* gp_client  = new GamePadClient(this);
-    CameraClient*  cam_client = new CameraClient(this);
+    // CameraClient*  cam_client = new CameraClient(this);
 
     pthread_create(&tid_gp_client, 0, GamePadClient::runWrapper, gp_client);
     // pthread_create(&tid_cam_client, 0, CameraClient::runWrapper, cam_client);
