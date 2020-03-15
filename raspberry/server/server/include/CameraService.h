@@ -27,13 +27,14 @@ class CameraService : public WorkingThread
     void stateStart();
     void stateHeader();
     void stateBody();
-    void stateEnd();
+    void stateConvert();
 
     enum State
     {
       START,
       HEADER,
       BODY,
+      CONVERT,
       END,
       ERROR
     };

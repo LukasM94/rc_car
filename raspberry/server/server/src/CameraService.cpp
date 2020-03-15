@@ -2,6 +2,8 @@
 #include <CameraService.h>
 #include <debug.h>
 #include <Image.h>
+#include <ImageJPEG.h>
+#include <ImageRGB.h>
 #include <ServerHandler.h>
 #include <string.h>
 
@@ -41,6 +43,11 @@ void CameraService::stateStart()
       image_json_data_->body_lenght_ = -1;
     }
   }
+  if (image_ != 0)
+  {
+    delete image_;
+  }
+  image_ = new ImageJPEG();
   state_ = HEADER;
   debug(CAM_SERVICE, "stateStart: Goto state header\n");
 }
@@ -75,8 +82,9 @@ void CameraService::stateHeader()
 
 void CameraService::stateBody()
 {
-  int count = image_json_data_->body_lenght_ / server_handler_->BUFFER_SIZE;
-  int ret;
+  char* body  = image_json_data_->body_;
+  int   count = image_json_data_->body_lenght_ / server_handler_->BUFFER_SIZE;
+  int   ret;
   while (count--)
   {
     if ((ret = server_handler_->receive()) != 0)
@@ -84,8 +92,18 @@ void CameraService::stateBody()
       state_ = ERROR;
       return;
     }
+    memcpy(body, server_handler_->input_buffer_, server_handler_->BUFFER_SIZE);
+    body += server_handler_->BUFFER_SIZE;
     debug(CAM_SERVICE, "stateBody: Count %d\n", count);
   }
+  state_ = CONVERT;
+}
+
+void CameraService::stateConvert()
+{
+  Image::getFromString(image_, image_json_data_->body_);
+  Image* rgb = new ImageRGB(image_);
+  rgb->print();
   state_ = END;
 }
 
@@ -109,9 +127,13 @@ void CameraService::run()
       {
         stateBody();
       }
+      else if (state_ == CONVERT)
+      {
+        stateConvert();
+      }
       else
       {
-        
+
       }
     }
     debug(CAM_SERVICE, "run: Got message\n");

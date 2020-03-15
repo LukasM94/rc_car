@@ -34,6 +34,16 @@ add_library(
   ../shared/src/Image.cpp
 )
 add_library( 
+  image_jpeg
+  SHARED
+  ../shared/src/ImageJPEG.cpp
+)
+add_library( 
+  image_rgb
+  SHARED
+  ../shared/src/ImageRGB.cpp
+)
+add_library( 
   gamepad
   SHARED
   ../shared/src/GamePad.cpp
@@ -54,7 +64,7 @@ add_library(
   ../shared/src/Lock.cpp
 )
 
-add_subdirectory(camera) 
+add_subdirectory(gtk) 
 add_subdirectory(server) 
 add_subdirectory(xbox) 
 
@@ -69,6 +79,9 @@ target_link_libraries(
   xc_service
   camera_service
   image
+  image_jpeg
+  image_rgb
   -pthread
   -ljsoncpp
+  -ljpeg
 )
