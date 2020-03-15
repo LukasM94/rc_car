@@ -10,7 +10,7 @@
 #include <debug.h>
 #include <GamePadClient.h>
 #include <CameraClient.h>
-  
+
 const char ClientHandler::HELLO[] = "Hello from client";
 
 //-------------------------------------------------
@@ -90,9 +90,9 @@ int ClientHandler::transmit()
 int ClientHandler::connectToServer()
 {
   debug(CLIENT_HAND, "transmit: Wait for connection\n"); 
-  if (connect(server_socket_, (struct sockaddr*)&address_, sizeof(address_)) < 0) 
+  if (connect(server_socket_, (struct sockaddr*)&address_, sizeof(address_)) == -1) 
   { 
-    debug(WARNING, "ClientHandler::connectToServer: Connection Failed \n"); 
+    debug(WARNING, "ClientHandler::connectToServer: Connection failed\n"); 
     return 1; 
   } 
   return 0;
@@ -130,10 +130,10 @@ void ClientHandler::run()
     pthread_t tid_cam_client;
 
     GamePadClient* gp_client  = new GamePadClient(this);
-    // CameraClient*  cam_client = new CameraClient(this);
+    CameraClient*  cam_client = new CameraClient(this);
 
     pthread_create(&tid_gp_client, 0, GamePadClient::runWrapper, gp_client);
-    // pthread_create(&tid_cam_client, 0, CameraClient::runWrapper, cam_client);
+    pthread_create(&tid_cam_client, 0, CameraClient::runWrapper, cam_client);
 
     while (connected_)
     {
@@ -141,7 +141,7 @@ void ClientHandler::run()
       sleep(5);
     }
 
-    // pthread_join(tid_cam_client, 0);
+    pthread_join(tid_cam_client, 0);
     pthread_join(tid_gp_client, 0);
 
     closeSocket();
