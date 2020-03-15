@@ -89,6 +89,7 @@ int ClientHandler::transmit()
 //-------------------------------------------------
 int ClientHandler::connectToServer()
 {
+  debug(CLIENT_DATA, "transmit: Wait for connection\n"); 
   if (connect(server_socket_, (struct sockaddr*)&address_, sizeof(address_)) < 0) 
   { 
     debug(WARNING, "ClientHandler::connectToServer: Connection Failed \n"); 
