@@ -34,8 +34,7 @@ void CameraClient::run()
 
   struct ImageJsonData image_data;
 
-  // while (client_handler_->connected_)
-  while (0)
+  while (client_handler_->connected_)
   {
     camera->condLock();
     camera->sleep();
@@ -60,7 +59,7 @@ void CameraClient::run()
       debug(CAM_CLIENT, "run: Start transmitting\n");
       while (length > 0)
       {
-        if (length > client_handler_->BUFFER_SIZE)
+        if (length >= client_handler_->BUFFER_SIZE)
         {
           memcpy(client_handler_->output_buffer_, buffer, client_handler_->BUFFER_SIZE);
           buffer += client_handler_->BUFFER_SIZE;
@@ -69,8 +68,7 @@ void CameraClient::run()
         else
         {
           debug(ERROR, "CameraClient::run: wrong\n");
-          memset(client_handler_->output_buffer_, 0, client_handler_->BUFFER_SIZE);
-          memcpy(client_handler_->output_buffer_, buffer, length);
+          exit(-1);
         }
 
         int ret;
