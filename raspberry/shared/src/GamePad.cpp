@@ -69,7 +69,10 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
     if (ret == 0)
     {
       debug(WARNING, "GamePad::getFromString: parsing not successful\n");
-      // debug(WARNING, "GamePad::getFromString: %s\n", str);
+      for (int i = 0; i < 4096; ++i)
+      {
+        printf("%c", str[i]);
+      }
       goto GET_FROM_STRING_ERROR;
     }
 
@@ -125,10 +128,15 @@ int GamePad::getMsg(char* msg, unsigned int max_length)
   unsigned int length = root.toStyledString().length();
   if (length > max_length)
   {
+    debug(WARNING, "GamePad::getMsg: To long %d > %d\n", length, max_length);
     return -1;
   }
 
   memcpy(msg, root.toStyledString().c_str(), length);
+  for (int i = 0; i < length; ++i)
+  {
+    printf("%c", msg[i]);
+  }
   return 0;
 }
 

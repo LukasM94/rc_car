@@ -32,9 +32,10 @@ void CameraClient::run()
   Camera* camera = Camera::instance();
   Image*  image;
 
-  struct Image::ImageJsonData image_data;
+  struct ImageJsonData image_data;
 
-  while (client_handler_->connected_)
+  // while (client_handler_->connected_)
+  while (0)
   {
     camera->condLock();
     camera->sleep();
