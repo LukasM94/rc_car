@@ -26,6 +26,7 @@ class ServerHandler : public Socket, public WorkingThread
     virtual int receive();
     virtual int transmit();
     virtual int closeSocket();
+    int closeServerSocket();
 
     int listenAndAccept();
 

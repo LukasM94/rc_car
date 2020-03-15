@@ -41,6 +41,8 @@ int  addToTids(const char* prime_key, pthread_t tid);
 int  removeFromTids(const char* prime_key);
 bool isInTids(const char* name);
 
+void signalHandler(int signal_num);
+
 int main(int argc, char* argv[])
 {
 
@@ -49,6 +51,9 @@ int main(int argc, char* argv[])
   xc       = new XboxController(XboxController::DEFAULT_PATH, XBOX_CONTROLLER);
   server   = new ServerHandler(SERVER_PORT_INT, xc->getJoystickData(), SERVER_NAME);
   // graphics = new Graphics(GRAPHICS_NAME);
+
+  debug(MAIN, "main: Catch the sigint signal\n");
+  signal(SIGINT, signalHandler);  
 
   lockTids();
   debug(MAIN, "main: Create threads\n");
@@ -104,6 +109,14 @@ int main(int argc, char* argv[])
   debug(MAIN, "main: Exits\n");
 
   return 0;
+}
+
+void signalHandler(int signal_num)
+{
+  debug(MAIN, "signalHandler: Got an signal %d\n", signal_num);
+  server->closeServerSocket();
+  debug(MAIN, "signalHandler: Exits\n");
+  _exit(signal_num);
 }
 
 void atExit(const char* name)

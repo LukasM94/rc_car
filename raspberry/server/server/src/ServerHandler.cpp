@@ -179,3 +179,9 @@ int ServerHandler::closeSocket()
 {
 	return close(client_socket_);
 }
+
+//-------------------------------------------------
+int ServerHandler::closeServerSocket()
+{
+	return close(socket_);
+}
