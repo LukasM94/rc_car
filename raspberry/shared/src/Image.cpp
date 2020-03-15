@@ -211,7 +211,7 @@ int Image::getFromString(Image* image, const char* body_str)
     int ret = reader.parse(body_str, body);
     if (ret == 0)
     {
-      debug(WARNING, "Image::getSizeOfBody: parsing not successful\n");
+      debug(WARNING, "Image::getFromString: parsing not successful\n");
       return 1;
     }
 
@@ -219,7 +219,7 @@ int Image::getFromString(Image* image, const char* body_str)
     std::string body_value = body[0].asString();
     if (body_value.compare(STRING_BODY) != 0)
     {
-      debug(WARNING, "Image::getSizeOfBody: parsing not successful\n");
+      debug(WARNING, "Image::getFromString: parsing not successful\n");
       return 2;
     }
 

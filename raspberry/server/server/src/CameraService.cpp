@@ -134,6 +134,7 @@ void CameraService::run()
       }
       else
       {
+        server_handler_->connected_ = 0;
         break;
       }
     }
