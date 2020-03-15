@@ -114,6 +114,7 @@ int main(int argc, char* argv[])
 void signalHandler(int signal_num)
 {
   debug(MAIN, "signalHandler: Got an signal %d\n", signal_num);
+  server->closeSocket();
   server->closeServerSocket();
   debug(MAIN, "signalHandler: Exits\n");
   _exit(signal_num);

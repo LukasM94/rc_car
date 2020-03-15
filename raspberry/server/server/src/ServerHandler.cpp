@@ -55,16 +55,17 @@ void ServerHandler::run()
 			sleep(2);
 			continue;
 		}
+  	debug(SERVER_HAND, "run: Connected\n");
 		connected_ = 1;
 
 		pthread_t tid_xc_service;
 		pthread_t tid_camera_service;
 
 		XboxControllerService* xc_service     = new XboxControllerService(this, gamepad_);
-		// CameraService*         camera_service = new CameraService(this);
+		CameraService*         camera_service = new CameraService(this);
 
 		pthread_create(&tid_xc_service, 0, XboxControllerService::runWrapper, xc_service);	
-		// pthread_create(&tid_camera_service, 0, CameraService::runWrapper, camera_service);	
+		pthread_create(&tid_camera_service, 0, CameraService::runWrapper, camera_service);	
 
 		while (connected_)
 		{
@@ -72,7 +73,7 @@ void ServerHandler::run()
       sleep(5);
 		}
 
-    // pthread_join(tid_camera_service, 0);
+    pthread_join(tid_camera_service, 0);
     pthread_join(tid_xc_service, 0);
     
 		closeSocket();
