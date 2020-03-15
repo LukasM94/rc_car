@@ -89,6 +89,7 @@ target_link_libraries(
   graphics
   image_instance
   cond
+  main_window
   -pthread
   -ljsoncpp
   -ljpeg

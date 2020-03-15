@@ -5,6 +5,7 @@
 #include <ImageInstance.h>
 #include <Image.h>
 #include <unistd.h>
+#include <MainWindow.h>
 
 Graphics::Graphics(const char* name) :
 	WorkingThread(name),
@@ -35,25 +36,34 @@ Graphics::~Graphics()
 void Graphics::run()
 {
 	debug(GRAPHICS, "run: Start\n");
-	debug(GRAPHICS, "run: Want to load a image\n");
 
-	image_ = ImageInstance::instance()->loadImage();
 	int argc = 1;
 	char* argv[] = {"./main", 0};
-	QApplication app(argc, argv);
-	QImage* graph = new QImage((const uchar *)image_->getData(), image_->getWidth(), image_->getHeight(), QImage::Format_RGB888);
-	QLabel* label = new QLabel();
-	label->setPixmap(QPixmap::fromImage(*graph));
-	label->setFixedSize(image_->getWidth(), image_->getHeight());
-	label->show();
-  app.exec();
-	if (fork() == 0)
-	{
-	}
-	else
-	{
-  	sleep(1000);
-	}
+	QApplication a(argc, argv);
+	MainWindow window;
+	window.show();
+	a.exec();
+	debug(GRAPHICS, "run: Exec finished\n");
+
+
+	// debug(GRAPHICS, "run: Want to load a image\n");
+	// image_ = ImageInstance::instance()->loadImage();
+	// int argc = 1;
+	// char* argv[] = {"./main", 0};
+	// QApplication app(argc, argv);
+	// QImage* graph = new QImage((const uchar *)image_->getData(), image_->getWidth(), image_->getHeight(), QImage::Format_RGB888);
+	// QLabel* label = new QLabel();
+	// label->setPixmap(QPixmap::fromImage(*graph));
+	// label->setFixedSize(image_->getWidth(), image_->getHeight());
+	// label->show();
+  // app.exec();
+	// if (fork() == 0)
+	// {
+	// }
+	// else
+	// {
+	// }
+	sleep(1000);
 	debug(GRAPHICS, "run: Exit\n");
 }
 

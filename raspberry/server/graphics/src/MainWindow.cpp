@@ -2,19 +2,26 @@
 #include <MainWindow.h>
 #include <debug.h>
 #include <unistd.h>
+#include "ui_MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) : 
   QMainWindow(parent), 
   ui_(new Ui::MainWindow) 
 {
+  debug(MAIN_WINDOW, "ctor\n");
   ui_->setupUi(this);
   setWindowTitle("Camera");
   setWindowOpacity(0.98);
-  setMinimumSize(380, 450);
-  setMaximumSize(380, 450);
+  setMinimumSize(640, 510);
+  setMaximumSize(640, 510);
 
-  ui_->radioButtonStart->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-  connect(ui_->radioButtonStart, SIGNAL(toggle(bool)), SLOT(run()));
+  ui_->buttonStart->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+  connect(ui_->buttonStart, SIGNAL(toggle(bool)), SLOT(run()));
+}
+
+MainWindow::~MainWindow()
+{
+  debug(MAIN_WINDOW, "dtor\n");
 }
 
 void MainWindow::run()
