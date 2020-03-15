@@ -33,14 +33,11 @@
       <widget class="QLabel" name="label">
         <property name="geometry">
           <rect>
-            <x>0</x>
-            <y>55</y>
+            <x>5</x>
+            <y>45</y>
             <width>640</width>
             <height>480</height>
           </rect>
-        </property>
-        <property name="text">
-          <string>Start</string>
         </property>
       </widget>
     </widget>

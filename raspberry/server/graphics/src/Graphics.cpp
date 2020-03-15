@@ -43,36 +43,4 @@ void Graphics::run()
 	window.show();
 	a.exec();
 	debug(GRAPHICS, "run: Exec finished\n");
-
-
-	// debug(GRAPHICS, "run: Want to load a image\n");
-	// image_ = ImageInstance::instance()->loadImage();
-	// int argc = 1;
-	// char* argv[] = {"./main", 0};
-	// QApplication app(argc, argv);
-	// QImage* graph = new QImage((const uchar *)image_->getData(), image_->getWidth(), image_->getHeight(), QImage::Format_RGB888);
-	// QLabel* label = new QLabel();
-	// label->setPixmap(QPixmap::fromImage(*graph));
-	// label->setFixedSize(image_->getWidth(), image_->getHeight());
-	// label->show();
-  // app.exec();
-	// if (fork() == 0)
-	// {
-	// }
-	// else
-	// {
-	// }
-	sleep(1000);
-	debug(GRAPHICS, "run: Exit\n");
 }
-
-// int graphics(int argc, char* argv[])
-// {
-//   QApplication app(argc, argv);
-//   QImage graph((uchar *)gdata, gx, gy, QImage::Format_RGB888);
-//   QLabel *label = new QLabel();
-//   label->setPixmap(QPixmap::fromImage(graph));
-//   label->setFixedSize(gx, gy);
-//   label->show();
-//   return app.exec();
-// }
