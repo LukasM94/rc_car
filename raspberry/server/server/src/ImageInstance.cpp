@@ -1,12 +1,14 @@
 
 #include <ImageInstance.h>
 #include <Image.h>
+#include <ImageRGB.h>
 #include <debug.h>
 
 ImageInstance* ImageInstance::instance_ = 0;
 
 ImageInstance::ImageInstance() :
-  image_(0)
+  image_(0),
+  cond_("ImageInstance")
 {
   debug(IMAGE_INSTA, "ctor\n");
 }
@@ -29,18 +31,40 @@ ImageInstance* ImageInstance::instance()
   return instance_;
 }
 
-int ImageInstance::setImage(Image* image)
+int ImageInstance::saveImage(Image* image)
 {
-  debug(IMAGE_INSTA, "setImage: image <%p>\n", image);
-  if (image->getType() != ImageType::RGB)
-  {
-    debug(WARNING, "ImageInstance::setImage: image <%p> is not rgb\n", image);
-    return -1;
-  }
+  debug(IMAGE_INSTA, "saveImage: image <%p>\n", image);
+  cond_.lock();
   if (image_ != 0)
   {
     delete image_;
-  } 
-  image_ = image;
+    image_ = 0;
+  }
+  image_ = new ImageRGB(image);
+  cond_.wake();
+  cond_.unlock();
   return 0;
+}
+
+Image* ImageInstance::loadImage()
+{
+  debug(IMAGE_INSTA, "loadImage\n");
+  Image* image;
+  cond_.lock();
+  while (image_ == 0)
+  {
+    cond_.sleep();
+  }
+  image = new ImageRGB(image_);
+  debug(IMAGE_INSTA, "loadImage: image <%p>\n", image);
+  delete image_;
+  image_ = 0;
+  cond_.unlock();
+  return image;
+}
+
+void ImageInstance::freeImage(Image* image)
+{
+  debug(IMAGE_INSTA, "freeImage: image <%p>\n", image);
+  delete image;
 }

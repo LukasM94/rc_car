@@ -44,7 +44,10 @@ Image::Image(const Image* image, enum ImageType type) :
 Image::~Image()
 {
   debug(IMAGE, "dtor\n");
-  delete data_;
+  if (data_ != 0)
+  {
+    delete data_;
+  }
 }
 
 int Image::set(unsigned int size, unsigned int width, unsigned int height)

@@ -19,6 +19,15 @@ ImageJPEG::ImageJPEG(const Image* image) :
   Image(image, JPEG)
 {
   debug(IMAGE_JPEG, "ImageJPEG(const Image* image)\n");
+
+  if (image->getType() == JPEG)
+  {
+    size_ = image->getSize();
+    data_ = new unsigned char[size_];
+    memcpy(data_, image->getData(), size_);
+    return;
+  }
+
   unsigned char* data = image->getData();
 
   struct jpeg_compress_struct cinfo;

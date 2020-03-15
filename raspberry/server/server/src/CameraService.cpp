@@ -6,7 +6,7 @@
 #include <ImageRGB.h>
 #include <ServerHandler.h>
 #include <string.h>
-#include <Graphics.h>
+#include <ImageInstance.h>
 
 CameraService::CameraService(ServerHandler* server_handler) :
   WorkingThread("CameraService"),
@@ -100,19 +100,10 @@ void CameraService::stateBody()
   state_ = CONVERT;
 }
 
-char* gdata;
-int gx;
-int gy;
-
 void CameraService::stateConvert()
 {
   Image::getFromString(image_, image_json_data_->body_);
-  Image* rgb = new ImageRGB(image_);
-  rgb->print();
-  gx = rgb->getWidth();
-  gy = rgb->getHeight();
-  gdata = (char*)rgb->getData();
-  graphics(0, 0);
+  ImageInstance::instance()->saveImage(image_);
   state_ = END;
 }
 

@@ -63,6 +63,11 @@ add_library(
   SHARED
   ../shared/src/Lock.cpp
 )
+add_library(
+  cond
+  SHARED
+  ../shared/src/Cond.cpp
+)
 
 add_subdirectory(graphics) 
 add_subdirectory(server) 
@@ -83,6 +88,7 @@ target_link_libraries(
   image_rgb
   graphics
   image_instance
+  cond
   -pthread
   -ljsoncpp
   -ljpeg

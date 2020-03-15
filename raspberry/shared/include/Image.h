@@ -27,6 +27,7 @@ class Image
 {
   public:
     Image(enum ImageType);
+    Image(const Image* image);
     Image(const Image* image, enum ImageType);
     ~Image();
 

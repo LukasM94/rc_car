@@ -20,6 +20,15 @@ ImageRGB::ImageRGB(const Image* image) :
   Image(image, RGB)
 {
   debug(IMAGE_RGB, "ImageRGB(const Image* image)\n");
+
+  if (image->getType() == RGB)
+  {
+    size_ = image->getSize();
+    data_ = new unsigned char[size_];
+    memcpy(data_, image->getData(), size_);
+    return;
+  }
+
   int ret;
   int row_stride;
 
