@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
   setFont(ui_->button_start);
 
   ui_->button_start->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+  ui_->label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
   connect(ui_->button_start, SIGNAL(clicked()), SLOT(run()));
 }
 
@@ -52,8 +53,10 @@ void MainWindow::run()
 
     graph = new QImage((const uchar *)image->getData(), 
         image->getWidth(), image->getHeight(), QImage::Format_RGB888);
+    debug(MAIN_WINDOW, "run: Set new image\n");
     ui_->label->setPixmap(QPixmap::fromImage(*graph));
-    ui_->label->show();
+    qApp->processEvents();
+
     if (graph_tmp == 0)
     {
       delete graph_tmp;
