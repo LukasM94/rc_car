@@ -22,3 +22,12 @@ add_dependencies(
   camera_service
   image
 )
+add_library(
+  image_instance
+  SHARED
+  src/ImageInstance.cpp
+)
+add_dependencies(
+  image_instance
+  image
+)

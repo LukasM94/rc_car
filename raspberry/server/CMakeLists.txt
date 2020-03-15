@@ -82,6 +82,7 @@ target_link_libraries(
   image_jpeg
   image_rgb
   graphics
+  image_instance
   -pthread
   -ljsoncpp
   -ljpeg
