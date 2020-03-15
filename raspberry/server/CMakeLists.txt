@@ -22,9 +22,17 @@ include_directories(
 
 set(warnings "-Wall -Wextra")
 
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
+set(CMAKE_BUILD_TYPE Debug)
+
 add_executable(${PROJECT_NAME} main.cpp)
 
 # shared
+add_library( 
+  image
+  SHARED
+  ../shared/src/Image.cpp
+)
 add_library( 
   gamepad
   SHARED
@@ -59,6 +67,8 @@ target_link_libraries(
   working_thread
   lock
   xc_service
+  camera_service
+  image
   -pthread
   -ljsoncpp
 )

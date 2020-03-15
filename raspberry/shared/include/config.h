@@ -36,6 +36,8 @@
 
 #define XBOX_CONTROLLER_PATH "/dev/input/js0"
 
+#define COMMON_PACKAGE_SIZE 4096
+
 #include <stdio.h>
 
 static size_t gpios[RASPBERRY_PIN_COUNT];

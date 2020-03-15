@@ -32,7 +32,7 @@ void CameraClient::run()
   Camera* camera = Camera::instance();
   Image*  image;
 
-  struct Image::JsonData image_data;
+  struct Image::ImageJsonData image_data;
 
   while (client_handler_->connected_)
   {
@@ -67,6 +67,7 @@ void CameraClient::run()
         }
         else
         {
+          debug(ERROR, "CameraClient::run: wrong\n");
           memset(client_handler_->output_buffer_, 0, client_handler_->BUFFER_SIZE);
           memcpy(client_handler_->output_buffer_, buffer, length);
         }

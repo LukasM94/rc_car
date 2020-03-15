@@ -13,3 +13,12 @@ add_library(
   SHARED
   src/XboxControllerService.cpp
 )
+add_library(
+  camera_service
+  SHARED
+  src/CameraService.cpp
+)
+add_dependencies(
+  camera_service
+  image
+)

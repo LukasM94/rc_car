@@ -73,7 +73,7 @@ int ClientHandler::transmit()
   int ret;
 	// debug(CLIENT_HAND, "transmit: Want to send message\n");
 
-	ret = send(server_socket_, output_buffer_, strlen(output_buffer_), MSG_NOSIGNAL); 
+	ret = send(server_socket_, output_buffer_, BUFFER_SIZE, MSG_NOSIGNAL); 
 	if (ret < 0)
 	{
 		debug(WARNING, "ClientHandler::transmit: Quit connection with ret %d\n", ret); 

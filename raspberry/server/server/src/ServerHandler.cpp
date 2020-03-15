@@ -10,6 +10,7 @@
 #include <exception>
 #include <config.h>
 #include <XboxControllerService.h>
+#include <CameraService.h>
 
 #define HELLO "Hello from server"
 
@@ -57,10 +58,13 @@ void ServerHandler::run()
 		connected_ = 1;
 
 		pthread_t tid_xc_service;
+		pthread_t tid_camera_service;
 
-		XboxControllerService* xc_service = new XboxControllerService(this, gamepad_);
+		XboxControllerService* xc_service     = new XboxControllerService(this, gamepad_);
+		CameraService*         camera_service = new CameraService(this);
 
 		pthread_create(&tid_xc_service, 0, XboxControllerService::runWrapper, xc_service);	
+		pthread_create(&tid_camera_service, 0, CameraService::runWrapper, camera_service);	
 
 		while (connected_)
 		{
@@ -68,7 +72,9 @@ void ServerHandler::run()
       sleep(5);
 		}
 
+    pthread_cancel(tid_camera_service);
     pthread_cancel(tid_xc_service);
+    pthread_join(tid_camera_service, 0);
     pthread_join(tid_xc_service, 0);
   }
 	atExit(name_.c_str());
@@ -122,10 +128,10 @@ int ServerHandler::receive()
 	}
 	else
 	{
-		debug(SERVER_HAND, "receive: Got message with length %d\n", ret);
+		debug(SERVER_DATA, "receive: Got message with length %d\n", ret);
 		// debug(SERVER_DATA, "receive: msg <%s>\n", input_buffer_); 
 	}
-	return ret;
+	return 0;
 }
 
 //-------------------------------------------------
@@ -134,7 +140,7 @@ int ServerHandler::transmit()
 	int ret;
 	// debug(SERVER_HAND, "transmit: Want to send message\n");
 
-	ret = send(client_socket_, output_buffer_, strlen(output_buffer_), MSG_NOSIGNAL); 
+	ret = send(client_socket_, output_buffer_, BUFFER_SIZE, MSG_NOSIGNAL); 
 	if (ret < 0)
 	{
 		debug(SERVER_HAND, "transmit: Quit connection with ret %d\n", ret); 
@@ -144,7 +150,7 @@ int ServerHandler::transmit()
 	{
 		// debug(SERVER_HAND, "transmit: Successfully sent data to client\n"); 
 	}
-	return ret;
+	return 0;
 }
 
 //-------------------------------------------------
