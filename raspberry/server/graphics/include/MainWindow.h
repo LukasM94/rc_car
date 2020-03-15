@@ -13,16 +13,19 @@ namespace Ui
 
 class MainWindow : public QMainWindow
 {
+  Q_OBJECT
+  
   public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
-    void run();
 
   private:
     Ui::MainWindow* ui_;
     QLabel*         label_;
     QImage*         image_;
+
+  public slots:
+    void run();
 };
 
 #endif

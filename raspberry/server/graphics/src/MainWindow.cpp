@@ -2,7 +2,7 @@
 #include <MainWindow.h>
 #include <debug.h>
 #include <unistd.h>
-#include "ui_MainWindow.h"
+#include <ui_MainWindow.h>
 
 MainWindow::MainWindow(QWidget *parent) : 
   QMainWindow(parent), 
@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
   setMaximumSize(640, 510);
 
   ui_->buttonStart->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-  connect(ui_->buttonStart, SIGNAL(toggle(bool)), SLOT(run()));
+  connect(ui_->buttonStart, SIGNAL(clicked()), SLOT(run()));
 }
 
 MainWindow::~MainWindow()
