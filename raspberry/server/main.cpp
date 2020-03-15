@@ -33,8 +33,6 @@ bool isInTids(const char* name);
 
 int main(int argc, char* argv[])
 {
-  return graphics(argc, argv);
-
   pthread_t tid_xc;
   pthread_t tid_server;
 
