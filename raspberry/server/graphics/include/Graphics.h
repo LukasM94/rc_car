@@ -11,7 +11,7 @@ class Image;
 class Graphics: public WorkingThread
 {
   public:
-    Graphics();
+    Graphics(const char*);
     ~Graphics();
 
     inline static void* runWrapper(void* arg)
@@ -22,6 +22,7 @@ class Graphics: public WorkingThread
     virtual void run();
 
   private:
+    Graphics();
     Graphics(const Graphics&);
 
     int    argv_;

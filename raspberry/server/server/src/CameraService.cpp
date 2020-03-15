@@ -57,6 +57,7 @@ void CameraService::stateHeader()
 {
   int ret;
   int size;
+  debug(CAM_SERVICE, "stateHeader: Receive\n");
   if ((ret = server_handler_->receive()) != 0)
   {
     state_ = ERROR;

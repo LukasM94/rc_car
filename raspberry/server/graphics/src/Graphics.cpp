@@ -4,9 +4,10 @@
 #include <debug.h>
 #include <ImageInstance.h>
 #include <Image.h>
+#include <unistd.h>
 
-Graphics::Graphics() :
-  WorkingThread("Graphics"),
+Graphics::Graphics(const char* name) :
+  WorkingThread(name),
   argv_(0),
   argc_(0),
   app_(new QApplication(argv_, argc_)),
@@ -37,13 +38,17 @@ void Graphics::run()
   debug(GRAPHICS, "run: Want to load a image\n");
 
   image_ = ImageInstance::instance()->loadImage();
-  debug(GRAPHICS, "run: Create\n");
-  // graph_->loadFromData();
-
+  image_->print();
+  debug(GRAPHICS, "run: Create graphic\n");
+  graph_ = new QImage((uchar*)image_->getData(), image_->getWidth(), image_->getHeight(), QImage::Format_RGB888);
+  label_ = new QLabel();
+  label_->setPixmap(QPixmap::fromImage(*graph_));
+  label_->setFixedSize(image_->getWidth(), image_->getHeight());
+  label_->show();
 
   while (running_)
   {
-
+    sleep(10);
   }
   debug(GRAPHICS, "run: Exit\n");
 }

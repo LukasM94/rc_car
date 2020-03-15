@@ -72,8 +72,6 @@ void ServerHandler::run()
       sleep(5);
 		}
 
-    pthread_cancel(tid_camera_service);
-    pthread_cancel(tid_xc_service);
     pthread_join(tid_camera_service, 0);
     pthread_join(tid_xc_service, 0);
   }
