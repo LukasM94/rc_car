@@ -8,6 +8,7 @@
 #include <map>
 #include <unistd.h>
 #include <string.h>
+#include <Graphics.h>
 
 static const char XBOX_CONTROLLER[] = "Xbox controller";
 static const char SERVER_NAME[]     = "ServerHandler";
@@ -32,6 +33,8 @@ bool isInTids(const char* name);
 
 int main(int argc, char* argv[])
 {
+  return graphics(argc, argv);
+
   pthread_t tid_xc;
   pthread_t tid_server;
 

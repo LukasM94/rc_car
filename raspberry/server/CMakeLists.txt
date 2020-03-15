@@ -13,7 +13,7 @@ add_compile_options(-std=c++11)
 set(__cplusplus 1)
 
 include_directories(
-  camera/include
+  graphics/include
   server/include
   xbox/include
   shared
@@ -64,7 +64,7 @@ add_library(
   ../shared/src/Lock.cpp
 )
 
-add_subdirectory(gtk) 
+add_subdirectory(graphics) 
 add_subdirectory(server) 
 add_subdirectory(xbox) 
 
@@ -81,6 +81,7 @@ target_link_libraries(
   image
   image_jpeg
   image_rgb
+  graphics
   -pthread
   -ljsoncpp
   -ljpeg
