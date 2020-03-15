@@ -17,23 +17,23 @@
       </sizepolicy>
     </property>
     <widget class="QWidget" name="centralWidget">
-      <widget class="QLabel" name="Label">
+      <widget class="QLabel" name="label">
         <property name="geometry">
           <rect>
             <x>0</x>
-            <y>0</y>
+            <y>55</y>
             <width>640</width>
             <height>480</height>
           </rect>
         </property>
       </widget>
-      <widget class="QPushButton" name="buttonStart">
+      <widget class="QPushButton" name="button_start">
         <property name="geometry">
           <rect>
-            <x>260</x>
-            <y>0</y>
-            <width>120</width>
-            <height>30</height>
+            <x>240</x>
+            <y>5</y>
+            <width>160</width>
+            <height>35</height>
           </rect>
         </property>
         <property name="text">

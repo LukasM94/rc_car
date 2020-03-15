@@ -1,6 +1,5 @@
 #include <Graphics.h>
 #include <QApplication>
-#include <QLabel>
 #include <debug.h>
 #include <ImageInstance.h>
 #include <Image.h>

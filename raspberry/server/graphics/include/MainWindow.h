@@ -2,9 +2,11 @@
 #define MAIN_WINDOW_H
 
 #include <QMainWindow>
+#include <atomic>
 
 class QLabel;
 class QImage;
+class QPushButton;
 
 namespace Ui
 {
@@ -14,15 +16,16 @@ namespace Ui
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
-  
+
   public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
   private:
-    Ui::MainWindow* ui_;
-    QLabel*         label_;
-    QImage*         image_;
+    void setFont(QPushButton* button);
+
+    Ui::MainWindow*  ui_;
+    std::atomic_bool running_;
 
   public slots:
     void run();
