@@ -41,6 +41,7 @@ int ImageInstance::saveImage(Image* image)
     image_ = 0;
   }
   image_ = new ImageRGB(image);
+  image_->print();
   cond_.wake();
   cond_.unlock();
   return 0;

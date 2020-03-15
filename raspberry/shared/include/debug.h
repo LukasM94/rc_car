@@ -55,3 +55,4 @@ const size_t IMAGE_JPEG  = Ansi_Blue;//    | OUTPUT_ENABLED;
 const size_t IMAGE_RGB   = Ansi_Magenta;// | OUTPUT_ENABLED;
 const size_t CAM_SERVICE = Ansi_Green   | OUTPUT_ENABLED;
 const size_t IMAGE_INSTA = Ansi_Blue    | OUTPUT_ENABLED;
+const size_t GRAPHICS    = Ansi_White   | OUTPUT_ENABLED;

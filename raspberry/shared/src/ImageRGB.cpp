@@ -74,6 +74,7 @@ ImageRGB::ImageRGB(const Image* image) :
 
 void ImageRGB::print()
 {
+  debug(IMAGE_RGB, "ImageRGB: Print picture\n");
   std::ofstream outFile ("raspicam_image.ppm", std::ios::binary);
   outFile << "P6\n" << width_ <<" "<< height_ << " 255\n";
   outFile.write((char*)data_, size_);
