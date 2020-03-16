@@ -21,8 +21,8 @@ void CameraHandler::run()
   debug(CAMERA, "run: Start\n");
   while (running_)
   {
-    debug(CAMERA, "run: Sleep 1 second\n");
-    sleep(1);
+    debug(CAMERA, "run: Sleep %d milli second\n", SLEEP / 1000);
+    usleep(SLEEP);
 
     int ret;
     if ((ret = camera->grab()) != 0)
