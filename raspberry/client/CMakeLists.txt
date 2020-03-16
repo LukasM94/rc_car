@@ -19,6 +19,11 @@ include_directories(
   shared/include
   ../shared/
   ../shared/include
+  ../shared/Image/include
+  ../shared/Lock/include
+  ../shared/GamePad/include
+  ../shared/Thread/include
+  ../shared/Socket/include
   ../../shared
   extern/include
   raspberry/include
@@ -30,27 +35,27 @@ include_directories(
 add_library( 
   working_thread
   SHARED
-  ../shared/src/WorkingThread.cpp
+  ../shared/Thread/src/WorkingThread.cpp
 )
 add_library( 
   socket
   SHARED
-  ../shared/src/Socket.cpp
+  ../shared/Socket/src/Socket.cpp
 )
 add_library( 
   game_pad
   SHARED
-  ../shared/src/GamePad.cpp
+  ../shared/GamePad/src/GamePad.cpp
 )
 add_library(
   image
   SHARED
-  ../shared/src/Image.cpp
+  ../shared/Image/src/Image.cpp
 )
 add_library(
   image_rgb
   SHARED
-  ../shared/src/ImageRGB.cpp
+  ../shared/Image/src/ImageRGB.cpp
 )
 add_dependencies(
   image_rgb
@@ -59,17 +64,17 @@ add_dependencies(
 add_library(
   image_jpeg
   SHARED
-  ../shared/src/ImageJPEG.cpp
+  ../shared/Image/src/ImageJPEG.cpp
 )
 add_library(
   lock
   SHARED
-  ../shared/src/Lock.cpp
+  ../shared/Lock/src/Lock.cpp
 )
 add_library(
   cond
   SHARED
-  ../shared/src/Cond.cpp
+  ../shared/Lock/src/Cond.cpp
 )
 
 add_subdirectory(extern) 
