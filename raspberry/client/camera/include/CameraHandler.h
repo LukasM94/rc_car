@@ -18,6 +18,8 @@ class CameraHandler : public WorkingThread
 
   private:
     CameraHandler(const CameraHandler&);
+
+    static const int SLEEP = 40000;
 };
 
 #endif
