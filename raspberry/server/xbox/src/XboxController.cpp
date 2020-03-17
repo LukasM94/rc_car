@@ -24,28 +24,23 @@ extern void atExit(const char* name);
 XboxController::XboxController(const char* path, const char* name) :
   WorkingThread(name),
   path_(path),
+  fd_(-1),
   gamepad_(new GamePad(BUTTON_COUNT))
 {
-  init();
-  debug(XBOX_CONTR, "ctor: fd_ <%d>\n", fd_);
+  debug(XBOX_CONTR, "ctor\n");
 }
 
 //-------------------------------------------------
 XboxController::~XboxController()
 {
-  close(fd_);
-}
-
-//-------------------------------------------------
-void XboxController::init()
-{
-  fd_ = open(path_, O_RDONLY);
+  debug(XBOX_CONTR, "dtor\n");
 }
 
 //-------------------------------------------------
 void XboxController::run()
 {
   debug(XBOX_CONTR, "run: Start\n");
+  fd_ = open(path_, O_RDONLY);
   int ret;
   while (running_ && (ret = readEvent()) >= 0)
   {
@@ -53,6 +48,7 @@ void XboxController::run()
   debug(XBOX_CONTR, "run: Ret is %d\n", ret);
   atExit(name_.c_str());
   gamepad_->reset();
+  close(fd_);
   debug(XBOX_CONTR, "run: Exit\n");
 }
 

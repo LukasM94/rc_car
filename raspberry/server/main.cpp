@@ -78,7 +78,6 @@ int main(int argc, char* argv[])
       if (!isInTids(XBOX_CONTROLLER))
       {
         debug(MAIN, "main: Restart %s thread\n", XBOX_CONTROLLER);
-        xc->init();
         pthread_create(&tid_xc, 0, XboxController::runWrapper, xc);
         pthread_detach(tid_xc);
         debug(MAIN, "main: Add %s to the tidmap\n", XBOX_CONTROLLER);

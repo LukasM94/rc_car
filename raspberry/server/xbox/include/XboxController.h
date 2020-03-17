@@ -36,8 +36,6 @@ class XboxController : public WorkingThread
       return gamepad_;
     }
 
-    void init();
-
   private:
     XboxController(XboxController& c);
 
