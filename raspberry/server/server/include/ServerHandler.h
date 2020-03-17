@@ -36,6 +36,9 @@ class ServerHandler : public WorkingThread, public Socket
     int client_socket_;
 
     GamePad* gamepad_;
+
+    XboxControllerService* xc_service_;
+    CameraService*         camera_service_;
 };
 
 #endif

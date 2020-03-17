@@ -7,6 +7,7 @@
 #include <string>
 #include <unistd.h>
 #include <math.h>
+#include <assert.h>
 #if defined(__x86_64)
 #include <json/json.h>
 #include <json/reader.h>

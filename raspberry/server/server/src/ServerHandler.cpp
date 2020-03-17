@@ -11,6 +11,8 @@
 #include <config.h>
 #include <XboxControllerService.h>
 #include <CameraService.h>
+#include <ThreadHandler.h>
+#include <assert.h>
 
 #define HELLO "Hello from server"
 
@@ -18,7 +20,9 @@
 ServerHandler::ServerHandler(unsigned int port, GamePad* gamepad) : 
   WorkingThread("ServerHandler"),
   Socket(port, "127.0.0.1"),
-  gamepad_(gamepad)
+  gamepad_(gamepad),
+  xc_service_(0),
+  camera_service_(0)
 {
   debug(SERVER_HAND, "ctor:\n");
 }
@@ -26,6 +30,14 @@ ServerHandler::ServerHandler(unsigned int port, GamePad* gamepad) :
 //-------------------------------------------------
 ServerHandler::~ServerHandler()
 {
+  if (xc_service_ != 0)
+  {
+    delete xc_service_;
+  }
+  if (camera_service_ != 0)
+  {
+    delete camera_service_;
+  }
   debug(SERVER_HAND, "dtor:\n");
 }
 
@@ -34,10 +46,13 @@ void ServerHandler::run()
 {
   int ret = 0;
 
+  xc_service_     = new XboxControllerService(this, gamepad_);
+  camera_service_ = new CameraService(this);
+
   debug(SERVER_HAND, "run: Start\n");
   if (initSocket())
   {
-    exit(-1);
+    assert(0);
   }
   debug(SERVER_HAND, "run: Successfully initialized and binded\n");
 
@@ -56,14 +71,10 @@ void ServerHandler::run()
     debug(SERVER_HAND, "run: Connected\n");
     connected_ = 1;
 
-    pthread_t tid_xc_service;
-    pthread_t tid_camera_service;
-
-    XboxControllerService* xc_service     = new XboxControllerService(this, gamepad_);
-    CameraService*         camera_service = new CameraService(this);
-
-    pthread_create(&tid_xc_service, 0, XboxControllerService::runWrapper, xc_service);  
-    pthread_create(&tid_camera_service, 0, CameraService::runWrapper, camera_service);  
+    ThreadHandler::lock();
+    ThreadHandler::startThread(xc_service_, 0);
+    ThreadHandler::startThread(camera_service_, 0);
+    ThreadHandler::unlock();
 
     while (connected_)
     {
@@ -71,10 +82,11 @@ void ServerHandler::run()
       sleep(5);
     }
 
-    pthread_join(tid_camera_service, 0);
-    pthread_join(tid_xc_service, 0);
-    
     closeSocket();
+
+    ThreadHandler::waitTillThreadFinished(xc_service_);
+    ThreadHandler::waitTillThreadFinished(camera_service_);
+
   }
   debug(SERVER_HAND, "run: Exit with ret %d\n", ret);
 }

@@ -5,6 +5,7 @@
 #include <string>
 #include <string.h>
 #include <debug.h>
+#include <assert.h>
 #if defined(__x86_64)
 #include <json/json.h>
 #include <json/reader.h>

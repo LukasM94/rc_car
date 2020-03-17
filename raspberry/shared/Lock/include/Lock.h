@@ -13,11 +13,13 @@ class Lock
     void lock();
     void unlock();
     int trylock();
+    bool heldByCurrentThread();
 
   private:  
     Lock();
     pthread_mutex_t lock_;
     std::string     name_;
+    pthread_t       held_by_;
 };
 
 #endif

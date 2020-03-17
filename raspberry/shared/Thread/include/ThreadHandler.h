@@ -13,8 +13,9 @@ class ThreadHandler
     static void init();
     static void lock();
     static void unlock();
-    static int  startThread(WorkingThread* thread);
+    static int  startThread(WorkingThread* thread, bool detached = true);
     static bool isThreadRunning(WorkingThread* thread);
+    static int  waitTillThreadFinished(WorkingThread* thread, void** ret = 0);
 
   private:
     static int addThread(WorkingThread* thread);

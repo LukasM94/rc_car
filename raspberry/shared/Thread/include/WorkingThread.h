@@ -23,6 +23,10 @@ class WorkingThread
     {
       return name_.c_str();
     }
+    inline long unsigned int getId()
+    {
+      return tid_;
+    }
   protected:
     std::atomic_bool  running_;
     std::string       name_;
