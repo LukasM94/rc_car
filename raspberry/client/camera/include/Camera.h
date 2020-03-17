@@ -25,6 +25,7 @@ class Camera
     ~Camera();
 
     int init();
+    int deinit();
     int grab();
     unsigned int getWidth();
     unsigned int getHeight();
@@ -58,23 +59,13 @@ class Camera
     {
       cond_.wake();
     }
+    void deleteImage();
 
   private:
     Camera();
     static Camera* instance_;
 
-    // ImageJPEG* jpeg = (ImageJPEG*)image_;
-    // image_          = new ImageRGB(image_);
-    // debug(CAMERA, "grab: Got the rgb back %d to %d\n", jpeg->getSize(), image_->getSize());
-    // delete jpeg;
-    // std::ofstream outFile ("raspicam_image.ppm",std::ios::binary);
-    // outFile << "P6\n" << image_->getWidth() <<" "<< image_->getHeight() << " 255\n";
-    // outFile.write((char*)image_->getData(), image_->getSize());
-    // debug(CAMERA, "run: Wrote picture to file\n");
-
     static int initCamera(raspicam::RaspiCam* camera_handler, struct CameraInfo& info);
-
-    void deleteImage();
 
     raspicam::RaspiCam* raspi_cam_;
 
