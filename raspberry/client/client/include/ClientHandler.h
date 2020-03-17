@@ -4,6 +4,9 @@
 #include <Socket.h>
 #include <WorkingThread.h>
 
+class CameraClient;
+class GamePadClient;
+
 class ClientHandler : public WorkingThread, public Socket 
 {
   public:
@@ -29,6 +32,9 @@ class ClientHandler : public WorkingThread, public Socket
     int server_socket_;
 
     static const char HELLO[];
+
+    GamePadClient* gp_client_;
+    CameraClient*  cam_client_;
 };
 
 #endif

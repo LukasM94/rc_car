@@ -15,10 +15,8 @@
 #include <Image.h>
 #include <Control.h>
 #include <Camera.h>
-
-pthread_t tid_client_handler;
-pthread_t tid_control_handler;
-pthread_t tid_camera;
+#include <ThreadHandler.h>
+#include <client_config.h>
 
 ClientHandler*   client_handler;
 ControlHandler*  control_handler;
@@ -40,28 +38,46 @@ int main(int argc, char* argv[])
   const char* port_no = SERVER_PORT;
 
   debug(MAIN, "main: Initialize the instances\n");
+  ThreadHandler::init();
   game_pad         = GamePadInstance::instance()->getGamePad();
   camera           = Camera::instance();
   atmega           = new Atmega();
-  control_handler  = new ControlHandler();
-  control = Control::instance();
-  control->setController(atmega);
+  control_handler  = new ControlHandler(atmega);
   camera_handler   = new CameraHandler();
   client_handler   = new ClientHandler(atoi(port_no), ip_addr);
 
   debug(MAIN, "main: Catch the sigint signal\n");
   signal(SIGINT, signalHandler);  
 
-  debug(MAIN, "main: Create threads\n");
-  pthread_create(&tid_client_handler, 0, ClientHandler::runWrapper, client_handler);
-  pthread_create(&tid_control_handler, 0, ControlHandler::runWrapper, control_handler);
-  pthread_create(&tid_camera, 0, CameraHandler::runWrapper, camera_handler);
+  ThreadHandler::lock();
+  ThreadHandler::beginThread(client_handler);
+  ThreadHandler::beginThread(control_handler);
+  ThreadHandler::beginThread(camera_handler);
+  ThreadHandler::unlock();
 
-  debug(MAIN, "main: Goes to sleep\n");
-  pthread_join(tid_client_handler, 0);
-  pthread_join(tid_control_handler, 0);
-  pthread_join(tid_camera, 0);
+  while (1)
+  {
+    sleep(CLIENT_SLEEP_TIME);
 
+    debug(MAIN, "main: Goes to sleep\n");
+    ThreadHandler::gotoSleep();
+    debug(MAIN, "main: Got up\n");
+
+    ThreadHandler::lock();
+    if (ThreadHandler::isThreadRunning(client_handler) == false)
+    {
+      ThreadHandler::startThread(client_handler);
+    }
+    if (ThreadHandler::isThreadRunning(control_handler) == false)
+    {
+      ThreadHandler::startThread(control_handler);
+    }
+    if (ThreadHandler::isThreadRunning(camera_handler) == false)
+    {
+      ThreadHandler::startThread(camera_handler);
+    }
+    ThreadHandler::unlock();
+  }
   debug(MAIN, "main: Exits\n");
   return 0;
 }
@@ -69,7 +85,6 @@ int main(int argc, char* argv[])
 void signalHandler(int signal_num)
 {
   debug(MAIN, "signalHandler: Got an signal %d\n", signal_num);
-  control_handler->deinit();
   client_handler->closeSocket();
   debug(MAIN, "signalHandler: Exits\n");
   _exit(signal_num);

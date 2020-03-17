@@ -16,6 +16,7 @@ set(warnings "-Wall -Wextra")
 # add_definitions(-D__extern)
 
 include_directories(
+  shared
   shared/include
   ../shared/
   ../shared/include
@@ -36,6 +37,11 @@ add_library(
   working_thread
   SHARED
   ../shared/Thread/src/WorkingThread.cpp
+)
+add_library( 
+  thread_handler
+  SHARED
+  ../shared/Thread/src/ThreadHandler.cpp
 )
 add_library( 
   socket
@@ -116,6 +122,9 @@ target_link_libraries(
   camera_client
   camera
   cond
+  thread_handler
+  gpio_handler
+  i2c_handler
   -pthread
   -lrt
   -ljsoncpp
@@ -147,6 +156,9 @@ target_link_libraries(
   camera_client
   camera
   cond
+  thread_handler
+  gpio_handler
+  i2c_handler
   -pthread
   -lwiringPi
   -lrt

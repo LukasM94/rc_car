@@ -10,13 +10,17 @@
 #include <debug.h>
 #include <GamePadClient.h>
 #include <CameraClient.h>
+#include <ThreadHandler.h>
+#include <client_config.h>
 
 const char ClientHandler::HELLO[] = "Hello from client";
 
 //-------------------------------------------------
 ClientHandler::ClientHandler(unsigned int server_port, const char* server_ip) :
   Socket(server_port, server_ip),
-  WorkingThread("ClientHandler")
+  WorkingThread("ClientHandler"),
+  gp_client_(0),
+  cam_client_(0)
 {
   debug(CLIENT_HAND, "ctor: %d, %s\n", server_port, server_ip);
 }
@@ -34,7 +38,7 @@ int ClientHandler::initSocket()
 
   if ((server_socket_ = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
   { 
-    debug(ERROR, "ClientHandler::init: Socket creation error \n"); 
+    debug(WARNING, "ClientHandler::init: Socket creation error \n"); 
     return -1; 
   } 
   
@@ -43,7 +47,7 @@ int ClientHandler::initSocket()
     
   if(inet_pton(AF_INET, ip_address_.c_str(), &address_.sin_addr)<=0)  
   { 
-    debug(ERROR, "ClientHandler::init: Invalid address/ Address not supported \n"); 
+    debug(WARNING, "ClientHandler::init: Invalid address/ Address not supported \n"); 
     return -1; 
   } 
   return 0;
@@ -103,12 +107,15 @@ void ClientHandler::run()
 {
   int ret = 0;
 
+  gp_client_  = new GamePadClient(this);
+  cam_client_ = new CameraClient(this);
+
   debug(CLIENT_HAND, "run: Start\n");
   while (running_)
   {
     if (initSocket())
     {
-      exit(-1);
+      break;
     }
     debug(CLIENT_HAND, "run: Successfully initialized\n");
 
@@ -124,28 +131,32 @@ void ClientHandler::run()
     }
 
     debug(CLIENT_HAND, "run: Connected\n");
-
     connected_ = 1;
-    pthread_t tid_gp_client;
-    pthread_t tid_cam_client;
 
-    GamePadClient* gp_client  = new GamePadClient(this);
-    CameraClient*  cam_client = new CameraClient(this);
-
-    pthread_create(&tid_gp_client, 0, GamePadClient::runWrapper, gp_client);
-    pthread_create(&tid_cam_client, 0, CameraClient::runWrapper, cam_client);
+    ThreadHandler::lock();
+    ThreadHandler::beginThread(gp_client_, 0);
+    ThreadHandler::beginThread(cam_client_, 0);
+    ThreadHandler::unlock();
 
     while (connected_)
     {
-      debug(CLIENT_HAND, "run: Nothing to do\n");
-      sleep(5);
+      debug(CLIENT_HAND, "run: Go to sleep\n");
+      ThreadHandler::gotoSleep();
+      debug(CLIENT_HAND, "run: Got up\n");
+      sleep(CLIENT_SLEEP_TIME);
     }
 
-    pthread_join(tid_cam_client, 0);
-    pthread_join(tid_gp_client, 0);
-
     closeSocket();
+
+    ThreadHandler::waitTillThreadFinished(gp_client_);
+    ThreadHandler::waitTillThreadFinished(cam_client_);
+    ThreadHandler::exitThread(gp_client_);
+    ThreadHandler::exitThread(cam_client_);
   }
+
+  delete gp_client_;
+  delete cam_client_;
+
   debug(CLIENT_HAND, "run: Exit\n");
 }
 

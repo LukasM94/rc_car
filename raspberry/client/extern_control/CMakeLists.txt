@@ -17,3 +17,13 @@ add_dependencies(
   i2c
   communication
 )
+add_library(
+  gpio_handler
+  SHARED
+  src/GpioHandler.cpp
+)
+add_library(
+  i2c_handler
+  SHARED
+  src/I2cHandler.cpp
+)

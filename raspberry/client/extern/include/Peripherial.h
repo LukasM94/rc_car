@@ -16,6 +16,7 @@ class Peripherial
     int initLedRed(uint8_t led_pin);
     int initResetButton(uint8_t reset_pin);
     int initButton(uint8_t button_pin, void (*f_ptr)());
+    void resetUcontroller();
     void resetResetPin();
     void setResetPin();
     void heartBeat();
