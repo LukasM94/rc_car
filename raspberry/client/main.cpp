@@ -16,10 +16,7 @@
 #include <Control.h>
 #include <Camera.h>
 #include <ThreadHandler.h>
-
-// pthread_t tid_client_handler;
-// pthread_t tid_control_handler;
-// pthread_t tid_camera;
+#include <client_config.h>
 
 ClientHandler*   client_handler;
 ControlHandler*  control_handler;
@@ -45,9 +42,7 @@ int main(int argc, char* argv[])
   game_pad         = GamePadInstance::instance()->getGamePad();
   camera           = Camera::instance();
   atmega           = new Atmega();
-  control_handler  = new ControlHandler();
-  control = Control::instance();
-  control->setController(atmega);
+  control_handler  = new ControlHandler(atmega);
   camera_handler   = new CameraHandler();
   client_handler   = new ClientHandler(atoi(port_no), ip_addr);
 
@@ -63,6 +58,8 @@ int main(int argc, char* argv[])
 
   while (1)
   {
+    sleep(CLIENT_SLEEP_TIME);
+
     debug(MAIN, "main: Goes to sleep\n");
     ThreadHandler::gotoSleep();
     debug(MAIN, "main: Got up\n");
@@ -81,8 +78,6 @@ int main(int argc, char* argv[])
       ThreadHandler::startThread(camera_handler);
     }
     ThreadHandler::unlock();
-
-    sleep(5);
   }
   debug(MAIN, "main: Exits\n");
   return 0;
@@ -91,7 +86,6 @@ int main(int argc, char* argv[])
 void signalHandler(int signal_num)
 {
   debug(MAIN, "signalHandler: Got an signal %d\n", signal_num);
-  control_handler->deinit();
   client_handler->closeSocket();
   debug(MAIN, "signalHandler: Exits\n");
   _exit(signal_num);

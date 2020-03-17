@@ -11,6 +11,7 @@
 #include <GamePadClient.h>
 #include <CameraClient.h>
 #include <ThreadHandler.h>
+#include <client_config.h>
 
 const char ClientHandler::HELLO[] = "Hello from client";
 
@@ -137,9 +138,13 @@ void ClientHandler::run()
     ThreadHandler::beginThread(cam_client_, 0);
     ThreadHandler::unlock();
 
-    debug(CLIENT_HAND, "run: Go to sleep\n");
-    ThreadHandler::gotoSleep();
-    debug(CLIENT_HAND, "run: Got up\n");
+    while (connected_)
+    {
+      debug(CLIENT_HAND, "run: Go to sleep\n");
+      ThreadHandler::gotoSleep();
+      debug(CLIENT_HAND, "run: Got up\n");
+      sleep(CLIENT_SLEEP_TIME);
+    }
 
     closeSocket();
 

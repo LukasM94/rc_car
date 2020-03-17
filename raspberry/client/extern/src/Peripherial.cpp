@@ -61,6 +61,13 @@ int Peripherial::initButton(uint8_t button_pin, void (*f_ptr)())
   return gpio_->initButton(button_pin, f_ptr);
 }
 
+void Peripherial::resetUcontroller()
+{
+  resetResetPin();
+  usleep(10000);
+  setResetPin();
+}
+
 void Peripherial::resetResetPin()
 {
   gpio_->resetResetPin();

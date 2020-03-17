@@ -5,14 +5,17 @@
 #include <GamePad.h>
 #include <unistd.h>
 #include <Control.h>
+#include <ThreadHandler.h>
+#include <I2cHandler.h>
+#include <GpioHandler.h>
+#include <UController.h>
+#include <client_config.h>
 
-const char ControlHandler::I2C[]  = "i2c";
-const char ControlHandler::GPIO[] = "gpio";
-
-ControlHandler::ControlHandler() :
+ControlHandler::ControlHandler(UController* u_controller) :
   WorkingThread("ControlHandler"),
-  tids_(),
-  lock_("ControlHandler::lock_")
+  i2c_handler_(0),
+  gpio_handler_(0),
+  u_controller_(u_controller)
 {
   debug(CONTROL, "ctor\n");
 }
@@ -24,131 +27,44 @@ ControlHandler::~ControlHandler()
 }
 
 //--------------------------------------------------------------------
-void ControlHandler::init()
-{
-  debug(CONTROL, "init\n");
-  Control::instance()->gpioInit();
-  Control::instance()->i2cInit();
-}
-
-//--------------------------------------------------------------------
-void ControlHandler::deinit()
-{
-  debug(CONTROL, "deinit\n");
-  Control::instance()->gpioDeInit();
-}
-
-//--------------------------------------------------------------------
-void* ControlHandler::wrapperStart(void* args)
-{
-  const char*      primary_key      = ((struct start_arg*)args)->primary_key_;
-  ControlHandler*         control_handler          = ((struct start_arg*)args)->control_handler_;
-  Control* control = Control::instance();
-
-  debug(CONTROL, "wrapperStart: Primary key is %s\n", primary_key);
-  debug(CONTROL, "wrapperStart: Go to f_ptr\n");
-  void* ret = ((struct start_arg*)args)->f_ptr_(control);
-
-  control_handler->lock();
-  control_handler->removeTid(primary_key);
-  control_handler->unlock();
-
-  return 0;
-}
-
-//--------------------------------------------------------------------
-int ControlHandler::setTid(const char* primary_key, int tid)
-{
-  auto it = tids_.find(primary_key);
-  if (it != tids_.end())
-  {
-    debug(WARNING, "ControlHandler::setTid: %s is already in map\n", primary_key);
-    return -1;
-  }
-  tids_[primary_key] = tid;
-  return 0;
-}
-
-//--------------------------------------------------------------------
-int ControlHandler::removeTid(const char* primary_key)
-{
-  auto it = tids_.find(primary_key);
-  if (it == tids_.end())
-  {
-    debug(WARNING, "ControlHandler::removeTid: %s not found\n", primary_key);
-    return -1;
-  }
-  tids_.erase(it);
-  return 0;
-}
-
-//--------------------------------------------------------------------
-bool ControlHandler::findTid(const char* primary_key)
-{
-  auto it = tids_.find(primary_key);
-  return (it != tids_.end());
-}
-
-//--------------------------------------------------------------------
 void ControlHandler::run()
 {
-  pthread_t tid_i2c;
-  pthread_t tid_gpio;
+  debug(CTL_HANDLER, "run: Start\n");
 
-  struct start_arg args_i2c  = {this, I2C, 0, &Control::i2cFunction};
-  struct start_arg args_gpio = {this, GPIO, 0,  &Control::gpioFunction};
+  i2c_handler_  = new I2cHandler(this);
+  gpio_handler_ = new GpioHandler(this);
 
-  init();
+  gpio_handler_->init();
+  // i2c_handler_->init();
+  u_controller_->initI2c();
 
-  lock();
-  debug(CONTROL, "run: Create threads\n");
-  pthread_create(&tid_gpio, 0, ControlHandler::wrapperStart, &args_gpio);
-  pthread_create(&tid_i2c, 0, ControlHandler::wrapperStart, &args_i2c);
-  
-  debug(CONTROL, "run: Set the tids\n");
-  setTid(args_gpio.primary_key_, tid_gpio);
-  setTid(args_i2c.primary_key_, tid_i2c);
-  unlock();
+  ThreadHandler::lock();
+  ThreadHandler::beginThread(i2c_handler_);
+  ThreadHandler::beginThread(gpio_handler_);
+  ThreadHandler::unlock();
 
   while (running_)
   {
-    lock();
-    if (tids_.size() != 2)
+    sleep(CLIENT_SLEEP_TIME);
+
+    debug(CTL_HANDLER, "run: Goes to sleep\n");
+    ThreadHandler::gotoSleep();
+    debug(CTL_HANDLER, "run: Got up\n");
+
+    ThreadHandler::lock();
+    if (ThreadHandler::isThreadRunning(i2c_handler_) == false)
     {
-      if (findTid(args_gpio.primary_key_) == false)
-      {
-        pthread_create(&tid_gpio, 0, ControlHandler::wrapperStart, &args_gpio);
-        setTid(args_gpio.primary_key_, tid_gpio);
-        debug(CONTROL, "run: Restart gpio\n");
-      }
-      if (findTid(args_i2c.primary_key_) == false)
-      {
-        pthread_create(&tid_i2c, 0, ControlHandler::wrapperStart, &args_i2c);
-        setTid(args_i2c.primary_key_, tid_i2c);
-        debug(CONTROL, "run: Restart i2c\n");
-      }
-      unlock();
+      ThreadHandler::startThread(i2c_handler_);
     }
-    else
+    if (ThreadHandler::isThreadRunning(gpio_handler_) == false)
     {
-      printTidEntries();
-      unlock();
-      debug(CONTROL, "run: Nothing to do\n");
-      sleep(5);
+      ThreadHandler::startThread(gpio_handler_);
     }
+    ThreadHandler::unlock();
   }
 
-  debug(CONTROL, "run: Exit\n");
-}
+  i2c_handler_->deinit();
+  gpio_handler_->deinit();
 
-//--------------------------------------------------------------------
-void ControlHandler::printTidEntries()
-{
-  std::string str;
-  for (auto it = tids_.begin(); it != tids_.end(); ++it)
-  {
-    str += "<" + std::string(it->first) + ">, ";
-  }
-  str.erase(str.end() - 2, str.end());
-  debug(CTL_DATA, "printTidEntries: %s\n", str.c_str());
+  debug(CTL_HANDLER, "run: Exit\n");
 }
