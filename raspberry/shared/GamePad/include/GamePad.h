@@ -106,6 +106,11 @@ class GamePad
     }
     void reset();
 
+    inline bool isNew()
+    {
+      return refreshed_.exchange(false);
+    }
+
     static const unsigned int BUTTON_A      = 0;
     static const unsigned int BUTTON_B      = 1;
     static const unsigned int BUTTON_X      = 2;
@@ -128,6 +133,8 @@ class GamePad
     std::atomic_bool    rt_;
     std::atomic_uint8_t buttons_count_;
     std::atomic_bool*   buttons_;
+
+    std::atomic_bool refreshed_;
 
     Lock lock_;
 

@@ -24,6 +24,7 @@ GamePad::GamePad() :
   rt_(0),
   buttons_count_(0),
   buttons_(0),
+  refreshed_(0),
   lock_("GamePad::lock")
 {
   debug(GAME_PAD, "ctor\n");
@@ -35,6 +36,7 @@ GamePad::GamePad(uint8_t button_count) :
   rt_(0),
   buttons_count_(button_count),
   buttons_(new std::atomic_bool[buttons_count_]),
+  refreshed_(0),
   lock_("GamePad::lock")
 {
   debug(GAME_PAD, "ctor: button_count <%d>\n", button_count);
@@ -106,6 +108,8 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
     debug(WARNING, "GamePad::getFromString: %s\n", e.what());
     goto GET_FROM_STRING_ERROR;
   }
+
+  game_pad->refreshed_ = 1;
 
   game_pad->unlock();
   return 0;

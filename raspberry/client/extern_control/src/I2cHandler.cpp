@@ -53,6 +53,8 @@ void I2cHandler::run()
 
   sleep(3);
 
+  game_pad_error_ = 0;
+
   i2c_error_ = 0;
   running_   = 1;
 
@@ -60,7 +62,24 @@ void I2cHandler::run()
   while (running_)
   {
     debug(I2C_HANDL_D, "run: Get data of game_pad\n");
+
     game_pad->lock();
+    if (game_pad->isNew() == false)
+    {
+      game_pad_error_++;
+      if (game_pad_error_ > GAME_PAD_ERROR_THRESHOLD)
+      {
+        debug(WARNING, "I2cHandler::run: Gamepad has not been refreshed in some time. Maybe a connection problem?\n");
+        running_ = false;
+        game_pad->unlock();
+        continue;
+      }
+    }
+    else
+    {
+      game_pad_error_ = 0;
+    }
+
     bool start_button  = game_pad->getButton(GamePad::BUTTON_START);
     bool select_button = game_pad->getButton(GamePad::BUTTON_SELECT);
     

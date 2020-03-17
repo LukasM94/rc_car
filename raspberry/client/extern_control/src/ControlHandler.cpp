@@ -66,5 +66,8 @@ void ControlHandler::run()
   i2c_handler_->deinit();
   gpio_handler_->deinit();
 
+  delete i2c_handler_;
+  delete gpio_handler_;
+
   debug(CTL_HANDLER, "run: Exit\n");
 }

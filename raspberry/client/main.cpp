@@ -55,7 +55,6 @@ int main(int argc, char* argv[])
   ThreadHandler::beginThread(camera_handler);
   ThreadHandler::unlock();
 
-
   while (1)
   {
     sleep(CLIENT_SLEEP_TIME);
