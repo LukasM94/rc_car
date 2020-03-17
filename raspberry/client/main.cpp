@@ -41,6 +41,7 @@ int main(int argc, char* argv[])
   const char* port_no = SERVER_PORT;
 
   debug(MAIN, "main: Initialize the instances\n");
+  ThreadHandler::init();
   game_pad         = GamePadInstance::instance()->getGamePad();
   camera           = Camera::instance();
   atmega           = new Atmega();

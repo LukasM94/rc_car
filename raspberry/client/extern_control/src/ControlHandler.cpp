@@ -9,15 +9,6 @@
 const char ControlHandler::I2C[]  = "i2c";
 const char ControlHandler::GPIO[] = "gpio";
 
-//--------------------------------------------------------------------
-// ControlHandler::ControlHandler(UController* u_controller) :
-//   WorkingThread("ControlHandler"),
-//   control_handler_(u_controller),
-//   tids_(),
-//   lock_("ControlHandler::lock_")
-// {
-//   debug(CONTROL, "ctor\n");
-// }
 ControlHandler::ControlHandler() :
   WorkingThread("ControlHandler"),
   tids_(),
