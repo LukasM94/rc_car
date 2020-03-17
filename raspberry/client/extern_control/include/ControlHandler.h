@@ -13,11 +13,6 @@ class ControlHandler : public WorkingThread
     ControlHandler();
     ~ControlHandler();
 
-    inline static void* runWrapper(void* arg)
-    {
-      reinterpret_cast<ControlHandler*>(arg)->run();
-      return 0;
-    }
     virtual void run();
 
     void init();

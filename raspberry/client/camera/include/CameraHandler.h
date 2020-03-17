@@ -9,11 +9,6 @@ class CameraHandler : public WorkingThread
     CameraHandler();
     ~CameraHandler();
 
-    inline static void* runWrapper(void* arg)
-    {
-      reinterpret_cast<CameraHandler*>(arg)->run();
-      return 0;
-    }
     virtual void run();
 
   private:

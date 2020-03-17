@@ -12,11 +12,6 @@ class GamePadClient : public WorkingThread
     GamePadClient(ClientHandler* client_handler);
     ~GamePadClient();
 
-    inline static void* runWrapper(void* arg)
-    {
-      reinterpret_cast<GamePadClient*>(arg)->run();
-      return 0;
-    }
     virtual void run();
 
   private:

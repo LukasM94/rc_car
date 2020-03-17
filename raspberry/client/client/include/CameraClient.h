@@ -11,11 +11,6 @@ class CameraClient : public WorkingThread
     CameraClient(ClientHandler* client_handler);
     ~CameraClient();
 
-    inline static void* runWrapper(void* arg)
-    {
-      reinterpret_cast<CameraClient*>(arg)->run();
-      return 0;
-    }
     virtual void run();
 
   private:

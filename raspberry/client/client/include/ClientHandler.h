@@ -4,17 +4,12 @@
 #include <Socket.h>
 #include <WorkingThread.h>
 
-class ClientHandler : public Socket, public WorkingThread
+class ClientHandler : public WorkingThread, public Socket 
 {
   public:
     ClientHandler(unsigned int server_port, const char* server_ip);
     ~ClientHandler();
 
-    inline static void* runWrapper(void* arg)
-    {
-      reinterpret_cast<ClientHandler*>(arg)->run();
-      return 0;
-    }
     virtual void run();
 
     virtual int initSocket();
