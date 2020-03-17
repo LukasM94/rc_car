@@ -4,27 +4,33 @@
 #include <atomic>
 #include <string>
 
+class ThreadHandler;
+
 class WorkingThread
 {
   public:
     WorkingThread(const char* name);
     ~WorkingThread();
 
-    inline static void* runWrapper(void* arg)
-    {
-      reinterpret_cast<WorkingThread*>(arg)->run();
-      return 0;
-    }
+    static void* runWrapper(void* arg);
+    
     virtual void run() = 0;
     inline void cancel()
     {
       running_ = 0;
     }
+    inline const char* getName()
+    {
+      return name_.c_str();
+    }
   protected:
-    std::atomic_bool running_;
-    std::string      name_;
+    std::atomic_bool  running_;
+    std::string       name_;
+    long unsigned int tid_;
   private:
+    friend ThreadHandler;
     WorkingThread();
+    static int (*callback_function)(WorkingThread*);
 };
 
 #endif

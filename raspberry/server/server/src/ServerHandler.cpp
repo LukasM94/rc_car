@@ -14,8 +14,6 @@
 
 #define HELLO "Hello from server"
 
-extern void atExit(const char* name);
-
 //-------------------------------------------------
 ServerHandler::ServerHandler(unsigned int port, GamePad* gamepad, const char* name) : 
 	WorkingThread(name),
@@ -78,7 +76,6 @@ void ServerHandler::run()
     
 		closeSocket();
   }
-	atExit(name_.c_str());
   debug(SERVER_HAND, "run: Exit with ret %d\n", ret);
 }
 

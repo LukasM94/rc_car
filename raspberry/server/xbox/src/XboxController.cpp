@@ -8,8 +8,6 @@
 
 const char XboxController::DEFAULT_PATH[] = "/dev/input/js0";
 
-extern void atExit(const char* name);
-
 //-------------------------------------------------
 // XboxController::XboxController() :
 //   path_(DEFAULT_PATH),
@@ -46,7 +44,6 @@ void XboxController::run()
   {
   }
   debug(XBOX_CONTR, "run: Ret is %d\n", ret);
-  atExit(name_.c_str());
   gamepad_->reset();
   close(fd_);
   debug(XBOX_CONTR, "run: Exit\n");

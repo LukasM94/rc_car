@@ -64,6 +64,11 @@ add_library(
   ../shared/Thread/src/WorkingThread.cpp
 )
 add_library(
+  thread_handler
+  SHARED
+  ../shared/Thread/src/ThreadHandler.cpp
+)
+add_library(
   lock
   SHARED
   ../shared/Lock/src/Lock.cpp
@@ -95,6 +100,7 @@ target_link_libraries(
   image_instance
   cond
   main_window
+  thread_handler
   -pthread
   -ljsoncpp
   -ljpeg
