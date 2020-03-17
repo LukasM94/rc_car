@@ -9,23 +9,23 @@
 const char XboxController::DEFAULT_PATH[] = "/dev/input/js0";
 
 //-------------------------------------------------
-// XboxController::XboxController() :
-//   path_(DEFAULT_PATH),
-//   gamepad_(new GamePad(BUTTON_COUNT)),
-//   running_(1)
-// {
-//   init();
-//   debug(XBOX_CONTR, "ctor: fd_ <%d>\n", fd_);
-// }
+XboxController::XboxController() :
+  WorkingThread("XboxController"),
+  path_(DEFAULT_PATH),
+  fd_(-1),
+  gamepad_(new GamePad(BUTTON_COUNT))
+{
+  debug(XBOX_CONTR, "ctor: Default path <%s>\n", path_);
+}
 
 //-------------------------------------------------
-XboxController::XboxController(const char* path, const char* name) :
-  WorkingThread(name),
+XboxController::XboxController(const char* path) :
+  WorkingThread("XboxController"),
   path_(path),
   fd_(-1),
   gamepad_(new GamePad(BUTTON_COUNT))
 {
-  debug(XBOX_CONTR, "ctor\n");
+  debug(XBOX_CONTR, "ctor: Path <%s>\n", path_);
 }
 
 //-------------------------------------------------

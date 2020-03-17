@@ -12,7 +12,7 @@ class CameraService;
 class ServerHandler : public WorkingThread, public Socket
 {
   public:
-    ServerHandler(unsigned int port, GamePad* gamepad, const char* name);
+    ServerHandler(unsigned int port, GamePad* gamepad);
     ~ServerHandler();
 
     virtual void run();

@@ -12,10 +12,6 @@
 #include <ImageInstance.h>
 #include <ThreadHandler.h>
 
-static const char XBOX_CONTROLLER[] = "Xbox controller";
-static const char SERVER_NAME[]     = "ServerHandler";
-static const char GRAPHICS_NAME[]   = "Graphics";
-
 XboxController* xc;
 ServerHandler*  server;
 ImageInstance*  image_inst;
@@ -29,9 +25,9 @@ int main(int argc, char* argv[])
   debug(MAIN, "main: Initialize the instances\n");
   ThreadHandler::init();
   image_inst = ImageInstance::instance();
-  xc       = new XboxController(XboxController::DEFAULT_PATH, XBOX_CONTROLLER);
-  server   = new ServerHandler(SERVER_PORT_INT, xc->getJoystickData(), SERVER_NAME);
-  graphics = new Graphics(GRAPHICS_NAME);
+  xc       = new XboxController(XboxController::DEFAULT_PATH);
+  server   = new ServerHandler(SERVER_PORT_INT, xc->getJoystickData());
+  graphics = new Graphics();
 
   debug(MAIN, "main: Catch the sigint signal\n");
   signal(SIGINT, signalHandler);  

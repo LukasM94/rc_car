@@ -13,7 +13,7 @@ class XboxController : public WorkingThread
     static const char DEFAULT_PATH[];
 
     XboxController();
-    XboxController(const char* path, const char* name);
+    XboxController(const char* path);
     ~XboxController();
 
     virtual void run();

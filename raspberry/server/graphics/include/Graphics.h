@@ -11,13 +11,12 @@ class Image;
 class Graphics: public WorkingThread
 {
   public:
-    Graphics(const char*);
+    Graphics();
     ~Graphics();
 
     virtual void run();
 
   private:
-    Graphics();
     Graphics(const Graphics&);
 
     int    argv_;

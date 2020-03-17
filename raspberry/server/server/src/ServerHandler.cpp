@@ -15,8 +15,8 @@
 #define HELLO "Hello from server"
 
 //-------------------------------------------------
-ServerHandler::ServerHandler(unsigned int port, GamePad* gamepad, const char* name) : 
-  WorkingThread(name),
+ServerHandler::ServerHandler(unsigned int port, GamePad* gamepad) : 
+  WorkingThread("ServerHandler"),
   Socket(port, "127.0.0.1"),
   gamepad_(gamepad)
 {

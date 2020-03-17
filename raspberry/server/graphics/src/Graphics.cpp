@@ -6,8 +6,8 @@
 #include <unistd.h>
 #include <MainWindow.h>
 
-Graphics::Graphics(const char* name) :
-  WorkingThread(name),
+Graphics::Graphics() :
+  WorkingThread("Graphics"),
   argv_(0),
   argc_(0),
   app_(0),
