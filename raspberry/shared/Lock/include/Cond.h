@@ -4,23 +4,20 @@
 #include <string>
 #include <stddef.h>
 #include <pthread.h>
+#include <Lock.h>
 
-class Cond
+class Cond : public Lock
 {
   public:
     Cond(const char* name);
     ~Cond();
-    void lock();
-    void unlock();
     void sleep();
     void wake();
     void wakeAll();
 
   private:  
     Cond();
-    pthread_mutex_t lock_;
-    pthread_cond_t  cond_;
-    std::string     name_;
+    pthread_cond_t cond_;
 };
 
 #endif

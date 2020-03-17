@@ -72,20 +72,20 @@ void ServerHandler::run()
     connected_ = 1;
 
     ThreadHandler::lock();
-    ThreadHandler::startThread(xc_service_, 0);
-    ThreadHandler::startThread(camera_service_, 0);
+    ThreadHandler::beginThread(xc_service_, 0);
+    ThreadHandler::beginThread(camera_service_, 0);
     ThreadHandler::unlock();
 
-    while (connected_)
-    {
-      debug(SERVER_HAND, "run: Nothing to do\n");
-      sleep(5);
-    }
+    debug(SERVER_HAND, "run: Go to sleep\n");
+    ThreadHandler::gotoSleep();
+    debug(SERVER_HAND, "run: Got up\n");
 
     closeSocket();
 
     ThreadHandler::waitTillThreadFinished(xc_service_);
     ThreadHandler::waitTillThreadFinished(camera_service_);
+    ThreadHandler::exitThread(xc_service_);
+    ThreadHandler::exitThread(camera_service_);
 
   }
   debug(SERVER_HAND, "run: Exit with ret %d\n", ret);

@@ -34,14 +34,18 @@ int main(int argc, char* argv[])
 
   ThreadHandler::lock();
 
-  ThreadHandler::startThread(xc);
-  ThreadHandler::startThread(server);
-  ThreadHandler::startThread(graphics);
+  ThreadHandler::beginThread(xc);
+  ThreadHandler::beginThread(server);
+  ThreadHandler::beginThread(graphics);
 
   ThreadHandler::unlock();
 
   while (1)
   {
+    debug(MAIN, "main: Goes to sleep\n");
+    ThreadHandler::gotoSleep();
+    debug(MAIN, "main: Got up\n");
+
     ThreadHandler::lock();
     if (ThreadHandler::isThreadRunning(xc) == false)
     {
@@ -57,7 +61,6 @@ int main(int argc, char* argv[])
     }
     ThreadHandler::unlock();
 
-    debug(MAIN, "main: Goes to sleep for 5 second\n");
     sleep(5);
   }
   debug(MAIN, "main: Exits\n");
