@@ -68,9 +68,13 @@ void ServerHandler::run()
     ThreadHandler::beginThread(camera_service_, 0);
     ThreadHandler::unlock();
 
-    debug(SERVER_HAND, "run: Go to sleep\n");
-    ThreadHandler::gotoSleep();
-    debug(SERVER_HAND, "run: Got up\n");
+    while (connected_)
+    {
+      sleep(5);
+      debug(SERVER_HAND, "run: Go to sleep\n");
+      ThreadHandler::gotoSleep();
+      debug(SERVER_HAND, "run: Got up\n");
+    }
 
     closeSocket();
 
@@ -80,15 +84,11 @@ void ServerHandler::run()
     ThreadHandler::exitThread(camera_service_);
 
   }
+
+  delete xc_service_;
+  delete camera_service_;
+  
   debug(SERVER_HAND, "run: Exit with ret %d\n", ret);
-  if (xc_service_ != 0)
-  {
-    delete xc_service_;
-  }
-  if (camera_service_ != 0)
-  {
-    delete camera_service_;
-  }
 }
 
 //-------------------------------------------------
@@ -133,7 +133,7 @@ int ServerHandler::receive()
   ret = recv(client_socket_, input_buffer_, BUFFER_SIZE, MSG_NOSIGNAL | MSG_WAITALL); 
   if (ret < 0)
   {
-    debug(SERVER_HAND, "receive: Quit connection with ret %d\n", ret); 
+    debug(WARNING, "ServerHandler::receive: Quit connection with ret %d\n", ret); 
     connected_ = 0;
   }
   else
