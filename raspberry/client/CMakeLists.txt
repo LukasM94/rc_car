@@ -38,6 +38,11 @@ add_library(
   ../shared/Thread/src/WorkingThread.cpp
 )
 add_library( 
+  thread_handler
+  SHARED
+  ../shared/Thread/src/ThreadHandler.cpp
+)
+add_library( 
   socket
   SHARED
   ../shared/Socket/src/Socket.cpp
@@ -116,6 +121,7 @@ target_link_libraries(
   camera_client
   camera
   cond
+  thread_handler
   -pthread
   -lrt
   -ljsoncpp
@@ -147,6 +153,7 @@ target_link_libraries(
   camera_client
   camera
   cond
+  thread_handler
   -pthread
   -lwiringPi
   -lrt

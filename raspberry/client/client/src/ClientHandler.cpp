@@ -34,7 +34,7 @@ int ClientHandler::initSocket()
 
   if ((server_socket_ = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
   { 
-    debug(ERROR, "ClientHandler::init: Socket creation error \n"); 
+    debug(WARNING, "ClientHandler::init: Socket creation error \n"); 
     return -1; 
   } 
   
@@ -43,7 +43,7 @@ int ClientHandler::initSocket()
     
   if(inet_pton(AF_INET, ip_address_.c_str(), &address_.sin_addr)<=0)  
   { 
-    debug(ERROR, "ClientHandler::init: Invalid address/ Address not supported \n"); 
+    debug(WARNING, "ClientHandler::init: Invalid address/ Address not supported \n"); 
     return -1; 
   } 
   return 0;
@@ -108,7 +108,7 @@ void ClientHandler::run()
   {
     if (initSocket())
     {
-      exit(-1);
+      break;
     }
     debug(CLIENT_HAND, "run: Successfully initialized\n");
 

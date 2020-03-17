@@ -15,10 +15,11 @@
 #include <Image.h>
 #include <Control.h>
 #include <Camera.h>
+#include <ThreadHandler.h>
 
-pthread_t tid_client_handler;
-pthread_t tid_control_handler;
-pthread_t tid_camera;
+// pthread_t tid_client_handler;
+// pthread_t tid_control_handler;
+// pthread_t tid_camera;
 
 ClientHandler*   client_handler;
 ControlHandler*  control_handler;
@@ -52,16 +53,36 @@ int main(int argc, char* argv[])
   debug(MAIN, "main: Catch the sigint signal\n");
   signal(SIGINT, signalHandler);  
 
-  debug(MAIN, "main: Create threads\n");
-  pthread_create(&tid_client_handler, 0, ClientHandler::runWrapper, client_handler);
-  pthread_create(&tid_control_handler, 0, ControlHandler::runWrapper, control_handler);
-  pthread_create(&tid_camera, 0, CameraHandler::runWrapper, camera_handler);
+  ThreadHandler::lock();
+  ThreadHandler::beginThread(client_handler);
+  ThreadHandler::beginThread(control_handler);
+  ThreadHandler::beginThread(camera_handler);
+  ThreadHandler::unlock();
 
-  debug(MAIN, "main: Goes to sleep\n");
-  pthread_join(tid_client_handler, 0);
-  pthread_join(tid_control_handler, 0);
-  pthread_join(tid_camera, 0);
 
+  while (1)
+  {
+    debug(MAIN, "main: Goes to sleep\n");
+    ThreadHandler::gotoSleep();
+    debug(MAIN, "main: Got up\n");
+
+    ThreadHandler::lock();
+    if (ThreadHandler::isThreadRunning(client_handler) == false)
+    {
+      ThreadHandler::startThread(client_handler);
+    }
+    if (ThreadHandler::isThreadRunning(control_handler) == false)
+    {
+      ThreadHandler::startThread(control_handler);
+    }
+    if (ThreadHandler::isThreadRunning(camera_handler) == false)
+    {
+      ThreadHandler::startThread(camera_handler);
+    }
+    ThreadHandler::unlock();
+
+    sleep(5);
+  }
   debug(MAIN, "main: Exits\n");
   return 0;
 }
