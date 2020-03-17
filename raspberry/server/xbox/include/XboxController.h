@@ -16,11 +16,6 @@ class XboxController : public WorkingThread
     XboxController(const char* path, const char* name);
     ~XboxController();
 
-    inline static void* runWrapper(void* arg)
-    {
-      reinterpret_cast<XboxController*>(arg)->run();
-      return 0;
-    }
     virtual void run();
 
     void print();

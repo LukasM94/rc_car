@@ -12,11 +12,6 @@ class XboxControllerService : public WorkingThread
     XboxControllerService(ServerHandler* server_handler, GamePad* gamepad);
     ~XboxControllerService();
 
-    inline static void* runWrapper(void* arg)
-    {
-      reinterpret_cast<XboxControllerService*>(arg)->run();
-      return 0;
-    }
     virtual void run();
 
   private:

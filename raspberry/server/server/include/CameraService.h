@@ -13,11 +13,6 @@ class CameraService : public WorkingThread
     CameraService(ServerHandler* server_handler);
     ~CameraService();
 
-    inline static void* runWrapper(void* arg)
-    {
-      reinterpret_cast<CameraService*>(arg)->run();
-      return 0;
-    }
     virtual void run();
 
   private:

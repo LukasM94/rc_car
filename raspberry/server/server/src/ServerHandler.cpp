@@ -18,8 +18,8 @@ extern void atExit(const char* name);
 
 //-------------------------------------------------
 ServerHandler::ServerHandler(unsigned int port, GamePad* gamepad, const char* name) : 
-	Socket(port, "127.0.0.1"),
 	WorkingThread(name),
+	Socket(port, "127.0.0.1"),
   gamepad_(gamepad)
 {
   debug(SERVER_HAND, "ctor:\n");

@@ -9,17 +9,12 @@ class GamePad;
 class XboxControllerService;
 class CameraService;
 
-class ServerHandler : public Socket, public WorkingThread
+class ServerHandler : public WorkingThread, public Socket
 {
   public:
     ServerHandler(unsigned int port, GamePad* gamepad, const char* name);
     ~ServerHandler();
 
-    inline static void* runWrapper(void* arg)
-    {
-      reinterpret_cast<ServerHandler*>(arg)->run();
-      return 0;
-    }
     virtual void run();
 
     virtual int initSocket();

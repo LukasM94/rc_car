@@ -9,6 +9,12 @@ class WorkingThread
   public:
     WorkingThread(const char* name);
     ~WorkingThread();
+
+    inline static void* runWrapper(void* arg)
+    {
+      reinterpret_cast<WorkingThread*>(arg)->run();
+      return 0;
+    }
     virtual void run() = 0;
     inline void cancel()
     {

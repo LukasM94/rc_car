@@ -14,11 +14,6 @@ class Graphics: public WorkingThread
     Graphics(const char*);
     ~Graphics();
 
-    inline static void* runWrapper(void* arg)
-    {
-      reinterpret_cast<Graphics*>(arg)->run();
-      return 0;
-    }
     virtual void run();
 
   private:
