@@ -62,8 +62,8 @@ void ServerHandler::run()
     XboxControllerService* xc_service     = new XboxControllerService(this, gamepad_);
     CameraService*         camera_service = new CameraService(this);
 
-    pthread_create(&tid_xc_service, 0, XboxControllerService::runWrapper, xc_service);	
-    pthread_create(&tid_camera_service, 0, CameraService::runWrapper, camera_service);	
+    pthread_create(&tid_xc_service, 0, XboxControllerService::runWrapper, xc_service);  
+    pthread_create(&tid_camera_service, 0, CameraService::runWrapper, camera_service);  
 
     while (connected_)
     {

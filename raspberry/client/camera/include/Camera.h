@@ -68,7 +68,7 @@ class Camera
     // debug(CAMERA, "grab: Got the rgb back %d to %d\n", jpeg->getSize(), image_->getSize());
     // delete jpeg;
     // std::ofstream outFile ("raspicam_image.ppm",std::ios::binary);
-	  // outFile << "P6\n" << image_->getWidth() <<" "<< image_->getHeight() << " 255\n";
+    // outFile << "P6\n" << image_->getWidth() <<" "<< image_->getHeight() << " 255\n";
     // outFile.write((char*)image_->getData(), image_->getSize());
     // debug(CAMERA, "run: Wrote picture to file\n");
 

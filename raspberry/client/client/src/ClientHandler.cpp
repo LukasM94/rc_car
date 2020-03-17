@@ -15,7 +15,7 @@ const char ClientHandler::HELLO[] = "Hello from client";
 
 //-------------------------------------------------
 ClientHandler::ClientHandler(unsigned int server_port, const char* server_ip) :
-	Socket(server_port, server_ip),
+  Socket(server_port, server_ip),
   WorkingThread("ClientHandler")
 {
   debug(CLIENT_HAND, "ctor: %d, %s\n", server_port, server_ip);
@@ -53,37 +53,37 @@ int ClientHandler::initSocket()
 int ClientHandler::receive()
 {
   memset(input_buffer_, 0, BUFFER_SIZE);
-	int ret;
-	ret = recv(server_socket_ , input_buffer_, BUFFER_SIZE, MSG_NOSIGNAL | MSG_WAITALL); 
-	if (ret <= 0)
-	{
-		debug(WARNING, "ClientHandler::receive: Quit connection with ret %d\n", ret);
-		connected_ = 0;
-	}
-	else
-	{
-		debug(CLIENT_DATA, "receive: Got message with length %d\n", ret);
-	}
-	return ret;
+  int ret;
+  ret = recv(server_socket_ , input_buffer_, BUFFER_SIZE, MSG_NOSIGNAL | MSG_WAITALL); 
+  if (ret <= 0)
+  {
+    debug(WARNING, "ClientHandler::receive: Quit connection with ret %d\n", ret);
+    connected_ = 0;
+  }
+  else
+  {
+    debug(CLIENT_DATA, "receive: Got message with length %d\n", ret);
+  }
+  return ret;
 }
 
 //-------------------------------------------------
 int ClientHandler::transmit()
 {
   int ret;
-	// debug(CLIENT_HAND, "transmit: Want to send message\n");
+  // debug(CLIENT_HAND, "transmit: Want to send message\n");
 
-	ret = send(server_socket_, output_buffer_, BUFFER_SIZE, MSG_NOSIGNAL); 
-	if (ret < 0)
-	{
-		debug(WARNING, "ClientHandler::transmit: Quit connection with ret %d\n", ret); 
-		connected_ = 0;
-	}
-	else
-	{
-		debug(CLIENT_DATA, "transmit: Successfully sent data to client\n"); 
-	}
-	return ret;
+  ret = send(server_socket_, output_buffer_, BUFFER_SIZE, MSG_NOSIGNAL); 
+  if (ret < 0)
+  {
+    debug(WARNING, "ClientHandler::transmit: Quit connection with ret %d\n", ret); 
+    connected_ = 0;
+  }
+  else
+  {
+    debug(CLIENT_DATA, "transmit: Successfully sent data to client\n"); 
+  }
+  return ret;
 }
 
 //-------------------------------------------------
@@ -152,5 +152,5 @@ void ClientHandler::run()
 //-------------------------------------------------
 int ClientHandler::closeSocket()
 {
-	return close(server_socket_);
+  return close(server_socket_);
 }

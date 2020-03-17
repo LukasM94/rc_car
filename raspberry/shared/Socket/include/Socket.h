@@ -28,7 +28,7 @@ class Socket
 
     std::string ip_address_;
 
-	  struct sockaddr_in address_; 
+    struct sockaddr_in address_; 
     std::atomic_bool   connected_;
 };
 
