@@ -51,6 +51,7 @@ void Camera::deleteImage()
       delete (ImageRGB*)image_;
       break;
   }
+  image_ = 0;
 #endif
 }
 
@@ -138,4 +139,26 @@ int Camera::init()
   lock_.unlock(); 
 #endif
   return 0;
+}
+
+int Camera::deinit()
+{
+  debug(CAMERA, "deinit\n");
+  
+#if defined(__arm__)
+  int ret = 0;
+
+  lock_.lock();
+  // if (raspi_cam_->close())
+  // {
+  //   ret = -1;
+  //   debug(WARNING, "Camera::run: Cannot open the camera_handler.\n");
+  // }
+  delete raspi_cam_;
+  lock_.unlock(); 
+
+  return ret;
+#endif
+  return 0;
+
 }

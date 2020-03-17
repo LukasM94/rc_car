@@ -56,6 +56,8 @@ void CameraClient::run()
       if ((ret = client_handler_->transmit()) < 0)
       {
         debug(WARNING, "CameraClient::run: Transmittion failed\n");
+        image->freeSpace(&image_data);
+        camera->deleteImage();
         camera->unlock();
         break;
       }
@@ -84,6 +86,8 @@ void CameraClient::run()
       }
       debug(CAM_CLIENT, "run: End transmitting\n");
     }
+    image->freeSpace(&image_data);
+    camera->deleteImage();
     camera->unlock();
   }
 

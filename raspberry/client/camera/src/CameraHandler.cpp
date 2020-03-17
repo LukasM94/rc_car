@@ -31,5 +31,7 @@ void CameraHandler::run()
     }
     debug(CAMERA, "run: Took picture\n");
   }
+  camera->deinit();
+
   debug(CAMERA, "run: Exit\n");
 }
