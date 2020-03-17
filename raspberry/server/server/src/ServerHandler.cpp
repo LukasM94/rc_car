@@ -30,14 +30,6 @@ ServerHandler::ServerHandler(unsigned int port, GamePad* gamepad) :
 //-------------------------------------------------
 ServerHandler::~ServerHandler()
 {
-  if (xc_service_ != 0)
-  {
-    delete xc_service_;
-  }
-  if (camera_service_ != 0)
-  {
-    delete camera_service_;
-  }
   debug(SERVER_HAND, "dtor:\n");
 }
 
@@ -89,6 +81,14 @@ void ServerHandler::run()
 
   }
   debug(SERVER_HAND, "run: Exit with ret %d\n", ret);
+  if (xc_service_ != 0)
+  {
+    delete xc_service_;
+  }
+  if (camera_service_ != 0)
+  {
+    delete camera_service_;
+  }
 }
 
 //-------------------------------------------------
