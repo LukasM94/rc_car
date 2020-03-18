@@ -5,6 +5,9 @@
 #include <Image.h>
 #include <ImageInstance.h>
 #include <QThread>
+#include <GamePadInstance.h>
+#include <GamePad.h>
+#include <string>
 
 MainWindow::MainWindow(QWidget *parent) : 
   QMainWindow(parent), 
@@ -43,6 +46,12 @@ void MainWindow::run()
   running_ = 1;
   ui_->button_start->hide();
 
+  GamePad* game_pad = GamePadInstance::instance()->getGamePad();
+  struct game_pad_data data;
+  game_pad->initData(&data);
+
+  int game_pad_not_refreshed = 0;
+
   QImage* graph_tmp = 0;
   QImage* graph     = 0;
   Image*  image_tmp = 0;
@@ -54,6 +63,7 @@ void MainWindow::run()
   debug(MAIN_WINDOW, "run: Start\n");
   while (running_)
   {
+    // IMAGE
     graph_tmp = graph;
     image_tmp = image;
 
@@ -76,8 +86,13 @@ void MainWindow::run()
       {
         delete image_tmp;
       }
+
+      // GAME PAD DATA
+      game_pad->getData(&data);
+      std::string string = "";
     }
     QThread::msleep(20);
   }
+  game_pad->freeData(&data);
   debug(MAIN_WINDOW, "run: Exit\n");
 }

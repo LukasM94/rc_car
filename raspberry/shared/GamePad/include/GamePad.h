@@ -7,6 +7,18 @@
 #include <atomic>
 #include <debug.h>
 
+struct game_pad_data
+{
+  int left_x_;
+  int left_y_;
+  int right_x_;
+  int right_y_;
+  bool lt_;
+  bool rt_;
+  unsigned int button_count_;
+  bool* buttons_;
+};
+
 struct axis_state 
 {
   std::atomic_int8_t x_;
@@ -28,6 +40,10 @@ class GamePad
     static int getFromString(GamePad* game_pad, const char* str);
 
     int getMsg(char* msg, unsigned int max_length);
+
+    void initData(struct game_pad_data* data);
+    int  getData(struct game_pad_data* data);
+    void freeData(struct game_pad_data* data);
 
     int setButton(uint8_t button_no, bool state)
     {

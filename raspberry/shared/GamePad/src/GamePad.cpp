@@ -18,6 +18,7 @@
 #include <jsoncpp/json/value.h>
 #endif
 #include <iostream>
+#include <assert.h>
 
 GamePad::GamePad() :
   lt_(0),
@@ -143,6 +144,39 @@ int GamePad::getMsg(char* msg, unsigned int max_length)
   //   printf("%c", msg[i]);
   // }
   return 0;
+}
+
+void GamePad::initData(struct game_pad_data* data)
+{
+  data->button_count_ = buttons_count_;
+  data->buttons_ = new bool[data->button_count_];
+}
+
+int GamePad::getData(struct game_pad_data* data)
+{
+  lock();
+  if (buttons_count_ != data->button_count_)
+  {
+    debug(ERROR, "GamePad::getData: Button count differs %d != %d\n", buttons_count_.load(), data->button_count_);
+    assert(0);
+  }
+  data->left_x_  = left_.x_;
+  data->left_y_  = left_.y_;
+  data->right_x_ = right_.x_;
+  data->right_y_ = right_.y_;
+  data->lt_ = lt_;
+  data->rt_ = rt_;
+  for (int i = 0; i < buttons_count_; ++i)
+  {
+    data->buttons_[i] = buttons_[i];
+  }
+  unlock();
+  return 0;
+}
+
+void GamePad::freeData(struct game_pad_data* data)
+{
+  delete data->buttons_;
 }
 
 int GamePad::getJson(Json::Value& root)
