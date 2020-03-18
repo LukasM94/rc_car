@@ -17,6 +17,8 @@ class ControlHandler : public WorkingThread
 
     virtual void run();
 
+    void deinit();
+
   private:
     friend GpioHandler;
     friend I2cHandler;

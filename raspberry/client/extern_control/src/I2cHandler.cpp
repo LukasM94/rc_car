@@ -31,7 +31,6 @@ void I2cHandler::init()
 void I2cHandler::deinit()
 {
   debug(I2C_HANDLER, "deinit\n");
-
 }
 
 void I2cHandler::run()
@@ -51,12 +50,12 @@ void I2cHandler::run()
   debug(I2C_HANDLER, "run: Reset u controller\n");
   Peripherial::instance()->resetUcontroller();
 
-  sleep(3);
-
-  game_pad_error_ = 0;
+  sleep(ATMEGA_RECOVER_AFTER_RESET);
 
   i2c_error_ = 0;
   running_   = 1;
+
+  bool prev_connected = 1;
 
   debug(I2C_HANDLER, "run: Start with communcation\n");
   while (running_)
@@ -64,21 +63,25 @@ void I2cHandler::run()
     debug(I2C_HANDL_D, "run: Get data of game_pad\n");
 
     game_pad->lock();
-    if (game_pad->isNew() == false)
+
+    if (!game_pad->isConnected())
     {
-      game_pad_error_++;
-      if (game_pad_error_ > GAME_PAD_ERROR_THRESHOLD)
-      {
-        debug(WARNING, "I2cHandler::run: Gamepad has not been refreshed in some time. Maybe a connection problem?\n");
-        running_ = false;
-        game_pad->unlock();
-        continue;
-      }
-    }
-    else
+      debug(WARNING, "I2cHandler::run: Joystick is not connected. Sleep 2 seconds and then test again\n");
+      Peripherial::instance()->resetResetPin();
+      prev_connected = game_pad->isConnected();
+      game_pad->unlock();
+      sleep(2);
+      continue;
+    } 
+    else if (!prev_connected)
     {
-      game_pad_error_ = 0;
+      debug(I2C_HANDLER, "run: Set u controller\n");
+      Peripherial::instance()->setResetPin();
+      sleep(ATMEGA_RECOVER_AFTER_RESET);
+      debug(I2C_HANDLER, "run: Recovered from reset\n");
     }
+
+    prev_connected = game_pad->isConnected();
 
     bool start_button  = game_pad->getButton(GamePad::BUTTON_START);
     bool select_button = game_pad->getButton(GamePad::BUTTON_SELECT);

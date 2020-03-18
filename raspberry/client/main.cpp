@@ -86,6 +86,7 @@ void signalHandler(int signal_num)
 {
   debug(MAIN, "signalHandler: Got an signal %d\n", signal_num);
   client_handler->closeSocket();
+  control_handler->deinit();
   debug(MAIN, "signalHandler: Exits\n");
   _exit(signal_num);
 }

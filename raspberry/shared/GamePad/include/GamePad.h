@@ -121,6 +121,10 @@ class GamePad
     {
       connected_ = 0;
     }
+    inline bool isConnected()
+    {
+      return connected_;
+    }
 
     static const unsigned int BUTTON_A      = 0;
     static const unsigned int BUTTON_B      = 1;

@@ -35,8 +35,7 @@ void ControlHandler::run()
   gpio_handler_ = new GpioHandler(this);
 
   gpio_handler_->init();
-  // i2c_handler_->init();
-  u_controller_->initI2c();
+  i2c_handler_->init();
 
   ThreadHandler::lock();
   ThreadHandler::beginThread(i2c_handler_);
@@ -70,4 +69,11 @@ void ControlHandler::run()
   delete gpio_handler_;
 
   debug(CTL_HANDLER, "run: Exit\n");
+}
+
+void ControlHandler::deinit()
+{
+  debug(CTL_HANDLER, "deinit\n");
+  i2c_handler_->deinit();
+  gpio_handler_->deinit();
 }

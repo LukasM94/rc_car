@@ -23,6 +23,8 @@
 #define I2C_SLEEP_TIME  50000 //us
 #define I2C_DEAD_TIME   500 //ms
 
+#define ATMEGA_RECOVER_AFTER_RESET 3 //s
+
 struct RegisterEntry
 {
   unsigned char register_number_;
