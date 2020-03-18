@@ -13,6 +13,7 @@
 #include <CameraService.h>
 #include <ThreadHandler.h>
 #include <assert.h>
+#include <TransceivedDataInstance.h>
 
 #define HELLO "Hello from server"
 

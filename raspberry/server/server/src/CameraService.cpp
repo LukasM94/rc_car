@@ -7,6 +7,7 @@
 #include <ServerHandler.h>
 #include <string.h>
 #include <ImageInstance.h>
+#include <TransceivedDataInstance.h>
 
 CameraService::CameraService(ServerHandler* server_handler) :
   WorkingThread("CameraService"),
@@ -77,6 +78,8 @@ void CameraService::stateHeader()
   image_json_data_->header_        = new char[image_json_data_->header_length_];
   image_json_data_->body_lenght_   = size;
   image_json_data_->body_          = new char[image_json_data_->body_lenght_];
+  TransceivedDataInstance::instance()->addReceivedBytes(size);
+  TransceivedDataInstance::instance()->addReceivedImage();
 
   memcpy(image_json_data_->header_, server_handler_->input_buffer_, image_json_data_->header_length_);
   memset(image_json_data_->body_, 0, image_json_data_->body_lenght_);
@@ -146,6 +149,7 @@ void CameraService::run()
       }
       else if (state_ == END)
       {
+
         stateEnd();
       }
       else

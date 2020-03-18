@@ -106,6 +106,7 @@ target_link_libraries(
   game_pad_instance
   status_display
   video_display
+  transceived_data_instance
   -pthread
   -ljsoncpp
   -ljpeg

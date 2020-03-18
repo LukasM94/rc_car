@@ -120,7 +120,7 @@ GET_FROM_STRING_ERROR:
   return -1;
 }
 
-int GamePad::getMsg(char* msg, unsigned int max_length)
+int GamePad::getMsg(char* msg, unsigned int max_length, unsigned int* length)
 {
   debug(GAME_PAD, "getMsg\n");
 
@@ -131,18 +131,24 @@ int GamePad::getMsg(char* msg, unsigned int max_length)
     return ret;
   }
 
-  unsigned int length = root.toStyledString().length();
-  if (length > max_length)
+  unsigned int l = root.toStyledString().length();
+  if (l > max_length)
   {
-    debug(WARNING, "GamePad::getMsg: To long %d > %d\n", length, max_length);
+    debug(WARNING, "GamePad::getMsg: To long %d > %d\n", l, max_length);
     return -1;
   }
 
-  memcpy(msg, root.toStyledString().c_str(), length);
+  memcpy(msg, root.toStyledString().c_str(), l);
   // for (int i = 0; i < length; ++i)
   // {
   //   printf("%c", msg[i]);
   // }
+
+  if (length != 0)
+  {
+    *length = l;
+  }
+
   return 0;
 }
 

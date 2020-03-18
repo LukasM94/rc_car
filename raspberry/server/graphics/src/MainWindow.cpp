@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
   setFont(ui_->button_start);
   setFont(ui_->button_stop);
   setFont(ui_->left_status, 16);
-  setFont(ui_->right_status, 16);
+  setFont(ui_->right_status, 14);
 
   status_display_ = new StatusDisplay(this);
   video_display_ = new VideoDisplay(this);
@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ui_->button_stop->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
   ui_->label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
   ui_->left_status->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+  ui_->right_status->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
   connect(ui_->button_start, SIGNAL(clicked()), SLOT(start()));
   connect(ui_->button_stop, SIGNAL(clicked()), SLOT(stop()));
 }

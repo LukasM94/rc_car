@@ -27,7 +27,7 @@ class GamePad
 
     static int getFromString(GamePad* game_pad, const char* str);
 
-    int getMsg(char* msg, unsigned int max_length);
+    int getMsg(char* msg, unsigned int max_length, unsigned int* lenght = 0);
 
     int getPrintableString(std::string& string);
 

@@ -62,3 +62,4 @@ const size_t GPIO_HANDLE = Ansi_Cyan    | OUTPUT_ENABLED;
 const size_t I2C_HANDLER = Ansi_Green   | OUTPUT_ENABLED;
 const size_t I2C_HANDL_D = Ansi_White;//   | OUTPUT_ENABLED;
 const size_t INFO        = Ansi_Red     | OUTPUT_ENABLED;
+const size_t TRANS_DATA  = Ansi_Yellow;//  | OUTPUT_ENABLED;

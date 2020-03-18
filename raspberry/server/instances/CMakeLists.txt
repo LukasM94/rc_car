@@ -12,3 +12,8 @@ add_library(
   SHARED
   src/GamePadInstance.cpp
 )
+add_library(
+  transceived_data_instance
+  SHARED
+  src/TransceivedDataInstance.cpp
+)

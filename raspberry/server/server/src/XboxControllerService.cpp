@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <config.h>
 #include <GamePadInstance.h>
+#include <TransceivedDataInstance.h>
 
 XboxControllerService::XboxControllerService(ServerHandler* server_handler) :
   WorkingThread("XboxControllerService"),
@@ -26,9 +27,11 @@ void XboxControllerService::run()
   GamePad* game_pad = GamePadInstance::instance()->getGamePad();
   while (server_handler_->connected_)
   {
+    unsigned int length;
     usleep(SERVER_SEND_DATA);
     memset(server_handler_->output_buffer_, 0, server_handler_->BUFFER_SIZE);
-    game_pad->getMsg(server_handler_->output_buffer_, server_handler_->BUFFER_SIZE);
+    game_pad->getMsg(server_handler_->output_buffer_, server_handler_->BUFFER_SIZE, &length);
+    TransceivedDataInstance::instance()->addTransmittedBytes(length);
     server_handler_->transmit();
   }
   debug(XB_SERVICE, "run: Exit\n");

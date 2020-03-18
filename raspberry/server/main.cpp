@@ -12,12 +12,14 @@
 #include <ImageInstance.h>
 #include <ThreadHandler.h>
 #include <GamePadInstance.h>
+#include <TransceivedDataInstance.h>
 
 XboxController*  xc;
 ServerHandler*   server;
 ImageInstance*   image_inst;
 Graphics*        graphics;
 GamePadInstance* game_pad_inst;
+TransceivedDataInstance* trans_data_inst;
 
 void signalHandler(int signal_num);
 
@@ -28,8 +30,9 @@ int main(int argc, char* argv[])
 
   ThreadHandler::init();
 
-  image_inst    = ImageInstance::instance();
-  game_pad_inst = GamePadInstance::instance();
+  image_inst      = ImageInstance::instance();
+  game_pad_inst   = GamePadInstance::instance();
+  trans_data_inst = TransceivedDataInstance::instance();
 
   xc       = new XboxController(XboxController::DEFAULT_PATH);
   server   = new ServerHandler(SERVER_PORT_INT);
