@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   setFont(ui_->button_start);
   setFont(ui_->left_status, 16);
-  setFont(ui_->rigt_status, 16);
+  setFont(ui_->right_status, 16);
 
   ui_->button_start->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
   ui_->label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
