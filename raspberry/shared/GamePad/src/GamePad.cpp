@@ -146,37 +146,25 @@ int GamePad::getMsg(char* msg, unsigned int max_length)
   return 0;
 }
 
-void GamePad::initData(struct game_pad_data* data)
-{
-  data->button_count_ = buttons_count_;
-  data->buttons_ = new bool[data->button_count_];
-}
-
-int GamePad::getData(struct game_pad_data* data)
+int GamePad::getPrintableString(std::string& string)
 {
   lock();
-  if (buttons_count_ != data->button_count_)
-  {
-    debug(ERROR, "GamePad::getData: Button count differs %d != %d\n", buttons_count_.load(), data->button_count_);
-    assert(0);
-  }
-  data->left_x_  = left_.x_;
-  data->left_y_  = left_.y_;
-  data->right_x_ = right_.x_;
-  data->right_y_ = right_.y_;
-  data->lt_ = lt_;
-  data->rt_ = rt_;
+  std::string connected = connected_ == 1 ? "<connected>" : "<not connected>";
+  std::string left      = "<" + std::to_string(left_.x_) + ", " + std::to_string(left_.y_) + ">";
+  std::string right     = "<" + std::to_string(right_.x_) + ", " + std::to_string(right_.y_) + ">";
+  std::string buttons   = "<";
   for (int i = 0; i < buttons_count_; ++i)
   {
-    data->buttons_[i] = buttons_[i];
+    buttons += buttons_[i].load() ? "1" : "0";
+    buttons += ", ";
   }
+  buttons += std::to_string(lt_.load()) + ", " + std::to_string(rt_.load()) + ">";
+  string = "controller " + connected + "\n" +
+           "left " + left + "\n" +
+           "right " + right + "\n" +
+           "btn " + buttons;
   unlock();
   return 0;
-}
-
-void GamePad::freeData(struct game_pad_data* data)
-{
-  delete data->buttons_;
 }
 
 int GamePad::getJson(Json::Value& root)

@@ -22,9 +22,12 @@ MainWindow::MainWindow(QWidget *parent) :
   setMaximumSize(650, 600);
 
   setFont(ui_->button_start);
+  setFont(ui_->left_status, 16);
+  setFont(ui_->rigt_status, 16);
 
   ui_->button_start->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
   ui_->label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+  ui_->left_status->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
   connect(ui_->button_start, SIGNAL(clicked()), SLOT(run()));
 }
 
@@ -40,6 +43,13 @@ void MainWindow::setFont(QPushButton* button)
   button->setFont(font);
 }
 
+void MainWindow::setFont(QLabel* label, int size)
+{
+  QFont font("Newyork", size);
+  font.setStyleHint(QFont::SansSerif);
+  label->setFont(font);
+}
+
 void MainWindow::run()
 {
   debug(MAIN_WINDOW, "run: Start\n");
@@ -47,10 +57,6 @@ void MainWindow::run()
   ui_->button_start->hide();
 
   GamePad* game_pad = GamePadInstance::instance()->getGamePad();
-  struct game_pad_data data;
-  game_pad->initData(&data);
-
-  int game_pad_not_refreshed = 0;
 
   QImage* graph_tmp = 0;
   QImage* graph     = 0;
@@ -88,11 +94,13 @@ void MainWindow::run()
       }
 
       // GAME PAD DATA
-      game_pad->getData(&data);
-      std::string string = "";
+      std::string data;
+      game_pad->getPrintableString(data);
+      ui_->left_status->setText(data.c_str());
+
+      // RC CAR
     }
     QThread::msleep(20);
   }
-  game_pad->freeData(&data);
   debug(MAIN_WINDOW, "run: Exit\n");
 }

@@ -23,6 +23,7 @@ class MainWindow : public QMainWindow
 
   private:
     void setFont(QPushButton* button);
+    void setFont(QLabel* label, int size);
 
     Ui::MainWindow*  ui_;
     std::atomic_bool running_;

@@ -40,12 +40,14 @@ void XboxController::run()
 {
   debug(XBOX_CONTR, "run: Start\n");
   GamePad* game_pad = GamePadInstance::instance()->getGamePad();
+  game_pad->setConnected();
   fd_ = open(path_, O_RDONLY);
   int ret;
   while (running_ && (ret = readEvent()) >= 0)
   {
   }
   debug(XBOX_CONTR, "run: Ret is %d\n", ret);
+  game_pad->setUnconnected();
   game_pad->reset();
   close(fd_);
   debug(XBOX_CONTR, "run: Exit\n");
