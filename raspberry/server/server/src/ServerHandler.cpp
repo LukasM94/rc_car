@@ -17,10 +17,9 @@
 #define HELLO "Hello from server"
 
 //-------------------------------------------------
-ServerHandler::ServerHandler(unsigned int port, GamePad* gamepad) : 
+ServerHandler::ServerHandler(unsigned int port) : 
   WorkingThread("ServerHandler"),
   Socket(port, "127.0.0.1"),
-  gamepad_(gamepad),
   xc_service_(0),
   camera_service_(0)
 {
@@ -38,7 +37,7 @@ void ServerHandler::run()
 {
   int ret = 0;
 
-  xc_service_     = new XboxControllerService(this, gamepad_);
+  xc_service_     = new XboxControllerService(this);
   camera_service_ = new CameraService(this);
 
   debug(SERVER_HAND, "run: Start\n");

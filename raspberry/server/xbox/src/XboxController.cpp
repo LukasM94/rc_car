@@ -5,6 +5,7 @@
 #include <debug.h>
 #include <string>
 #include <GamePad.h>
+#include <GamePadInstance.h>
 
 const char XboxController::DEFAULT_PATH[] = "/dev/input/js0";
 
@@ -12,9 +13,9 @@ const char XboxController::DEFAULT_PATH[] = "/dev/input/js0";
 XboxController::XboxController() :
   WorkingThread("XboxController"),
   path_(DEFAULT_PATH),
-  fd_(-1),
-  gamepad_(new GamePad(BUTTON_COUNT))
+  fd_(-1)
 {
+  GamePadInstance::instance()->setGamePad(new GamePad(BUTTON_COUNT));
   debug(XBOX_CONTR, "ctor: Default path <%s>\n", path_);
 }
 
@@ -22,16 +23,15 @@ XboxController::XboxController() :
 XboxController::XboxController(const char* path) :
   WorkingThread("XboxController"),
   path_(path),
-  fd_(-1),
-  gamepad_(new GamePad(BUTTON_COUNT))
+  fd_(-1)
 {
+  GamePadInstance::instance()->setGamePad(new GamePad(BUTTON_COUNT));
   debug(XBOX_CONTR, "ctor: Path <%s>\n", path_);
 }
 
 //-------------------------------------------------
 XboxController::~XboxController()
 {
-  delete gamepad_;
   debug(XBOX_CONTR, "dtor\n");
 }
 
@@ -39,13 +39,14 @@ XboxController::~XboxController()
 void XboxController::run()
 {
   debug(XBOX_CONTR, "run: Start\n");
+  GamePad* game_pad = GamePadInstance::instance()->getGamePad();
   fd_ = open(path_, O_RDONLY);
   int ret;
   while (running_ && (ret = readEvent()) >= 0)
   {
   }
   debug(XBOX_CONTR, "run: Ret is %d\n", ret);
-  gamepad_->reset();
+  game_pad->reset();
   close(fd_);
   debug(XBOX_CONTR, "run: Exit\n");
 }
@@ -61,12 +62,14 @@ int XboxController::readEvent()
 {
   ssize_t bytes;
 
+  GamePad* game_pad = GamePadInstance::instance()->getGamePad();
+
   bytes = read(fd_, &event_, sizeof(struct js_event));
 
   int ret = -1;
   if (bytes == sizeof(event_))
   {
-    gamepad_->lock();
+    game_pad->lock();
     if (isButton())
     {
       ret = refreshButton();
@@ -79,7 +82,7 @@ int XboxController::readEvent()
     {
       ret = event_.type;
     }
-    gamepad_->unlock();
+    game_pad->unlock();
   }
   return ret;
 }
@@ -87,37 +90,39 @@ int XboxController::readEvent()
 //-------------------------------------------------
 int XboxController::refreshButton()
 {
-  return gamepad_->setButton(event_.number, event_.value);
+  GamePad* game_pad = GamePadInstance::instance()->getGamePad();
+  return game_pad->setButton(event_.number, event_.value);
 }
 
 //-------------------------------------------------
 int XboxController::refreshJoystick()
 {
+  GamePad* game_pad = GamePadInstance::instance()->getGamePad();
   switch (event_.number)
   {
     case AXIS_L_X:
-      gamepad_->setLeftAxisX(event_.value >> 8);
-      // gamepad_->left_.x_ = (event_.value >> 8);
+      game_pad->setLeftAxisX(event_.value >> 8);
+      // game_pad->left_.x_ = (event_.value >> 8);
       break;
     case AXIS_L_Y:
-      gamepad_->setLeftAxisY(event_.value >> 8);
-      // gamepad_->left_.y_ = (event_.value >> 8);
+      game_pad->setLeftAxisY(event_.value >> 8);
+      // game_pad->left_.y_ = (event_.value >> 8);
       break;
     case AXIS_R_X:
-      gamepad_->setRightAxisX(event_.value >> 8);
-      // gamepad_->right_.x_ = (event_.value >> 8);
+      game_pad->setRightAxisX(event_.value >> 8);
+      // game_pad->right_.x_ = (event_.value >> 8);
       break;
     case AXIS_R_Y:
-      gamepad_->setRightAxisY(event_.value >> 8);
-      // gamepad_->right_.y_ = (event_.value >> 8);
+      game_pad->setRightAxisY(event_.value >> 8);
+      // game_pad->right_.y_ = (event_.value >> 8);
       break;
     case BUTTON_LT:
-      gamepad_->setLTButton((event_.value >> 8) > LT_THRESHOLD);
-      // gamepad_->lt_ = ((event_.value >> 8) > LT_THRESHOLD);
+      game_pad->setLTButton((event_.value >> 8) > LT_THRESHOLD);
+      // game_pad->lt_ = ((event_.value >> 8) > LT_THRESHOLD);
       break;
     case BUTTON_RT:
-      gamepad_->setRTButton((event_.value >> 8) > RT_THRESHOLD);
-      // gamepad_->rt_ = ((event_.value >> 8) > RT_THRESHOLD);
+      game_pad->setRTButton((event_.value >> 8) > RT_THRESHOLD);
+      // game_pad->rt_ = ((event_.value >> 8) > RT_THRESHOLD);
       break;
     default:
       return 3;

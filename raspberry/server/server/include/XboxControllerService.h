@@ -3,13 +3,12 @@
 
 #include <WorkingThread.h>
 
-class GamePad;
 class ServerHandler;
 
 class XboxControllerService : public WorkingThread
 {
   public:
-    XboxControllerService(ServerHandler* server_handler, GamePad* gamepad);
+    XboxControllerService(ServerHandler* server_handler);
     ~XboxControllerService();
 
     virtual void run();
@@ -19,7 +18,6 @@ class XboxControllerService : public WorkingThread
     XboxControllerService(const XboxControllerService&);
 
     ServerHandler* server_handler_;
-    GamePad*       gamepad_;
 };
 
 #endif

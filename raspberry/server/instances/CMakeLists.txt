@@ -7,3 +7,8 @@ add_dependencies(
   image_instance
   image
 )
+add_library(
+  game_pad_instance
+  SHARED
+  src/GamePadInstance.cpp
+)

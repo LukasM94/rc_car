@@ -11,11 +11,13 @@
 #include <Graphics.h>
 #include <ImageInstance.h>
 #include <ThreadHandler.h>
+#include <GamePadInstance.h>
 
-XboxController* xc;
-ServerHandler*  server;
-ImageInstance*  image_inst;
-Graphics*       graphics;
+XboxController*  xc;
+ServerHandler*   server;
+ImageInstance*   image_inst;
+Graphics*        graphics;
+GamePadInstance* game_pad_inst;
 
 void signalHandler(int signal_num);
 
@@ -23,10 +25,14 @@ int main(int argc, char* argv[])
 {
 
   debug(MAIN, "main: Initialize the instances\n");
+
   ThreadHandler::init();
-  image_inst = ImageInstance::instance();
+
+  image_inst    = ImageInstance::instance();
+  game_pad_inst = GamePadInstance::instance();
+
   xc       = new XboxController(XboxController::DEFAULT_PATH);
-  server   = new ServerHandler(SERVER_PORT_INT, xc->getJoystickData());
+  server   = new ServerHandler(SERVER_PORT_INT);
   graphics = new Graphics();
 
   debug(MAIN, "main: Catch the sigint signal\n");

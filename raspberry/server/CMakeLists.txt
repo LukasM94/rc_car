@@ -103,6 +103,7 @@ target_link_libraries(
   cond
   main_window
   thread_handler
+  game_pad_instance
   -pthread
   -ljsoncpp
   -ljpeg

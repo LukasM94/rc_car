@@ -5,8 +5,6 @@
 #include <linux/joystick.h>
 #include <WorkingThread.h>
 
-class GamePad;
-
 class XboxController : public WorkingThread
 {
   public:
@@ -25,11 +23,6 @@ class XboxController : public WorkingThread
     }
     
     int readEvent(); 
-
-    GamePad* getJoystickData() const
-    {
-      return gamepad_;
-    }
 
   private:
     XboxController(XboxController& c);
@@ -53,8 +46,6 @@ class XboxController : public WorkingThread
     const char* path_;
 
     int fd_;
-  
-    GamePad* gamepad_;
 
     struct js_event event_;
 

@@ -6,13 +6,13 @@
 #include <string.h>
 #include <unistd.h>
 #include <config.h>
+#include <GamePadInstance.h>
 
-XboxControllerService::XboxControllerService(ServerHandler* server_handler, GamePad* gamepad) :
+XboxControllerService::XboxControllerService(ServerHandler* server_handler) :
   WorkingThread("XboxControllerService"),
-  server_handler_(server_handler),
-  gamepad_(gamepad)
+  server_handler_(server_handler)
 {
-  debug(XB_SERVICE, "ctor: server_handler <%p>, gamepad <%p>\n", server_handler, gamepad);
+  debug(XB_SERVICE, "ctor: server_handler <%p>\n", server_handler);
 }
 
 XboxControllerService::~XboxControllerService()
@@ -23,11 +23,12 @@ XboxControllerService::~XboxControllerService()
 void XboxControllerService::run()
 {
   debug(XB_SERVICE, "run: Start\n");
+  GamePad* game_pad = GamePadInstance::instance()->getGamePad();
   while (server_handler_->connected_)
   {
     usleep(SERVER_SEND_DATA);
     memset(server_handler_->output_buffer_, 0, server_handler_->BUFFER_SIZE);
-    gamepad_->getMsg(server_handler_->output_buffer_, server_handler_->BUFFER_SIZE);
+    game_pad->getMsg(server_handler_->output_buffer_, server_handler_->BUFFER_SIZE);
     server_handler_->transmit();
   }
   debug(XB_SERVICE, "run: Exit\n");

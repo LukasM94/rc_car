@@ -5,14 +5,13 @@
 #include <Socket.h>
 #include <WorkingThread.h>
 
-class GamePad;
 class XboxControllerService;
 class CameraService;
 
 class ServerHandler : public WorkingThread, public Socket
 {
   public:
-    ServerHandler(unsigned int port, GamePad* gamepad);
+    ServerHandler(unsigned int port);
     ~ServerHandler();
 
     virtual void run();
@@ -34,8 +33,6 @@ class ServerHandler : public WorkingThread, public Socket
 
     int socket_;
     int client_socket_;
-
-    GamePad* gamepad_;
 
     XboxControllerService* xc_service_;
     CameraService*         camera_service_;
