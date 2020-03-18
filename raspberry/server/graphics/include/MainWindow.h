@@ -7,6 +7,7 @@
 class QLabel;
 class QImage;
 class QPushButton;
+class Image;
 
 namespace Ui
 {
@@ -20,6 +21,12 @@ class MainWindow : public QMainWindow
   public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    static void* wrapperStart(void* arg)
+    {
+      reinterpret_cast<MainWindow*>(arg)->run();
+      return 0;
+    }
+    void run();
 
   private:
     void setFont(QPushButton* button);
@@ -27,9 +34,13 @@ class MainWindow : public QMainWindow
 
     Ui::MainWindow*  ui_;
     std::atomic_bool running_;
+    long unsigned int tid_;
+    QImage* graph_;
+    Image*  image_;
 
   public slots:
-    void run();
+    void start();
+    void stop();
 };
 
 #endif

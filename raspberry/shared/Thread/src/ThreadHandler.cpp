@@ -79,6 +79,12 @@ int ThreadHandler::startThread(WorkingThread* thread, bool detached)
   return 0;
 }
 
+int ThreadHandler::startExternThread(long unsigned int* tid, void* (*wrapperStart)(void*), void* arg)
+{
+  debug(THREAD_LIST, "startExternThread\n");
+  return pthread_create(tid, 0, wrapperStart, arg);
+}
+
 int ThreadHandler::waitTillThreadFinished(WorkingThread* thread, void** return_value)
 {
   assert(heldByCurrentThread() == false);

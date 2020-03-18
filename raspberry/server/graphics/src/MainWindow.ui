@@ -30,9 +30,9 @@
       <widget class="QLabel" name="right_status">
         <property name="geometry">
           <rect>
-            <x>330</x>
-            <y>5</y>
-            <width>315</width>
+            <x>380</x>
+            <y>40</y>
+            <width>265</width>
             <height>100</height>
           </rect>
         </property>
@@ -40,7 +40,7 @@
       <widget class="QPushButton" name="button_start">
         <property name="geometry">
           <rect>
-            <x>240</x>
+            <x>305</x>
             <y>5</y>
             <width>160</width>
             <height>35</height>
@@ -48,6 +48,19 @@
         </property>
         <property name="text">
           <string>Start</string>
+        </property>
+      </widget>
+      <widget class="QPushButton" name="button_stop">
+        <property name="geometry">
+          <rect>
+            <x>305</x>
+            <y>5</y>
+            <width>160</width>
+            <height>35</height>
+          </rect>
+        </property>
+        <property name="text">
+          <string>Stop</string>
         </property>
       </widget>
       <widget class="QLabel" name="label">
