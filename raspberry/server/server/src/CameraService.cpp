@@ -78,7 +78,7 @@ void CameraService::stateHeader()
   image_json_data_->header_        = new char[image_json_data_->header_length_];
   image_json_data_->body_lenght_   = size;
   image_json_data_->body_          = new char[image_json_data_->body_lenght_];
-  TransceivedDataInstance::instance()->addReceivedBytes(size);
+  TransceivedDataInstance::instance()->addReceivedBytes(server_handler_->BUFFER_SIZE);
   TransceivedDataInstance::instance()->addReceivedImage();
 
   memcpy(image_json_data_->header_, server_handler_->input_buffer_, image_json_data_->header_length_);
@@ -101,6 +101,7 @@ void CameraService::stateBody()
       state_ = ERROR;
       return;
     }
+    TransceivedDataInstance::instance()->addReceivedBytes(server_handler_->BUFFER_SIZE);
     memcpy(body, server_handler_->input_buffer_, server_handler_->BUFFER_SIZE);
     body += server_handler_->BUFFER_SIZE;
     debug(CAM_SERVICE, "stateBody: Count %d\n", count);
