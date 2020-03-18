@@ -144,7 +144,7 @@ void I2cHandler::run()
           single_register = I2C_SERVO_OFFSET_DECREMENT;
         }
         writeI2c(I2C_CHANGE_OFFSET, (const uint8_t*)&single_register, 1);
-        sleep(I2C_SLEEP_TIME);
+        usleep(I2C_SLEEP_TIME);
         break;
       default:
         debug(WARNING, "I2cHandler::run: Not knowing mode %d\n", mode);
