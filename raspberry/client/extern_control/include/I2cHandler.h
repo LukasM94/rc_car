@@ -20,13 +20,14 @@ class I2cHandler : public WorkingThread
 
     std::atomic_uint8_t  i2c_error_;
     static const uint8_t I2C_ERROR_THRESHOLD = 5;
-    static const uint8_t GAME_PAD_ERROR_THRESHOLD = 5;
 
     ControlHandler* control_handler_;
 
     enum I2C_MODE { NORMAL, OFFSET };
 
     static const int8_t THRESHOLD_FOR_JOYSTICK = 50;
+
+    static const unsigned int I2C_HANDLER_NOT_CONNECTED_TRY_AGAIN_SLEEP_TIME = 2;
 };
 
 #endif

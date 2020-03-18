@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <string>
-#include <Lock.h>
+#include <Cond.h>
 #include <atomic>
 #include <debug.h>
 
@@ -100,18 +100,17 @@ class GamePad
 
     inline void lock()
     {
-      lock_.lock();
+      cond_.lock();
     }
     inline void unlock()
     {
-      lock_.unlock();
+      cond_.unlock();
+    }
+    inline void wakeAll()
+    {
+      cond_.wakeAll();
     }
     void reset();
-
-    inline bool isNew()
-    {
-      return refreshed_.exchange(false);
-    }
 
     inline void setConnected()
     {
@@ -125,6 +124,8 @@ class GamePad
     {
       return connected_;
     }
+
+    void waitTillNewData(unsigned int timed = 2); //second
 
     static const unsigned int BUTTON_A      = 0;
     static const unsigned int BUTTON_B      = 1;
@@ -150,9 +151,7 @@ class GamePad
     std::atomic_bool*   buttons_;
     std::atomic_bool    connected_;
 
-    std::atomic_bool refreshed_;
-
-    Lock lock_;
+    Cond cond_;
 
     static const char STRING_LEFT[];
     static const char STRING_RIGHT[];

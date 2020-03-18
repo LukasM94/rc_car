@@ -56,8 +56,8 @@ void ServerHandler::run()
     }
     else if (ret > 0)
     {
-      debug(SERVER_HAND, "run: Wait 2 sec and try again\n");
-      sleep(2);
+      debug(SERVER_HAND, "run: Wait % sec and try again\n", SLEEP_TIME_TRY_AGAIN);
+      sleep(SLEEP_TIME_TRY_AGAIN);
       continue;
     }
     debug(SERVER_HAND, "run: Connected\n");

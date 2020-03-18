@@ -30,6 +30,8 @@ class Socket
 
     struct sockaddr_in address_; 
     std::atomic_bool   connected_;
+
+    static const unsigned int SLEEP_TIME_TRY_AGAIN = 2;
 };
 
 #endif

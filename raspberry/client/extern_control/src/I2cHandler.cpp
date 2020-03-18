@@ -64,13 +64,16 @@ void I2cHandler::run()
 
     game_pad->lock();
 
+    game_pad->waitTillNewData();
+
     if (!game_pad->isConnected())
     {
-      debug(WARNING, "I2cHandler::run: Joystick is not connected. Sleep 2 seconds and then test again\n");
+      debug(WARNING, "I2cHandler::run: Joystick is not connected. Sleep %d seconds and then test again\n",
+        I2C_HANDLER_NOT_CONNECTED_TRY_AGAIN_SLEEP_TIME);
       Peripherial::instance()->resetResetPin();
       prev_connected = game_pad->isConnected();
       game_pad->unlock();
-      sleep(2);
+      sleep(I2C_HANDLER_NOT_CONNECTED_TRY_AGAIN_SLEEP_TIME);
       continue;
     } 
     else if (!prev_connected)
@@ -141,11 +144,12 @@ void I2cHandler::run()
           single_register = I2C_SERVO_OFFSET_DECREMENT;
         }
         writeI2c(I2C_CHANGE_OFFSET, (const uint8_t*)&single_register, 1);
+        sleep(I2C_SLEEP_TIME);
         break;
       default:
         debug(WARNING, "I2cHandler::run: Not knowing mode %d\n", mode);
     }
-    usleep(I2C_SLEEP_TIME);
+    // usleep(I2C_SLEEP_TIME);
   }
 
   debug(I2C_HANDLER, "run: Exit\n");

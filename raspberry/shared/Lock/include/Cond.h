@@ -12,6 +12,7 @@ class Cond : public Lock
     Cond(const char* name);
     ~Cond();
     void sleep();
+    void sleep(unsigned int timed);
     void wake();
     void wakeAll();
 

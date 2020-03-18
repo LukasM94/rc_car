@@ -31,6 +31,8 @@ class Peripherial
     static Peripherial* instance_;
 
     Gpio*  gpio_;
+
+    static const unsigned int HEART_BEAT_SLEEP_TIME = 1;
 };
 
   

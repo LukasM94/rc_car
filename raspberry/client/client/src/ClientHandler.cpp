@@ -125,8 +125,8 @@ void ClientHandler::run()
     }
     else if (ret > 0)
     {
-      debug(CLIENT_HAND, "run: Wait 2 sec and try again\n");
-      sleep(2);
+      debug(CLIENT_HAND, "run: Wait %d sec and try again\n", SLEEP_TIME_TRY_AGAIN);
+      sleep(SLEEP_TIME_TRY_AGAIN);
       continue;
     }
 

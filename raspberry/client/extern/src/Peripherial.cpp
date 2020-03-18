@@ -81,9 +81,9 @@ void Peripherial::setResetPin()
 void Peripherial::heartBeat()
 {
   gpio_->onGreenLed();
-  sleep(1);
+  sleep(HEART_BEAT_SLEEP_TIME);
   gpio_->offGreenLed();
-  sleep(1);
+  sleep(HEART_BEAT_SLEEP_TIME);
 }
 
 void Peripherial::turnGreenLedOff()
