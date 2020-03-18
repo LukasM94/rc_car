@@ -156,6 +156,7 @@ class GamePad
     static const char STRING_RT[];
     static const char STRING_BCNT[];
     static const char STRING_BTN[];
+    static const char STRING_CON[];
 };
 
 #endif

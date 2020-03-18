@@ -55,6 +55,7 @@ const char GamePad::STRING_LT[]    = "lt";
 const char GamePad::STRING_RT[]    = "rt";
 const char GamePad::STRING_BCNT[]  = "bcnt";
 const char GamePad::STRING_BTN[]   = "bnt";
+const char GamePad::STRING_CON[]   = "cnt";
 
 int GamePad::getFromString(GamePad* game_pad, const char* str)
 {
@@ -98,6 +99,8 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
 
     game_pad->rt_ = root[STRING_RT].asBool();
     game_pad->lt_ = root[STRING_LT].asBool();
+
+    game_pad->connected_ = root[STRING_CON].asBool();
 
     for (int i = 0; i < button_cnt; ++i)
     {
@@ -189,8 +192,9 @@ int GamePad::getJson(Json::Value& root)
 
     root[STRING_LEFT]  = left;
     root[STRING_RIGHT] = right;
-    root[STRING_LT]    = lt_.load()? 1 : 0;
-    root[STRING_RT]    = rt_.load()? 1 : 0;
+    root[STRING_LT]    = lt_.load() ? 1 : 0;
+    root[STRING_RT]    = rt_.load() ? 1 : 0;
+    root[STRING_CON]   = connected_.load() ? 1 : 0;
 
     for (int i = 0; i < buttons_count_; ++i)
     {
