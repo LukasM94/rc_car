@@ -31,6 +31,7 @@ XboxController::XboxController(const char* path) :
 //-------------------------------------------------
 XboxController::~XboxController()
 {
+  delete gamepad_;
   debug(XBOX_CONTR, "dtor\n");
 }
 

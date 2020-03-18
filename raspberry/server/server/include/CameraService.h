@@ -23,6 +23,7 @@ class CameraService : public WorkingThread
     void stateHeader();
     void stateBody();
     void stateConvert();
+    void stateEnd();
 
     enum State
     {
@@ -37,6 +38,7 @@ class CameraService : public WorkingThread
     struct ImageJsonData* image_json_data_;
 
     enum State      state_;
+    enum State      next_state_;
     ServerHandler*  server_handler_;
     Image*          image_;
 };

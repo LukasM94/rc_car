@@ -42,24 +42,30 @@ void MainWindow::run()
   running_ = 1;
   QImage* graph_tmp = 0;
   QImage* graph     = 0;
-  Image*  image;
+  Image*  image_tmp = 0;
+  Image*  image     = 0;
   debug(MAIN_WINDOW, "run: Start\n");
   while (running_)
   {
     debug(MAIN_WINDOW, "run: Want to load a image\n");
 
-    image     = ImageInstance::instance()->loadImage();
     graph_tmp = graph;
+    image_tmp = image;
 
+    image = ImageInstance::instance()->loadImage();
     graph = new QImage((const uchar *)image->getData(), 
         image->getWidth(), image->getHeight(), QImage::Format_RGB888);
     debug(MAIN_WINDOW, "run: Set new image\n");
     ui_->label->setPixmap(QPixmap::fromImage(*graph));
     qApp->processEvents();
 
-    if (graph_tmp == 0)
+    if (graph_tmp != 0)
     {
       delete graph_tmp;
+    }
+    if (image_tmp != 0)
+    {
+      delete image_tmp;
     }
   }
   debug(MAIN_WINDOW, "run: Exit\n");

@@ -20,6 +20,10 @@ CameraService::CameraService(ServerHandler* server_handler) :
 
 CameraService::~CameraService()
 {
+  if (image_json_data_ != 0)
+  {
+    delete image_json_data_;
+  }
   debug(CAM_SERVICE, "dtor\n");
 }
 
@@ -49,7 +53,7 @@ void CameraService::stateStart()
     delete image_;
   }
   image_ = new ImageJPEG();
-  state_ = HEADER;
+  next_state_ = HEADER;
   debug(CAM_SERVICE, "stateStart: Goto state header\n");
 }
 
@@ -60,13 +64,13 @@ void CameraService::stateHeader()
   debug(CAM_SERVICE, "stateHeader: Receive\n");
   if ((ret = server_handler_->receive()) != 0)
   {
-    state_ = ERROR;
+    next_state_ = ERROR;
     return;
   }
   ret = Image::getSizeOfBody(server_handler_->input_buffer_, &size);
   if (ret != 0)
   {
-    state_ = ERROR;
+    next_state_ = ERROR;
     return;
   }
   image_json_data_->header_length_ = server_handler_->BUFFER_SIZE;
@@ -77,7 +81,7 @@ void CameraService::stateHeader()
   memcpy(image_json_data_->header_, server_handler_->input_buffer_, image_json_data_->header_length_);
   memset(image_json_data_->body_, 0, image_json_data_->body_lenght_);
 
-  state_ = BODY;
+  next_state_ = BODY;
   debug(CAM_SERVICE, "stateHeader: Body length is %d\n", image_json_data_->body_lenght_);
   debug(CAM_SERVICE, "stateHeader: Goto state body\n");
 }
@@ -98,14 +102,20 @@ void CameraService::stateBody()
     body += server_handler_->BUFFER_SIZE;
     debug(CAM_SERVICE, "stateBody: Count %d\n", count);
   }
-  state_ = CONVERT;
+  next_state_ = CONVERT;
 }
 
 void CameraService::stateConvert()
 {
+  debug(CAM_SERVICE, "stateConvert\n");
   Image::getFromString(image_, image_json_data_->body_);
   ImageInstance::instance()->saveImage(image_);
-  state_ = END;
+  next_state_ = END;
+}
+
+void CameraService::stateEnd()
+{
+  debug(CAM_SERVICE, "StateEnd\n");
 }
 
 void CameraService::run()
@@ -113,9 +123,11 @@ void CameraService::run()
   debug(CAM_SERVICE, "run: Start\n");
   while (server_handler_->connected_)
   {
-    state_ = START;
+    state_      = START;
+    next_state_ = START;
     while (state_ != END)
     {
+      state_ = next_state_;
       if (state_ == START)
       {
         stateStart();
@@ -132,8 +144,13 @@ void CameraService::run()
       {
         stateConvert();
       }
+      else if (state_ == END)
+      {
+        stateEnd();
+      }
       else
       {
+        stateEnd();
         server_handler_->connected_ = 0;
         break;
       }
