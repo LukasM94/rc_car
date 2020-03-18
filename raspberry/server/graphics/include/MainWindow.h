@@ -3,11 +3,14 @@
 
 #include <QMainWindow>
 #include <atomic>
+#include <string>
 
 class QLabel;
 class QImage;
 class QPushButton;
 class Image;
+class StatusDisplay;
+class VideoDisplay;
 
 namespace Ui
 {
@@ -21,22 +24,20 @@ class MainWindow : public QMainWindow
   public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    static void* wrapperStart(void* arg)
-    {
-      reinterpret_cast<MainWindow*>(arg)->run();
-      return 0;
-    }
-    void run();
+
+    void setStatusLeft(std::string& left);
+    void setStatusRight(std::string& right);
+    void setImage(Image* image);
 
   private:
     void setFont(QPushButton* button);
     void setFont(QLabel* label, int size);
 
-    Ui::MainWindow*  ui_;
+    Ui::MainWindow* ui_;
     std::atomic_bool running_;
-    long unsigned int tid_;
     QImage* graph_;
-    Image*  image_;
+    StatusDisplay* status_display_;
+    VideoDisplay*  video_display_;
 
   public slots:
     void start();

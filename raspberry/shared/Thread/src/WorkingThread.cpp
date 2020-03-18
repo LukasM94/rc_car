@@ -5,10 +5,11 @@
 
 int (*WorkingThread::callback_function)(WorkingThread*) = 0;
 
-WorkingThread::WorkingThread(const char* name) :
+WorkingThread::WorkingThread(const char* name, bool external) :
   running_(true),
   name_(name),
-  tid_(-1)
+  tid_(-1),
+  external_(external)
 {
   debug(WORKING_TH, "ctor: name <%s>\n", name_.c_str());
 }
@@ -24,7 +25,7 @@ void* WorkingThread::runWrapper(void* arg)
 
   thread->run();
 
-  if (callback_function != 0)
+  if (callback_function != 0 && !thread->external_)
   {
     callback_function(thread);
   }

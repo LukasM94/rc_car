@@ -104,6 +104,8 @@ target_link_libraries(
   main_window
   thread_handler
   game_pad_instance
+  status_display
+  video_display
   -pthread
   -ljsoncpp
   -ljpeg

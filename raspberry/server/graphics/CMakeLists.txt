@@ -5,6 +5,16 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5 COMPONENTS Widgets Gui Core REQUIRED)
 
+add_library(
+  status_display
+  SHARED
+  src/StatusDisplay.cpp
+)
+add_library(
+  video_display
+  SHARED
+  src/VideoDisplay.cpp
+)
 add_library( 
   graphics
   SHARED
@@ -19,3 +29,5 @@ add_library(
 )
 target_link_libraries(graphics Qt5::Widgets Qt5::Gui Qt5::Core)
 target_link_libraries(main_window Qt5::Widgets Qt5::Gui Qt5::Core)
+target_link_libraries(video_display Qt5::Widgets Qt5::Gui Qt5::Core)
+target_link_libraries(status_display Qt5::Widgets Qt5::Gui Qt5::Core)

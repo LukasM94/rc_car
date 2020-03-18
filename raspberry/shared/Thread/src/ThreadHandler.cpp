@@ -79,10 +79,11 @@ int ThreadHandler::startThread(WorkingThread* thread, bool detached)
   return 0;
 }
 
-int ThreadHandler::startExternThread(long unsigned int* tid, void* (*wrapperStart)(void*), void* arg)
+int ThreadHandler::startExternThread(WorkingThread* thread)
 {
-  debug(THREAD_LIST, "startExternThread\n");
-  return pthread_create(tid, 0, wrapperStart, arg);
+  debug(THREAD_LIST, "startThread: name_ <%s>\n", thread->getName());
+  pthread_create(&thread->tid_, 0, WorkingThread::runWrapper, thread);
+  return 0;
 }
 
 int ThreadHandler::waitTillThreadFinished(WorkingThread* thread, void** return_value)

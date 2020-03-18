@@ -9,7 +9,7 @@ class ThreadHandler;
 class WorkingThread
 {
   public:
-    WorkingThread(const char* name);
+    WorkingThread(const char* name, bool external = 0);
     ~WorkingThread();
 
     static void* runWrapper(void* arg);
@@ -31,6 +31,8 @@ class WorkingThread
     std::atomic_bool  running_;
     std::string       name_;
     long unsigned int tid_;
+    bool              external_;
+    
   private:
     friend ThreadHandler;
     WorkingThread();
