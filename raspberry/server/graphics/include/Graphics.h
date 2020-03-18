@@ -3,11 +3,6 @@
 
 #include <WorkingThread.h>
 
-class QApplication;
-class QImage;
-class QLabel;
-class Image;
-
 class Graphics: public WorkingThread
 {
   public:
@@ -18,15 +13,6 @@ class Graphics: public WorkingThread
 
   private:
     Graphics(const Graphics&);
-
-    int    argv_;
-    char** argc_;
-
-    QApplication* app_;
-    QImage*       graph_;
-    QLabel*       label_;
-
-    Image* image_;
 };
 
 #endif
