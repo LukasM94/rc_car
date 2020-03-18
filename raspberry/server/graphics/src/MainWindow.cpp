@@ -54,7 +54,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::setFont(QPushButton* button)
 {
-  QFont font("Newyork", 18);
+  QFont font("Newyork", 19);
   font.setStyleHint(QFont::SansSerif);
   button->setFont(font);
 }

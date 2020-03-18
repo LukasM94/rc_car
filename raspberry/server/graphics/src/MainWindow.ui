@@ -40,27 +40,27 @@
       <widget class="QPushButton" name="button_start">
         <property name="geometry">
           <rect>
-            <x>305</x>
+            <x>325</x>
             <y>5</y>
-            <width>160</width>
+            <width>200</width>
             <height>35</height>
           </rect>
         </property>
         <property name="text">
-          <string>Start gui</string>
+          <string>Start capture</string>
         </property>
       </widget>
       <widget class="QPushButton" name="button_stop">
         <property name="geometry">
           <rect>
-            <x>305</x>
+            <x>325</x>
             <y>5</y>
-            <width>160</width>
+            <width>200</width>
             <height>35</height>
           </rect>
         </property>
         <property name="text">
-          <string>Stop gui</string>
+          <string>Stop capture</string>
         </property>
       </widget>
       <widget class="QLabel" name="label">
