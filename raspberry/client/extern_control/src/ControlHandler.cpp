@@ -4,7 +4,6 @@
 #include <ControlHandler.h>
 #include <GamePad.h>
 #include <unistd.h>
-#include <Control.h>
 #include <ThreadHandler.h>
 #include <I2cHandler.h>
 #include <GpioHandler.h>

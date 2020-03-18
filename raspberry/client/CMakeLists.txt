@@ -101,7 +101,6 @@ target_link_libraries(
   communication
   extern_control
   peripherial
-  control
   camera_handler
   game_pad_client
   working_thread
@@ -135,7 +134,6 @@ target_link_libraries(
   communication
   extern_control
   peripherial
-  control
   camera_handler
   game_pad_client
   working_thread

@@ -13,7 +13,6 @@
 #include <fstream>
 #include <CameraHandler.h>
 #include <Image.h>
-#include <Control.h>
 #include <Camera.h>
 #include <ThreadHandler.h>
 #include <client_config.h>
@@ -23,7 +22,6 @@ ControlHandler*  control_handler;
 GamePad*         game_pad;
 Atmega*          atmega;
 CameraHandler*   camera_handler;
-Control*         control;
 Camera*          camera;
 
 void signalHandler(int signal_num);
