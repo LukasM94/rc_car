@@ -12,7 +12,7 @@ class ImageInstance
     static ImageInstance* instance();
 
     int    saveImage(Image* image);
-    Image* loadImage();
+    Image* loadImage(bool sleep = true);
     void   freeImage(Image* image);
 
   private:

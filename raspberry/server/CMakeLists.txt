@@ -13,6 +13,7 @@ add_compile_options(-std=c++11)
 set(__cplusplus 1)
 
 include_directories(
+  instances/include
   graphics/include
   server/include
   xbox/include
@@ -82,6 +83,7 @@ add_library(
 add_subdirectory(graphics) 
 add_subdirectory(server) 
 add_subdirectory(xbox) 
+add_subdirectory(instances) 
 
 target_link_libraries(
   ${PROJECT_NAME}

@@ -46,14 +46,22 @@ int ImageInstance::saveImage(Image* image)
   return 0;
 }
 
-Image* ImageInstance::loadImage()
+Image* ImageInstance::loadImage(bool sleep)
 {
   debug(IMAGE_INSTA, "loadImage\n");
   Image* image;
   cond_.lock();
   while (image_ == 0)
   {
-    cond_.sleep();
+    if (sleep)
+    {
+      cond_.sleep();
+    }
+    else
+    {
+      cond_.unlock();
+      return 0;
+    }
   }
   image = new ImageRGB(image_);
   debug(IMAGE_INSTA, "loadImage: image <%p>\n", image);

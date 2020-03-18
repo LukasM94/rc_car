@@ -1,10 +1,10 @@
 
 #include <MainWindow.h>
 #include <debug.h>
-#include <unistd.h>
 #include <ui_MainWindow.h>
 #include <Image.h>
 #include <ImageInstance.h>
+#include <QThread>
 
 MainWindow::MainWindow(QWidget *parent) : 
   QMainWindow(parent), 
@@ -15,8 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
   ui_->setupUi(this);
   setWindowTitle("Camera");
   setWindowOpacity(0.98);
-  setMinimumSize(650, 530);
-  setMaximumSize(650, 530);
+  setMinimumSize(650, 600);
+  setMaximumSize(650, 600);
 
   setFont(ui_->button_start);
 
@@ -39,34 +39,45 @@ void MainWindow::setFont(QPushButton* button)
 
 void MainWindow::run()
 {
+  debug(MAIN_WINDOW, "run: Start\n");
   running_ = 1;
+  ui_->button_start->hide();
+
   QImage* graph_tmp = 0;
   QImage* graph     = 0;
   Image*  image_tmp = 0;
   Image*  image     = 0;
+  Image*  image_new = 0;
+
+  QLabel* status_label_left = new QLabel();
+
   debug(MAIN_WINDOW, "run: Start\n");
   while (running_)
   {
-    debug(MAIN_WINDOW, "run: Want to load a image\n");
-
     graph_tmp = graph;
     image_tmp = image;
 
-    image = ImageInstance::instance()->loadImage();
-    graph = new QImage((const uchar *)image->getData(), 
-        image->getWidth(), image->getHeight(), QImage::Format_RGB888);
-    debug(MAIN_WINDOW, "run: Set new image\n");
-    ui_->label->setPixmap(QPixmap::fromImage(*graph));
-    qApp->processEvents();
+    image_new = ImageInstance::instance()->loadImage();
+    if (image_new != 0)
+    {
+      debug(MAIN_WINDOW, "run: Load image\n");
+      image = image_new;
+      graph = new QImage((const uchar *)image->getData(), 
+          image->getWidth(), image->getHeight(), QImage::Format_RGB888);
+      debug(MAIN_WINDOW, "run: Set new image\n");
+      ui_->label->setPixmap(QPixmap::fromImage(*graph));
+      qApp->processEvents();
 
-    if (graph_tmp != 0)
-    {
-      delete graph_tmp;
+      if (graph_tmp != 0)
+      {
+        delete graph_tmp;
+      }
+      if (image_tmp != 0)
+      {
+        delete image_tmp;
+      }
     }
-    if (image_tmp != 0)
-    {
-      delete image_tmp;
-    }
+    QThread::msleep(20);
   }
   debug(MAIN_WINDOW, "run: Exit\n");
 }
