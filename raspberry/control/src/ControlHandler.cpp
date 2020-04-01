@@ -7,14 +7,13 @@
 #include <ThreadHandler.h>
 #include <I2cHandler.h>
 #include <GpioHandler.h>
-#include <UController.h>
+#include <Atmega.h>
 #include <client_config.h>
 
-ControlHandler::ControlHandler(UController* u_controller) :
+ControlHandler::ControlHandler() :
   WorkingThread("ControlHandler"),
   i2c_handler_(0),
-  gpio_handler_(0),
-  u_controller_(u_controller)
+  gpio_handler_(0)
 {
   debug(CONTROL, "ctor\n");
 }

@@ -2,7 +2,7 @@
 #include <I2cHandler.h>
 #include <Peripherial.h>
 #include <I2c.h>
-#include <UController.h>
+#include <Atmega.h>
 #include <debug.h>
 #include <unistd.h>
 #include <GamePad.h>
@@ -15,17 +15,19 @@ I2cHandler::I2cHandler(ControlHandler* control_handler) :
   control_handler_(control_handler)
 {
   debug(I2C_HANDLER, "ctor\n");
+  u_controller_ = new Atmega();
 }
 
 I2cHandler::~I2cHandler()
 {
+  delete u_controller_;
   debug(I2C_HANDLER, "dtor\n");
 }
 
 void I2cHandler::init()
 {
   debug(I2C_HANDLER, "init\n");
-  control_handler_->u_controller_->initI2c();
+  u_controller_->initI2c();
 }
 
 void I2cHandler::deinit()
@@ -68,7 +70,7 @@ void I2cHandler::run()
 
     if (!game_pad->isConnected())
     {
-      debug(WARNING, "I2cHandler::run: Joystick is not connected. Sleep %d seconds and then test again\n",
+      debug(WARNING, "I2cHandler::run: GamePad not connected\n",
         I2C_HANDLER_NOT_CONNECTED_TRY_AGAIN_SLEEP_TIME);
       Peripherial::instance()->resetResetPin();
       prev_connected = game_pad->isConnected();
@@ -158,7 +160,7 @@ void I2cHandler::run()
 void I2cHandler::writeI2c(uint8_t reg, const uint8_t* data, int length)
 {
   debug(I2C_HANDL_D, "writeI2c: reg <%d>, data <%p>, length <%d>\n", reg, data, length);
-  if (control_handler_->u_controller_->writeI2c(reg, data, length) == 0)
+  if (u_controller_->writeI2c(reg, data, length) == 0)
   {
     i2c_error_ = 0;
   }

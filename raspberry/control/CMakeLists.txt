@@ -1,10 +1,10 @@
 add_library( 
-  extern_control
+  control
   SHARED
   src/ControlHandler.cpp
 )
 add_dependencies(
-  extern_control
+  control
   u_controller
   usart
   spi

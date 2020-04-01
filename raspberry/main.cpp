@@ -1,6 +1,5 @@
 
 #include <ControlHandler.h>
-#include <Atmega.h>
 #include <unistd.h>
 #include <debug.h>
 #include <sys/wait.h>
@@ -20,7 +19,6 @@
 ClientHandler*   client_handler;
 ControlHandler*  control_handler;
 GamePad*         game_pad;
-Atmega*          atmega;
 CameraHandler*   camera_handler;
 Camera*          camera;
 
@@ -39,8 +37,7 @@ int main(int argc, char* argv[])
   ThreadHandler::init();
   game_pad         = GamePadInstance::instance()->getGamePad();
   camera           = Camera::instance();
-  atmega           = new Atmega();
-  control_handler  = new ControlHandler(atmega);
+  control_handler  = new ControlHandler();
   camera_handler   = new CameraHandler();
   client_handler   = new ClientHandler(atoi(port_no), ip_addr);
 

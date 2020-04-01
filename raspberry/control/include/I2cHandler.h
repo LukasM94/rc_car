@@ -4,6 +4,7 @@
 #include <WorkingThread.h>
 
 class ControlHandler;
+class UController;
 
 class I2cHandler : public WorkingThread
 {
@@ -22,6 +23,7 @@ class I2cHandler : public WorkingThread
     static const uint8_t I2C_ERROR_THRESHOLD = 5;
 
     ControlHandler* control_handler_;
+    UController* u_controller_;
 
     enum I2C_MODE { NORMAL, OFFSET };
 

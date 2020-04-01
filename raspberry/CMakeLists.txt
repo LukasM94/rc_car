@@ -28,7 +28,7 @@ include_directories(
   ../../shared
   extern/include
   raspberry/include
-  extern_control/include
+  control/include
   camera/include
   client/include
 )
@@ -85,7 +85,7 @@ add_library(
 
 add_subdirectory(extern) 
 add_subdirectory(shared) 
-add_subdirectory(extern_control) 
+add_subdirectory(control) 
 add_subdirectory(camera)
 add_subdirectory(client) 
 add_subdirectory(raspberry) 
@@ -99,7 +99,7 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "amd64.*|x86_64.*|AMD64.*")
 target_link_libraries(
   ${PROJECT_NAME}
   communication
-  extern_control
+  control
   peripherial
   camera_handler
   game_pad_client
@@ -132,7 +132,7 @@ elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm.*|ARM.*)")
 target_link_libraries(
   ${PROJECT_NAME}
   communication
-  extern_control
+  control
   peripherial
   camera_handler
   game_pad_client
