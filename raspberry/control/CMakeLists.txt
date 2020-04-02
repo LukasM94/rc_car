@@ -21,3 +21,12 @@ add_library(
   SHARED
   src/I2cHandler.cpp
 )
+add_library(
+  atmega_i2c_handler
+  SHARED
+  src/AtmegaI2cHandler.cpp
+)
+add_dependencies(
+  atmega_i2c_handler
+  i2c_handler
+)

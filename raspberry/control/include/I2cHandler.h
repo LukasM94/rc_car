@@ -16,7 +16,9 @@ class I2cHandler : public WorkingThread
 
     void init();
     void deinit();
-  private:
+  
+  protected:
+
     void writeI2c(uint8_t reg, const uint8_t* data, int length);
 
     std::atomic_uint8_t  i2c_error_;

@@ -124,6 +124,7 @@ target_link_libraries(
   thread_handler
   gpio_handler
   i2c_handler
+  atmega_i2c_handler
   -pthread
   -lrt
   -ljsoncpp
@@ -157,6 +158,7 @@ target_link_libraries(
   thread_handler
   gpio_handler
   i2c_handler
+  atmega_i2c_handler
   -pthread
   -lwiringPi
   -lrt
