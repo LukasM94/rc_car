@@ -1,6 +1,7 @@
 #include <Cond.h>
 #include <sched.h>
 #include <sys/time.h>
+#include <debug.h>
 
 Cond::Cond(const char* name) :
   Lock(name)
@@ -22,9 +23,8 @@ void Cond::sleep()
 void Cond::sleep(unsigned int timed)
 {
   struct timespec ts;
-  struct timeval now;
-  gettimeofday(&now,NULL);
-  ts.tv_sec = now.tv_sec + timed;
+  clock_gettime(CLOCK_REALTIME, &ts);
+  ts.tv_sec += timed;
   pthread_cond_timedwait(&cond_, &lock_, &ts);
 }
 
