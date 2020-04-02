@@ -24,15 +24,7 @@ class I2cHandler : public WorkingThread
     static const uint8_t I2C_ERROR_THRESHOLD = 5;
 
     ControlHandler* control_handler_;
-    union 
-    {
-      UController* u_controller_;
-      struct 
-      {
-        UController* u_controller_;
-        size_t       count_;
-      }* u_controllers_;
-    } controller_;
+    UController*    u_controller_;
 };
 
 #endif

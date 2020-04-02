@@ -30,7 +30,6 @@ GamePad::GamePad() :
   debug(GAME_PAD, "ctor\n");
 }
 
-
 GamePad::GamePad(uint8_t button_count) :
   lt_(0),
   rt_(0),

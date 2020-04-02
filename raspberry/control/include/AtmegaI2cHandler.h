@@ -3,6 +3,8 @@
 
 #include <I2cHandler.h>
 
+class I2cRegisterData;
+
 class AtmegaI2cHandler : public I2cHandler
 {
   public:
@@ -15,14 +17,10 @@ class AtmegaI2cHandler : public I2cHandler
 
   protected:
     virtual void writeI2c(uint8_t reg, const uint8_t* data, int length);
+
+    I2cRegisterData* i2c_register_data_;
     
-    enum I2C_MODE { NORMAL, OFFSET };
-
-    static const int8_t THRESHOLD_FOR_JOYSTICK = 50;
-    static const int8_t MAX_OFFSET             = 50;
-
     static const unsigned int I2C_HANDLER_NOT_CONNECTED_TRY_AGAIN_SLEEP_TIME = 2;
-
 };
 
 #endif

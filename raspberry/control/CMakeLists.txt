@@ -30,3 +30,13 @@ add_dependencies(
   atmega_i2c_handler
   i2c_handler
 )
+add_library(
+  i2c_register_data
+  SHARED
+  src/I2cRegisterData.cpp
+)
+add_dependencies(
+  i2c_register_data
+  atmega_i2c_handler
+)
+
