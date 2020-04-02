@@ -110,6 +110,10 @@ class GamePad
     {
       cond_.wakeAll();
     }
+    inline void sleep(unsigned int timed)
+    {
+      cond_.sleep(timed);
+    }
     void reset();
 
     inline void setConnected()

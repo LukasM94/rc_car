@@ -8,6 +8,8 @@ if (NOT CONFIGURED_ONCE)
         CACHE STRING "Flags used by the compiler during all build types." FORCE)
 endif()
 
+set(CMAKE_CXX_FLAGS_RELEASE "-O1")
+
 add_compile_options(-std=c++11)
 
 set(warnings "-Wall -Wextra")

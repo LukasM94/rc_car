@@ -40,15 +40,25 @@ void AtmegaI2cHandler::deinit()
 void AtmegaI2cHandler::run()
 {
   debug(A_I2C_HANDL, "run: Start\n");
-  bool prev_start_button = false;
-  bool prev_select_button = false;
 
   GamePad* game_pad = GamePadInstance::instance()->getGamePad();
 
   enum I2C_MODE mode = NORMAL;
   
-  int8_t speed;
-  int8_t angle;
+  int8_t motor = 0;
+  int8_t servo = 0;
+  int8_t motor_offset = 0;
+  int8_t servo_offset = 0;
+
+  int8_t y_axis = 0;
+  int8_t x_axis = 0;
+  int8_t y_axis_prev = 0;
+  int8_t x_axis_prev = 0;
+  
+  bool start_button = false;
+  bool select_button = false;
+  bool start_button_prev = false;
+  bool select_button_prev = false;
   
   uint8_t single_register;
   debug(A_I2C_HANDL, "run: Reset u controller\n");
@@ -59,103 +69,104 @@ void AtmegaI2cHandler::run()
   i2c_error_ = 0;
   running_   = 1;
 
-  bool prev_connected = 1;
+  bool game_pad_connected      = 1;
+  bool game_pad_connected_prev = 1;
 
   debug(A_I2C_HANDL, "run: Start with communcation\n");
   while (running_)
   {
-    debug(I2C_HANDL_D, "run: Get data of game_pad\n");
-
     game_pad->lock();
-
     game_pad->waitTillNewData();
 
-    if (!game_pad->isConnected())
+    game_pad_connected_prev = game_pad_connected;
+    game_pad_connected = game_pad->isConnected();
+
+    if (!game_pad_connected)
     {
       debug(WARNING, "I2cHandler::run: GamePad not connected\n",
         I2C_HANDLER_NOT_CONNECTED_TRY_AGAIN_SLEEP_TIME);
       Peripherial::instance()->resetResetPin();
-      prev_connected = game_pad->isConnected();
       game_pad->unlock();
       sleep(I2C_HANDLER_NOT_CONNECTED_TRY_AGAIN_SLEEP_TIME);
       continue;
-    } 
-    else if (!prev_connected)
-    {
-      debug(A_I2C_HANDL, "run: Set u controller\n");
-      Peripherial::instance()->setResetPin();
-      sleep(ATMEGA_RECOVER_AFTER_RESET);
-      debug(I2C_HANDLER, "run: Recovered from reset\n");
     }
 
-    prev_connected = game_pad->isConnected();
+    start_button_prev  = start_button;
+    select_button_prev = select_button;
 
-    bool start_button  = game_pad->getButton(GamePad::BUTTON_START);
-    bool select_button = game_pad->getButton(GamePad::BUTTON_SELECT);
-    
-    speed = game_pad->getLeftAxisY();
-    angle = game_pad->getLeftAxisX();
+    start_button  = game_pad->getButton(GamePad::BUTTON_START);
+    select_button = game_pad->getButton(GamePad::BUTTON_SELECT);
+
+    y_axis_prev = y_axis;
+    x_axis_prev = x_axis;
+
+    y_axis = game_pad->getLeftAxisY();
+    x_axis = game_pad->getLeftAxisX();
+
     game_pad->unlock();
 
-    debug(I2C_HANDL_D, "run: Check button action\n");
-    if (start_button && !prev_start_button)
+    if (start_button_prev != start_button)
     {
-      single_register = I2C_CONTROL_REGISTER_CHANGE_PWM_RUNNING;
-      writeI2c(I2C_CONTROL_REGISTER, (const uint8_t*)&single_register, 1); 
-      Peripherial::instance()->toggleRedLed();
+      debug(I2C_HANDL_D, "run: StartButton is %s\n", start_button ? "start" : "stop");
     }
-    prev_start_button = start_button;
-
-    if (select_button && !prev_select_button)
+    if (select_button_prev != select_button)
     {
+      debug(I2C_HANDL_D, "run: SelectButton is %s\n", select_button ? "start" : "stop");
+      if (select_button)
+      {
+        if (mode == NORMAL)
+        {
+          mode = OFFSET;
+        }
+        else if (mode == OFFSET)
+        {
+          mode = NORMAL;
+        }
+      }
+    }
+    if (y_axis_prev != y_axis)
+    {
+      motor = y_axis;
       if (mode == NORMAL)
       {
-        mode = OFFSET;
+        debug(I2C_HANDL_D, "run: Motor is %d\n", motor);
       }
       else if (mode == OFFSET)
       {
-        mode = NORMAL;
+        if (motor > THRESHOLD_FOR_JOYSTICK)
+        {
+          motor_offset++;
+        }
+        else if (motor < (-1 * THRESHOLD_FOR_JOYSTICK))
+        {
+          motor_offset--;
+        }
+        debug(I2C_HANDL_D, "run: MotorOffset is %d\n", motor_offset);
+        usleep(I2C_SLEEP_TIME);
       }
     }
-    prev_select_button = select_button;
-
-    debug(I2C_HANDL_D, "run: Current mode %d\n", mode);
-
-    single_register = 0;
-    switch (mode)
+    if (x_axis_prev != x_axis)
     {
-      case NORMAL:
-        writeI2c(I2C_MOTOR, (const uint8_t*)&speed, 1); 
-        writeI2c(I2C_SERVO, (const uint8_t*)&angle, 1); 
-        break;
-      case OFFSET:
-        if (speed > THRESHOLD_FOR_JOYSTICK)
+      servo = x_axis;
+      if (mode == NORMAL)
+      {
+        debug(I2C_HANDL_D, "run: Servo is %d\n", servo);
+      }
+      else if (mode == OFFSET)
+      {
+        if (servo > THRESHOLD_FOR_JOYSTICK)
         {
-          single_register = I2C_MOTOR_OFFSET_INCREMENT;
-        } 
-        else if (speed < (-1 * THRESHOLD_FOR_JOYSTICK))
-        {
-          single_register = I2C_MOTOR_OFFSET_DECREMENT;
+          servo_offset++;
         }
-        writeI2c(I2C_CHANGE_OFFSET, (const uint8_t*)&single_register, 1);
-        single_register = 0;
-        if (angle > THRESHOLD_FOR_JOYSTICK)
+        else if (servo < (-1 * THRESHOLD_FOR_JOYSTICK))
         {
-          single_register = I2C_SERVO_OFFSET_INCREMENT;
-        } 
-        else if (angle < (-1 * THRESHOLD_FOR_JOYSTICK))
-        {
-          single_register = I2C_SERVO_OFFSET_DECREMENT;
+          servo_offset--;
         }
-        writeI2c(I2C_CHANGE_OFFSET, (const uint8_t*)&single_register, 1);
+        debug(I2C_HANDL_D, "run: ServoOffset is %d\n", servo_offset);
         usleep(I2C_SLEEP_TIME);
-        break;
-      default:
-        debug(WARNING, "I2cHandler::run: Not knowing mode %d\n", mode);
+      }
     }
-    // usleep(I2C_SLEEP_TIME);
   }
-
   debug(A_I2C_HANDL, "run: Exit\n");
 }
 

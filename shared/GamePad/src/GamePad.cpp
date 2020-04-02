@@ -244,5 +244,5 @@ void GamePad::reset()
 void GamePad::waitTillNewData(unsigned int timed)
 {
   assert(cond_.heldByCurrentThread() == true);
-  cond_.sleep(timed);
+  sleep(timed);
 }

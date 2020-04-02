@@ -4,21 +4,24 @@
 
 #define I2C_ADDRESS 0x05
 
-#define I2C_MOTOR 0x00
-#define I2C_MOTOR_SIZE 1
+#define I2C_CONTROL_REGISTER 0x00
+// please do not use the software reset
+#define I2C_CONTROL_REGISTER_RESET   0x01
+#define I2C_CONTROL_REGISTER_STOP    0x02
+#define I2C_CONTROL_REGISTER_RUNNING 0x04
 
-#define I2C_SERVO 0x04
-#define I2C_SERVO_SIZE 1
+#define I2C_STATUS_REGISTER 0x01
+#define I2C_STATUS_REGISTER_MOTOR0_RUNNING 0x01
+#define I2C_STATUS_REGISTER_MOTOR1_RUNNING 0x02
+#define I2C_STATUS_REGISTER_MOTOR2_RUNNING 0x04
 
-#define I2C_CONTROL_REGISTER 0x20
-#define I2C_CONTROL_REGISTER_CHANGE_PWM_RUNNING 0x01
-#define I2C_CONTROL_REGISTER_RESET 0x02
+#define I2C_MOTOR0_REGISTER 0x10
+#define I2C_MOTOR1_REGISTER 0x11
+#define I2C_MOTOR2_REGISTER 0x12
 
-#define I2C_CHANGE_OFFSET 0x21
-#define I2C_MOTOR_OFFSET_INCREMENT 0x01
-#define I2C_MOTOR_OFFSET_DECREMENT 0x02
-#define I2C_SERVO_OFFSET_INCREMENT 0x04
-#define I2C_SERVO_OFFSET_DECREMENT 0x08
+#define I2C_MOTOR0_OFFSET_REGISTER 0x20
+#define I2C_MOTOR1_OFFSET_REGISTER 0x21
+#define I2C_MOTOR2_OFFSET_REGISTER 0x22
 
 #define I2C_SLEEP_TIME  50000 //us
 #define I2C_DEAD_TIME   500 //ms
@@ -28,18 +31,32 @@
 struct RegisterEntry
 {
   unsigned char register_number_;
-  const char name_[7];
+  const char* name_;
 }__attribute__((packed));
+
+
+static const char I2C_CONTROL_REGISTER_NAME[] = "ControlRegister";
+static const char I2C_STATUS_REGISTER_NAME[] = "StatusRegister";
+static const char I2C_MOTOR0_REGISTER_NAME[] = "Motor";
+static const char I2C_MOTOR1_REGISTER_NAME[] = "Servo";
+static const char I2C_MOTOR2_REGISTER_NAME[] = "MotorNotUsed";
+static const char I2C_MOTOR0_OFFSET_REGISTER_NAME[] = "MotorOffset";
+static const char I2C_MOTOR1_OFFSET_REGISTER_NAME[] = "ServoOffset";
+static const char I2C_MOTOR2_OFFSET_REGISTER_NAME[] = "MotorOffsetNotUsed";
 
 static struct RegisterEntry registers[] = 
 {
-  {I2C_MOTOR, "Motor"},
-  {I2C_SERVO, "Servo"},
-  {I2C_CONTROL_REGISTER, "Ctl"},
-  {I2C_CHANGE_OFFSET, "Offset"},
+  {I2C_CONTROL_REGISTER, I2C_CONTROL_REGISTER_NAME},
+  {I2C_STATUS_REGISTER, I2C_STATUS_REGISTER_NAME},
+  {I2C_MOTOR0_REGISTER, I2C_MOTOR0_REGISTER_NAME},
+  {I2C_MOTOR1_REGISTER, I2C_MOTOR1_REGISTER_NAME},
+  {I2C_MOTOR2_REGISTER, I2C_MOTOR2_REGISTER_NAME},
+  {I2C_MOTOR0_OFFSET_REGISTER, I2C_MOTOR0_OFFSET_REGISTER_NAME},
+  {I2C_MOTOR1_OFFSET_REGISTER, I2C_MOTOR1_OFFSET_REGISTER_NAME},
+  {I2C_MOTOR2_OFFSET_REGISTER, I2C_MOTOR2_OFFSET_REGISTER_NAME},
 };
 
-#define COUNT_REGISTER 4
+#define COUNT_REGISTER 8
 
 static const char* getNameOfRegister(unsigned char register_number)
 {
