@@ -10,11 +10,18 @@ class AtmegaI2cHandler : public I2cHandler
     ~AtmegaI2cHandler();
 
     virtual void run();
+    virtual void init();
+    virtual void deinit();
 
   protected:
-    UController* u_controller_;
+    virtual void writeI2c(uint8_t reg, const uint8_t* data, int length);
+    
+    enum I2C_MODE { NORMAL, OFFSET };
 
-  private:
+    static const int8_t THRESHOLD_FOR_JOYSTICK = 50;
+
+    static const unsigned int I2C_HANDLER_NOT_CONNECTED_TRY_AGAIN_SLEEP_TIME = 2;
+
 };
 
 #endif

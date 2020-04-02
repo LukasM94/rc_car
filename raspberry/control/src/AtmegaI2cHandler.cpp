@@ -15,12 +15,26 @@
 AtmegaI2cHandler::AtmegaI2cHandler(ControlHandler* control_handler) :
   I2cHandler(control_handler)
 {
+  controller_.u_controller_ = new Atmega();
   debug(A_I2C_HANDL, "ctor: %p\n", control_handler);
 }
 
 AtmegaI2cHandler::~AtmegaI2cHandler()
 {
+  delete controller_.u_controller_;
   debug(A_I2C_HANDL, "dtor\n");
+}
+
+void AtmegaI2cHandler::init()
+{
+  debug(A_I2C_HANDL, "init\n");
+  UController* u_controller = controller_.u_controller_;
+  u_controller->initI2c();
+}
+
+void AtmegaI2cHandler::deinit()
+{
+  debug(A_I2C_HANDL, "deinit\n");
 }
 
 void AtmegaI2cHandler::run()
@@ -50,7 +64,7 @@ void AtmegaI2cHandler::run()
   debug(A_I2C_HANDL, "run: Start with communcation\n");
   while (running_)
   {
-    debug(A_I2C_HANDL, "run: Get data of game_pad\n");
+    debug(I2C_HANDL_D, "run: Get data of game_pad\n");
 
     game_pad->lock();
 
@@ -143,4 +157,23 @@ void AtmegaI2cHandler::run()
   }
 
   debug(A_I2C_HANDL, "run: Exit\n");
+}
+
+void AtmegaI2cHandler::writeI2c(uint8_t reg, const uint8_t* data, int length)
+{
+  debug(I2C_HANDL_D, "writeI2c: reg <%d>, data <%p>, length <%d>\n", reg, data, length);
+  UController* u_controller = controller_.u_controller_;
+  if (u_controller->writeI2c(reg, data, length) == 0)
+  {
+    i2c_error_ = 0;
+  }
+  else 
+  {
+    i2c_error_++;
+  }
+  if (i2c_error_ > I2C_ERROR_THRESHOLD)
+  {
+    debug(WARNING, "I2cHandler::writeI2c: %d errors on the i2c line\n", i2c_error_.load());
+    running_ = false;
+  }
 }

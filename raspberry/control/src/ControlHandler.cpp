@@ -5,7 +5,7 @@
 #include <GamePad.h>
 #include <unistd.h>
 #include <ThreadHandler.h>
-#include <I2cHandler.h>
+#include <AtmegaI2cHandler.h>
 #include <GpioHandler.h>
 #include <Atmega.h>
 #include <client_config.h>
@@ -29,7 +29,7 @@ void ControlHandler::run()
 {
   debug(CTL_HANDLER, "run: Start\n");
 
-  i2c_handler_  = new I2cHandler(this);
+  i2c_handler_  = new AtmegaI2cHandler(this);
   gpio_handler_ = new GpioHandler(this);
 
   gpio_handler_->init();
