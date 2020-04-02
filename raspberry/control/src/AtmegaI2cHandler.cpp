@@ -49,6 +49,8 @@ void AtmegaI2cHandler::run()
   int8_t servo = 0;
   int8_t motor_offset = 0;
   int8_t servo_offset = 0;
+  uint8_t status_register = 0;
+  uint8_t control_register = 0;
 
   int8_t y_axis = 0;
   int8_t x_axis = 0;
@@ -108,7 +110,10 @@ void AtmegaI2cHandler::run()
     if (start_button_prev != start_button)
     {
       debug(I2C_HANDL_D, "run: StartButton is %s\n", start_button ? "start" : "stop");
+      control_register ^= I2C_CONTROL_REGISTER_RUNNING;
+      writeI2c(I2C_CONTROL_REGISTER, (const uint8_t*)&control_register, 1);
     }
+
     if (select_button_prev != select_button)
     {
       debug(I2C_HANDL_D, "run: SelectButton is %s\n", select_button ? "start" : "stop");
@@ -124,45 +129,51 @@ void AtmegaI2cHandler::run()
         }
       }
     }
+
     if (y_axis_prev != y_axis)
     {
       motor = y_axis;
       if (mode == NORMAL)
       {
         debug(I2C_HANDL_D, "run: Motor is %d\n", motor);
+        writeI2c(I2C_MOTOR0_REGISTER, (const uint8_t*)&motor, 1);
       }
       else if (mode == OFFSET)
       {
-        if (motor > THRESHOLD_FOR_JOYSTICK)
+        if (motor > THRESHOLD_FOR_JOYSTICK && motor_offset < MAX_OFFSET)
         {
           motor_offset++;
         }
-        else if (motor < (-1 * THRESHOLD_FOR_JOYSTICK))
+        else if (motor < (-1 * THRESHOLD_FOR_JOYSTICK) && motor_offset > (-1 * MAX_OFFSET))
         {
           motor_offset--;
         }
         debug(I2C_HANDL_D, "run: MotorOffset is %d\n", motor_offset);
+        writeI2c(I2C_MOTOR0_OFFSET_REGISTER, (const uint8_t*)&motor_offset, 1);
         usleep(I2C_SLEEP_TIME);
       }
     }
+
     if (x_axis_prev != x_axis)
     {
       servo = x_axis;
       if (mode == NORMAL)
       {
         debug(I2C_HANDL_D, "run: Servo is %d\n", servo);
+        writeI2c(I2C_MOTOR1_REGISTER, (const uint8_t*)&servo, 1);
       }
       else if (mode == OFFSET)
       {
-        if (servo > THRESHOLD_FOR_JOYSTICK)
+        if (servo > THRESHOLD_FOR_JOYSTICK && servo_offset < MAX_OFFSET)
         {
           servo_offset++;
         }
-        else if (servo < (-1 * THRESHOLD_FOR_JOYSTICK))
+        else if (servo < (-1 * THRESHOLD_FOR_JOYSTICK) && servo_offset > (-1 * MAX_OFFSET))
         {
           servo_offset--;
         }
         debug(I2C_HANDL_D, "run: ServoOffset is %d\n", servo_offset);
+        writeI2c(I2C_MOTOR1_OFFSET_REGISTER, (const uint8_t*)&servo_offset, 1);
         usleep(I2C_SLEEP_TIME);
       }
     }

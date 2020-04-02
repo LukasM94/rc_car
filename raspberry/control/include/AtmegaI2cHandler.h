@@ -19,6 +19,7 @@ class AtmegaI2cHandler : public I2cHandler
     enum I2C_MODE { NORMAL, OFFSET };
 
     static const int8_t THRESHOLD_FOR_JOYSTICK = 50;
+    static const int8_t MAX_OFFSET             = 50;
 
     static const unsigned int I2C_HANDLER_NOT_CONNECTED_TRY_AGAIN_SLEEP_TIME = 2;
 
