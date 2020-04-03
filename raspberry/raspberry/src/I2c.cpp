@@ -71,8 +71,9 @@ static inline int i2c_smbus_access(int fd, char rw, uint8_t command, int size, u
   return ioctl(fd, I2C_SMBUS, &args);
 }
 
-I2c::I2c(const char* name, const int dev_address) : 
-    Communication(name, Communication::TYPE_I2C)
+I2c::I2c(const char* name, unsigned int dev_address) : 
+    Communication(name, Communication::TYPE_I2C),
+    dev_address_(dev_address)
 {
 #if defined(__arm__)
   fd_ = wiringPiI2CSetupInterface(I2C_DEVICE, dev_address);
@@ -110,7 +111,7 @@ int I2c::writeByte(uint8_t reg, const uint8_t data)
   union i2c_smbus_data smbus_data;
 
   smbus_data.byte = data;
-  debug(I2C, "writeByte reg <0x%x>, data <%d>\n", reg, smbus_data.byte);
+  debug(I2C, "writeByte reg <0x%x>, data <%d>, dev <%d>\n", reg, smbus_data.byte, dev_address_);
   int ret = i2c_smbus_access(fd_, I2C_SMBUS_WRITE, reg, I2C_SMBUS_BYTE_DATA, &smbus_data);
   debug(I2C, "writeByte ret %d\n", ret);
   return ret;
