@@ -122,6 +122,7 @@ int Camera::init()
   if (!raspi_cam_->open())
   {
     debug(WARNING, "Camera::run: Cannot open the camera_handler.\n");
+    lock_.unlock();
     return -1;
   }
 
