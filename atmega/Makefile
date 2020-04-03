@@ -5,7 +5,7 @@ SIZE   = avr-size
 
 UCONTROLLER = atmega328p
 
-TARGET = slave
+TARGET = main
 
 SOURCE_DIR  = source
 OBJECT_DIR  = object
@@ -17,8 +17,6 @@ OBJECTS = $(patsubst $(SOURCE_DIR)/%.c,$(OBJECT_DIR)/%.o,$(wildcard $(SOURCE_DIR
 
 FREQUENCY = 16000000
 
-I2C_ADDRESS = 0x05
-
 OPTIMIZATION = 3
 
 GNU = 11
@@ -27,7 +25,6 @@ CFLAGS  = -mmcu=$(UCONTROLLER)
 CFLAGS += -I./$(INCLUDE_DIR)
 CFLAGS += -I$(SHARED_DIR)
 CFLAGS += -DF_CPU=$(FREQUENCY)UL
-CFLAGS += -DADDRESS=$(I2C_ADDRESS)
 CFLAGS += -O$(OPTIMIZATION) 
 CFLAGS += -Wall
 # CFLAGS += -Werror
