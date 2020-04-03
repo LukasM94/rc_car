@@ -21,13 +21,15 @@ I2cRegisterData::I2cRegisterData(int8_t motor_offset_, int8_t servo_offset_) :
   servo_offset_(servo_offset_),
   status_register_(0),
   control_register_(0),
-  mode_(NORMAL)
+  mode_(NORMAL),
+  new_data_(new I2cNewData())
 {
   debug(I2C_REG_D, "ctor: motor_offset_ <%d>, servo_offset_ <%d>\n", motor_offset_, servo_offset_);
 }
 
 I2cRegisterData::~I2cRegisterData()
 {
+  delete new_data_;
   debug(I2C_REG_D, "dtor\n");
 }
 
@@ -48,12 +50,15 @@ void I2cRegisterData::refreshData(GamePad* game_pad)
 
 void I2cRegisterData::nextState()
 {
+  (*new_data_).clear();
+
   if (start_button_prev_ != start_button_)
   {
     if (start_button_)
     {
       debug(I2C_REG_D, "nextState: StartButton is %s\n", start_button_ ? "pressed" : "released");
       control_register_ ^= I2C_CONTROL_REGISTER_RUNNING;
+      (*new_data_)[I2C_CONTROL_REGISTER] = control_register_;
     }
   }
 
@@ -79,6 +84,7 @@ void I2cRegisterData::nextState()
     if (mode_ == NORMAL)
     {
       debug(I2C_REG_D, "nextState: Motor is %d\n", motor_);
+      (*new_data_)[I2C_MOTOR0_REGISTER] = motor_;
     }
     else if (mode_ == OFFSET)
     {
@@ -91,6 +97,7 @@ void I2cRegisterData::nextState()
         motor_offset_--;
       }
       debug(I2C_REG_D, "nextState: MotorOffset is %d\n", motor_offset_);
+      (*new_data_)[I2C_MOTOR0_OFFSET_REGISTER] = motor_offset_;
       usleep(I2C_SLEEP_TIME);
     }
   }
@@ -101,6 +108,7 @@ void I2cRegisterData::nextState()
     if (mode_ == NORMAL)
     {
       debug(I2C_REG_D, "nextState: Servo is %d\n", servo_);
+      (*new_data_)[I2C_MOTOR1_REGISTER] = servo_;
     }
     else if (mode_ == OFFSET)
     {
@@ -113,6 +121,7 @@ void I2cRegisterData::nextState()
         servo_offset_--;
       }
       debug(I2C_REG_D, "nextState: ServoOffset is %d\n", servo_offset_);
+      (*new_data_)[I2C_MOTOR1_OFFSET_REGISTER] = servo_offset_;
       usleep(I2C_SLEEP_TIME);
     }
   }

@@ -84,17 +84,27 @@ void AtmegaI2cHandler::run()
     game_pad->unlock();
 
     i2c_register_data_->nextState();
+
+    I2cNewData* new_data = i2c_register_data_->getNewData();
     
+    writeNewData(new_data);
   }
 
   debug(A_I2C_HANDL, "run: Exit\n");
 }
 
+void AtmegaI2cHandler::writeNewData(I2cNewData* new_data)
+{
+  for (auto it = new_data->begin(); it != new_data->end(); ++it)
+  {
+    writeI2c(it->first, it->second);
+  }
+}
+
 void AtmegaI2cHandler::writeI2c(uint8_t reg, const uint8_t* data, int length)
 {
   debug(I2C_HANDL_D, "writeI2c: reg <%d>, data <%p>, length <%d>\n", reg, data, length);
-  UController* u_controller = u_controller_;
-  if (u_controller->writeI2c(reg, data, length) == 0)
+  if (u_controller_->writeI2c(reg, data, length) == 0)
   {
     i2c_error_ = 0;
   }
@@ -105,6 +115,24 @@ void AtmegaI2cHandler::writeI2c(uint8_t reg, const uint8_t* data, int length)
   if (i2c_error_ > I2C_ERROR_THRESHOLD)
   {
     debug(WARNING, "I2cHandler::writeI2c: %d errors on the i2c line\n", i2c_error_.load());
-    running_ = false;
+    // running_ = false;
+  }
+}
+
+void AtmegaI2cHandler::writeI2c(uint8_t reg, uint8_t data)
+{
+  debug(I2C_HANDL_D, "writeI2c: reg <%d>, data <%d>\n", reg, data);
+  if (u_controller_->writeI2c(reg, &data, 1) == 0)
+  {
+    i2c_error_ = 0;
+  }
+  else 
+  {
+    i2c_error_++;
+  }
+  if (i2c_error_ > I2C_ERROR_THRESHOLD)
+  {
+    debug(WARNING, "I2cHandler::writeI2c: %d errors on the i2c line\n", i2c_error_.load());
+    // running_ = false;
   }
 }

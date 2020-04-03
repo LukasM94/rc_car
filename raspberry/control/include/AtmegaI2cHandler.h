@@ -2,8 +2,7 @@
 #define ATMEGA_I2C_HANDLER_H
 
 #include <I2cHandler.h>
-
-class I2cRegisterData;
+#include <I2cRegisterData.h>
 
 class AtmegaI2cHandler : public I2cHandler
 {
@@ -16,6 +15,8 @@ class AtmegaI2cHandler : public I2cHandler
     virtual void deinit();
 
   protected:
+    void writeNewData(I2cNewData* new_data);
+    virtual void writeI2c(uint8_t reg, uint8_t data);
     virtual void writeI2c(uint8_t reg, const uint8_t* data, int length);
 
     I2cRegisterData* i2c_register_data_;
