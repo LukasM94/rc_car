@@ -50,11 +50,12 @@ int main()
   initUsart();
   initLed();
   initI2c();
-  initTimer();
-  initPwm();
+  // initTimer();
+  // initPwm();
   sei();
 
-  Printf_print("main: start\n");
+  Printf_print("main: Start\n");
+  Printf_print("main: i2c dev %d\n", I2C_ADDRESS);
 
   while (1)
   {
@@ -62,10 +63,11 @@ int main()
     swapped_flag = flag;
     flag         = 0;
     sei();
-    if (flag)
+    if (swapped_flag)
     {
       const char* register_name = getNameOfRegister(received_register);
-      Printf_print("Received register %s\n", register_name);
+      Printf_print("%s\n", register_name);
+      Printf_print("data <%d>\n", buffer[received_register]);
     }
   }
 }
@@ -109,6 +111,7 @@ void initPwm()
 //---------------------------------------------------------------------
 void receiveFunction(uint8_t* data, uint8_t length, uint8_t reg)
 {
+  LED_TOOGLE;
   if (length > 2)
   {
     ++data;
