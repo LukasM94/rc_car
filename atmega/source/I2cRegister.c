@@ -2,6 +2,7 @@
 #include <com_config.h>
 #include <I2cRegister.h>
 #include <Eeprom.h>
+#include <Printf.h>
 
 struct I2cRegister* I2cRegister_ctor(struct I2cRegister* this)
 {
@@ -18,7 +19,7 @@ struct I2cRegister* I2cRegister_dtor(struct I2cRegister* this)
 
 void I2cRegister_writeToEEPROM(struct I2cRegister* this)
 {
-  for (uint8_t i = 0; i < 256; ++i)
+  for (int i = 0; i < REGISTER_SIZE; ++i)
   {
     if (shouldBeSaved(i))
     {
@@ -29,7 +30,7 @@ void I2cRegister_writeToEEPROM(struct I2cRegister* this)
 
 void I2cRegister_readFromEEPROM(struct I2cRegister* this)
 {
-  for (uint8_t i = 0; i < 256; ++i)
+  for (int i = 0; i < REGISTER_SIZE; ++i)
   {
     if (shouldBeSaved(i))
     {
@@ -40,7 +41,7 @@ void I2cRegister_readFromEEPROM(struct I2cRegister* this)
 
 void I2cRegister_write(struct I2cRegister* this, uint8_t reg, uint8_t reg_number)
 {
-  if (reg_number >= 256)
+  if (reg_number >= REGISTER_SIZE)
   {
     return;
   }
@@ -53,9 +54,24 @@ void I2cRegister_write(struct I2cRegister* this, uint8_t reg, uint8_t reg_number
 
 uint8_t I2cRegister_read(struct I2cRegister* this, uint8_t reg_number)
 {
-  if (reg_number >= 256)
+  if (reg_number >= REGISTER_SIZE)
   {
     return -1;
   }
   return this->register_[reg_number];
+}
+
+void I2cRegister_printEEPROMRegisters(struct I2cRegister* this)
+{
+  char*   name;
+  uint8_t data;
+  for (int i = 0; i < REGISTER_SIZE; ++i)
+  {
+    if (shouldBeSaved(i))
+    {
+      name = getNameOfRegister(i);
+      data = this->register_[i];
+      Printf_print("%s: %d\n", name, data);
+    }
+  }
 }
