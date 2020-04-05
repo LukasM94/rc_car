@@ -5,7 +5,7 @@
 #include "Timer.h"
 #include "I2cSlave.h"
 #include "Pwm.h"
-#include "Eeprom.h"
+#include "I2cRegister.h"
 #include <string.h>
 #include <com_config.h>
 

@@ -28,10 +28,14 @@
 
 #define ATMEGA_RECOVER_AFTER_RESET 3 //s
 
+#define NOT_SAVED 0
+#define SAVED     1
+
 struct RegisterEntry
 {
   unsigned char register_number_;
-  const char* name_;
+  const char*   name_;
+  int           should_be_saved_;
 }__attribute__((packed));
 
 
@@ -46,19 +50,19 @@ static const char I2C_MOTOR2_OFFSET_REGISTER_NAME[] = "MotorOffsetNotUsed";
 
 static struct RegisterEntry registers[] = 
 {
-  {I2C_CONTROL_REGISTER, I2C_CONTROL_REGISTER_NAME},
-  {I2C_STATUS_REGISTER, I2C_STATUS_REGISTER_NAME},
-  {I2C_MOTOR0_REGISTER, I2C_MOTOR0_REGISTER_NAME},
-  {I2C_MOTOR1_REGISTER, I2C_MOTOR1_REGISTER_NAME},
-  {I2C_MOTOR2_REGISTER, I2C_MOTOR2_REGISTER_NAME},
-  {I2C_MOTOR0_OFFSET_REGISTER, I2C_MOTOR0_OFFSET_REGISTER_NAME},
-  {I2C_MOTOR1_OFFSET_REGISTER, I2C_MOTOR1_OFFSET_REGISTER_NAME},
-  {I2C_MOTOR2_OFFSET_REGISTER, I2C_MOTOR2_OFFSET_REGISTER_NAME},
+  {I2C_CONTROL_REGISTER, I2C_CONTROL_REGISTER_NAME, NOT_SAVED},
+  {I2C_STATUS_REGISTER, I2C_STATUS_REGISTER_NAME, NOT_SAVED},
+  {I2C_MOTOR0_REGISTER, I2C_MOTOR0_REGISTER_NAME, NOT_SAVED},
+  {I2C_MOTOR1_REGISTER, I2C_MOTOR1_REGISTER_NAME, NOT_SAVED},
+  {I2C_MOTOR2_REGISTER, I2C_MOTOR2_REGISTER_NAME, NOT_SAVED},
+  {I2C_MOTOR0_OFFSET_REGISTER, I2C_MOTOR0_OFFSET_REGISTER_NAME, SAVED},
+  {I2C_MOTOR1_OFFSET_REGISTER, I2C_MOTOR1_OFFSET_REGISTER_NAME, SAVED},
+  {I2C_MOTOR2_OFFSET_REGISTER, I2C_MOTOR2_OFFSET_REGISTER_NAME, SAVED},
 };
 
 #define COUNT_REGISTER 8
 
-static const char* getNameOfRegister(unsigned char register_number)
+__attribute__((unused))static const char* getNameOfRegister(unsigned char register_number)
 {
   const char* result = 0;
   for (int i = 0; i < COUNT_REGISTER; ++i)
@@ -69,6 +73,19 @@ static const char* getNameOfRegister(unsigned char register_number)
     }
   }
   return result;
+}
+
+__attribute__((unused))static int shouldBeSaved(unsigned char register_number)
+{
+  int should_ba_saved = 0;
+  for (int i = 0; i < COUNT_REGISTER; ++i)
+  {
+    if (registers[i].register_number_ == register_number)
+    {
+      should_ba_saved = registers[i].should_be_saved_;
+    }
+  }
+  return should_ba_saved;
 }
 
 #endif
