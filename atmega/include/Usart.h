@@ -21,12 +21,6 @@
 
 struct Usart
 {
-  volatile unsigned char* ubrrh_;
-  volatile unsigned char* ubrrl_;
-  volatile unsigned char* ucsrb_;
-  volatile unsigned char* ucsrc_;
-  volatile unsigned char* ucsra_;
-  volatile unsigned char* udr_;
   int (*transmit)(struct Usart* this, uint8_t data);
   int (*transmitString)(struct Usart* this, const char* string);
 };
