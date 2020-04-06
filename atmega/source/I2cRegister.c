@@ -100,6 +100,11 @@ uint8_t I2cRegister_readControlRegister(struct I2cRegister* this)
   return (int8_t)this->read(this, I2C_CONTROL_REGISTER);
 }
 
+uint8_t I2cRegister_isMotorsRunning(struct I2cRegister* this)
+{
+  return (int8_t)this->read(this, I2C_CONTROL_REGISTER) & I2C_CONTROL_REGISTER_RUNNING;
+}
+
 int8_t I2cRegister_readMotorOffset(struct I2cRegister* this)
 {
   return (int8_t)this->read(this, I2C_MOTOR0_OFFSET_REGISTER);

@@ -1,10 +1,10 @@
 
-#include "config.h"
-#include "Usart.h"
-#include "Printf.h"
-#include "Timer.h"
-#include "Pwm.h"
-#include "I2cRegister.h"
+#include <config.h>
+#include <Usart.h>
+#include <Printf.h>
+#include <Timer.h>
+#include <Pwm.h>
+#include <I2cRegister.h>
 #include <string.h>
 
 //---------------------------------------------------------------------
@@ -39,6 +39,7 @@ int main()
   while (1)
   {
     i2c_register.run(&i2c_register);
+    pwm.run(&pwm);
   }
 }
 
@@ -64,7 +65,5 @@ void initI2c()
 //---------------------------------------------------------------------
 void initPwm()
 {
-  int8_t motor_offset = i2c_register.readMotorOffset(&i2c_register);
-  int8_t servo_offset = i2c_register.readServoOffset(&i2c_register);
-  Pwm_ctor(&pwm, motor_offset, servo_offset);
+  Pwm_ctor(&pwm);
 }
