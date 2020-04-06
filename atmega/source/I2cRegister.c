@@ -4,11 +4,26 @@
 #include <Eeprom.h>
 #include <Printf.h>
 #include <I2cSlave.h>
+#include <config.h>
+
+#define BUFFER_SIZE 8
+
+volatile static uint8_t buffer[BUFFER_SIZE];
+volatile static uint8_t recv_reg_number;
+volatile static uint8_t recv_flag;
+volatile static uint8_t swapped_recv_flag;
+
+static void recv(uint8_t* data, uint8_t length, uint8_t reg_number);
+static void req();
 
 struct I2cRegister* I2cRegister_ctor(struct I2cRegister* this)
 {
   I2cRegister_init(this);
   this->readFromEEPROM(this);
+
+  i2cSlaveInit(I2C_ADDRESS);
+  i2cSlaveSetCallbacks(&recv, &req);
+
   return this;
 }
 
@@ -18,10 +33,22 @@ struct I2cRegister* I2cRegister_dtor(struct I2cRegister* this)
   return this;
 }
 
-void I2cRegister_initSlave(struct I2cRegister* this, void (*recv)(uint8_t*, uint8_t, uint8_t), void (*req)())
+void I2cRegister_run(struct I2cRegister* this)
 {
-  i2cSlaveSetCallbacks(recv, req);
-  i2cSlaveInit(I2C_ADDRESS);
+  cli();
+  swapped_recv_flag = recv_flag;
+  recv_flag = 0;
+  sei();
+  if (swapped_recv_flag)
+  {
+    const char* register_name = this->getNameOfRegister(recv_reg_number);
+    uint8_t     single_data   = buffer[0];
+
+    this->write(this, single_data, recv_reg_number);
+
+    Printf_print("%s\n", register_name);
+    Printf_print("data <%d>\n", single_data);
+  }
 }
 
 void I2cRegister_writeToEEPROM(struct I2cRegister* this)
@@ -89,4 +116,24 @@ void I2cRegister_printEEPROMRegisters(struct I2cRegister* this)
       Printf_print("%s: %d\n", name, data);
     }
   }
+}
+
+void recv(uint8_t* data, uint8_t length, uint8_t reg_number)
+{
+  LED_TOOGLE;
+  {
+    ++data;
+    --length;
+  }
+  recv_reg_number = reg_number;
+  for (int i = 0; (i < length) && (i < BUFFER_SIZE); ++i)
+  {
+    buffer[i] = data[i];
+  }
+  recv_flag = 1;
+}
+
+void req()
+{
+
 }

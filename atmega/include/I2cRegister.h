@@ -8,7 +8,8 @@
 
 struct I2cRegister
 {
-  void (*initSlave)(struct I2cRegister* this, void (*recv)(uint8_t*, uint8_t, uint8_t), void (*req)());
+  void (*run)(struct I2cRegister* this);
+
   void (*writeToEEPROM)(struct I2cRegister* this);
   void (*readFromEEPROM)(struct I2cRegister* this);
   void (*write)(struct I2cRegister* this, uint8_t reg, uint8_t reg_number);
@@ -26,7 +27,8 @@ struct I2cRegister
 struct I2cRegister* I2cRegister_ctor(struct I2cRegister* this);
 struct I2cRegister* I2cRegister_dtor(struct I2cRegister* this);
 
-void I2cRegister_initSlave(struct I2cRegister* this, void (*recv)(uint8_t*, uint8_t, uint8_t), void (*req)());
+void I2cRegister_run(struct I2cRegister* this);
+
 void I2cRegister_writeToEEPROM(struct I2cRegister* this);
 void I2cRegister_readFromEEPROM(struct I2cRegister* this);
 void I2cRegister_write(struct I2cRegister* this, uint8_t reg, uint8_t reg_number);
@@ -39,7 +41,7 @@ extern const char* getNameOfRegister(unsigned char register_number);
 
 __attribute__((unused))static void I2cRegister_init(struct I2cRegister* i2c_register)
 {
-  i2c_register->initSlave      = &I2cRegister_initSlave;
+  i2c_register->run = &I2cRegister_run;
   i2c_register->writeToEEPROM  = &I2cRegister_writeToEEPROM;
   i2c_register->readFromEEPROM = &I2cRegister_readFromEEPROM;
   i2c_register->write = &I2cRegister_write;
