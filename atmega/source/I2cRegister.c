@@ -95,6 +95,11 @@ uint8_t I2cRegister_read(struct I2cRegister* this, uint8_t reg_number)
   return this->register_[reg_number];
 }
 
+uint8_t I2cRegister_readControlRegister(struct I2cRegister* this)
+{
+  return (int8_t)this->read(this, I2C_CONTROL_REGISTER);
+}
+
 int8_t I2cRegister_readMotorOffset(struct I2cRegister* this)
 {
   return (int8_t)this->read(this, I2C_MOTOR0_OFFSET_REGISTER);
@@ -103,6 +108,16 @@ int8_t I2cRegister_readMotorOffset(struct I2cRegister* this)
 int8_t I2cRegister_readServoOffset(struct I2cRegister* this)
 {
   return (int8_t)this->read(this, I2C_MOTOR1_OFFSET_REGISTER);
+}
+
+int8_t I2cRegister_readMotor(struct I2cRegister* this)
+{
+  return (int8_t)this->read(this, I2C_MOTOR0_REGISTER);
+}
+
+int8_t I2cRegister_readServo(struct I2cRegister* this)
+{
+  return (int8_t)this->read(this, I2C_MOTOR1_REGISTER);
 }
 
 void I2cRegister_printEEPROMRegisters(struct I2cRegister* this)
@@ -121,6 +136,7 @@ void I2cRegister_printEEPROMRegisters(struct I2cRegister* this)
 void recv(uint8_t* data, uint8_t length, uint8_t reg_number)
 {
   LED_TOOGLE;
+  if (length > 2)
   {
     ++data;
     --length;
