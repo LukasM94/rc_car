@@ -3,11 +3,9 @@
 #include "Usart.h"
 #include "Printf.h"
 #include "Timer.h"
-#include "I2cSlave.h"
 #include "Pwm.h"
 #include "I2cRegister.h"
 #include <string.h>
-#include <com_config.h>
 
 //---------------------------------------------------------------------
 #define BUFFER_SIZE          256
@@ -19,6 +17,7 @@
 //---------------------------------------------------------------------
 struct Usart       usart;
 struct I2cRegister i2c_register;
+struct Pwm         pwm;
 
 uint32_t time_threshold;
 int8_t   pwm_ocra_offset;
@@ -36,7 +35,6 @@ volatile uint32_t time_last_i2c     = 0;
 void initUsart();
 void initLed();
 void initI2c();
-void initTimer();
 void initPwm();
 
 void receiveFunction(uint8_t* data, uint8_t length, uint8_t reg);
@@ -51,12 +49,10 @@ int main()
   initUsart();
   initLed();
   initI2c();
-  // initTimer();
   // initPwm();
   sei();
 
   Printf_print("main: Start\n");
-  Printf_print("main: i2c dev %d\n", I2C_ADDRESS);
   Printf_print("main: print eeprom\n");
   i2c_register.printEEPROMRegisters(&i2c_register);
 
@@ -68,7 +64,7 @@ int main()
     sei();
     if (swapped_flag)
     {
-      const char* register_name = getNameOfRegister(i2c_recv_register);
+      const char* register_name = i2c_register.getNameOfRegister(i2c_recv_register);
       Printf_print("%s\n", register_name);
       Printf_print("data <%d>\n", i2c_revc_data[0]);
       i2c_register.write(&i2c_register, i2c_revc_data[0], i2c_recv_register);
@@ -93,24 +89,15 @@ void initLed()
 void initI2c()
 {
   I2cRegister_ctor(&i2c_register);
-  i2cSlaveSetCallbacks(receiveFunction, requestFunction);
-  i2cSlaveInit(I2C_ADDRESS);
-}
-
-//---------------------------------------------------------------------
-void initTimer()
-{
-  time_threshold = (volatile uint32_t)((((F_CPU / PRESCALE) * I2C_DEAD_TIME) / 1000) / 256); 
-
-  timerInit();
-  timerSetCallbacks(timer);
-  timerStart();
+  i2c_register.initSlave(&i2c_register, receiveFunction, requestFunction);
 }
 
 //---------------------------------------------------------------------
 void initPwm()
 {
-  pwmInit();
+  int8_t motor_offset = i2c_register.readMotorOffset(&i2c_register);
+  int8_t servo_offset = i2c_register.readServoOffset(&i2c_register);
+  Pwm_ctor(&pwm, motor_offset, servo_offset);
 }
 
 //---------------------------------------------------------------------
@@ -135,10 +122,4 @@ void receiveFunction(uint8_t* data, uint8_t length, uint8_t reg)
 //---------------------------------------------------------------------
 void requestFunction()
 {
-}
-
-//---------------------------------------------------------------------
-void timer()
-{
-  ++time_last_i2c;
 }

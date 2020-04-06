@@ -3,6 +3,7 @@
 #include <I2cRegister.h>
 #include <Eeprom.h>
 #include <Printf.h>
+#include <I2cSlave.h>
 
 struct I2cRegister* I2cRegister_ctor(struct I2cRegister* this)
 {
@@ -15,6 +16,12 @@ struct I2cRegister* I2cRegister_dtor(struct I2cRegister* this)
 {
   this->writeToEEPROM(this);
   return this;
+}
+
+void I2cRegister_initSlave(struct I2cRegister* this, void (*recv)(uint8_t*, uint8_t, uint8_t), void (*req)())
+{
+  i2cSlaveSetCallbacks(recv, req);
+  i2cSlaveInit(I2C_ADDRESS);
 }
 
 void I2cRegister_writeToEEPROM(struct I2cRegister* this)
@@ -61,16 +68,24 @@ uint8_t I2cRegister_read(struct I2cRegister* this, uint8_t reg_number)
   return this->register_[reg_number];
 }
 
+int8_t I2cRegister_readMotorOffset(struct I2cRegister* this)
+{
+  return (int8_t)this->read(this, I2C_MOTOR0_OFFSET_REGISTER);
+}
+
+int8_t I2cRegister_readServoOffset(struct I2cRegister* this)
+{
+  return (int8_t)this->read(this, I2C_MOTOR1_OFFSET_REGISTER);
+}
+
 void I2cRegister_printEEPROMRegisters(struct I2cRegister* this)
 {
-  char*   name;
-  uint8_t data;
   for (int i = 0; i < REGISTER_SIZE; ++i)
   {
     if (shouldBeSaved(i))
     {
-      name = getNameOfRegister(i);
-      data = this->register_[i];
+      const char* name = this->getNameOfRegister(i);
+      uint8_t     data = this->register_[i];
       Printf_print("%s: %d\n", name, data);
     }
   }

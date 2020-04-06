@@ -62,7 +62,7 @@ static struct RegisterEntry registers[] =
 
 #define COUNT_REGISTER 8
 
-__attribute__((unused))static const char* getNameOfRegister(unsigned char register_number)
+__attribute__((unused))const char* getNameOfRegister(unsigned char register_number)
 {
   const char* result = 0;
   for (int i = 0; i < COUNT_REGISTER; ++i)
@@ -75,7 +75,7 @@ __attribute__((unused))static const char* getNameOfRegister(unsigned char regist
   return result;
 }
 
-__attribute__((unused))static int shouldBeSaved(unsigned char register_number)
+__attribute__((unused))int shouldBeSaved(unsigned char register_number)
 {
   int should_ba_saved = 0;
   for (int i = 0; i < COUNT_REGISTER; ++i)
