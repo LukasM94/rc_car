@@ -38,6 +38,13 @@ void CameraClient::run()
   {
     camera->condLock();
     debug(CAM_CLIENT, "run: Sleep\n");
+    if (camera->isConnected() == false)
+    {
+      // bad busy wait :-(
+      camera->condUnlock();
+      sleep(2);
+      continue;
+    }
     camera->sleep();
     camera->lock();
     camera->condUnlock();

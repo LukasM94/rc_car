@@ -4,6 +4,7 @@
 #include <Image.h>
 #include <ImageJPEG.h>
 #include <ImageRGB.h>
+#include <unistd.h>
 #if defined(__arm__)
 #include <raspicam/raspicam.h>
 #endif
@@ -13,6 +14,7 @@ Camera* Camera::instance_ = 0;
 Camera::Camera() :
   image_(0),
   raspi_cam_(0),
+  connected_(0),
   lock_("Camera::lock_"),
   cond_("Camera::cond_")
 {
@@ -122,9 +124,11 @@ int Camera::init()
   if (!raspi_cam_->open())
   {
     debug(WARNING, "Camera::run: Cannot open the camera_handler.\n");
+    connected_ = 0;
     lock_.unlock();
     return -1;
   }
+  connected_ = 1;
 
   struct CameraInfo info;
   info.width_       = VGA_WIDTH;
