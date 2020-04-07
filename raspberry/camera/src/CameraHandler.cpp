@@ -19,7 +19,7 @@ void CameraHandler::run()
   Camera* camera = Camera::instance();
   if (camera->init() != 0)
   {
-    sleep(10);
+    debug(CAMERA, "run: Exit camera not connected?\n");
     return;
   }
   else
