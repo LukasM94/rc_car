@@ -6,6 +6,7 @@
 #include <Pwm.h>
 #include <I2cRegister.h>
 #include <string.h>
+#include <Watchdog.h>
 
 //---------------------------------------------------------------------
 struct Usart       usart;
@@ -17,6 +18,7 @@ void initUsart();
 void initLed();
 void initI2c();
 void initPwm();
+void initWatchdog();
 
 //---------------------------------------------------------------------
 int main()
@@ -36,6 +38,7 @@ int main()
   {
     i2c_register.update(&i2c_register);
     pwm.update(&pwm);
+    watchdogReset();
   }
 }
 
@@ -62,4 +65,10 @@ void initI2c()
 void initPwm()
 {
   Pwm_ctor(&pwm);
+}
+
+//---------------------------------------------------------------------
+void initWatchdog()
+{
+  watchdogEnable();
 }
