@@ -12,10 +12,6 @@ struct Usart       usart;
 struct I2cRegister i2c_register;
 struct Pwm         pwm;
 
-uint32_t time_threshold;
-int8_t   pwm_ocra_offset;
-int8_t   pwm_ocrb_offset;
-
 //---------------------------------------------------------------------
 void initUsart();
 void initLed();
@@ -38,8 +34,8 @@ int main()
 
   while (1)
   {
-    i2c_register.run(&i2c_register);
-    pwm.run(&pwm);
+    i2c_register.update(&i2c_register);
+    pwm.update(&pwm);
   }
 }
 

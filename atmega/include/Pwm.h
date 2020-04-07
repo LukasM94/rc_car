@@ -25,7 +25,7 @@ struct Ocr* OCR_dtor(struct Ocr* this);
 struct Pwm
 {
   // Public
-  void (*run)(struct Pwm* this);
+  void (*update)(struct Pwm* this);
 
   // Private
   void (*start)(struct Pwm* this);
@@ -43,7 +43,7 @@ struct Pwm
 struct Pwm* Pwm_ctor(struct Pwm* this);
 struct Pwm* Pwm_dtor(struct Pwm* this);
 
-void Pwm_run(struct Pwm* this);
+void Pwm_update(struct Pwm* this);
 
 void Pwm_start(struct Pwm* this);
 void Pwm_stop(struct Pwm* this);
@@ -54,7 +54,7 @@ void Pwm_setServoOffset(struct Pwm* this, int8_t data);
 
 __attribute__((unused))static void Pwm_init(struct Pwm* pwm)
 {
-  pwm->run = &Pwm_run;
+  pwm->update = &Pwm_update;
 
   pwm->start    = &Pwm_start;
   pwm->stop     = &Pwm_stop;
@@ -63,20 +63,5 @@ __attribute__((unused))static void Pwm_init(struct Pwm* pwm)
   pwm->setMotorOffset = &Pwm_setMotorOffset;
   pwm->setServoOffset = &Pwm_setServoOffset;
 }
-
-
-
-
-
-
-
-
-
-void pwmInit();
-uint8_t getPwmRunning();
-void pwmStart();
-void pwmStop();
-void pwmChangePulseOfOCRA(int8_t pulse);
-void pwmChangePulseOfOCRB(int8_t pulse);
 
 #endif

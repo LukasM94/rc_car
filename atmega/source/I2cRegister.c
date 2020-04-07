@@ -33,7 +33,7 @@ struct I2cRegister* I2cRegister_dtor(struct I2cRegister* this)
   return this;
 }
 
-void I2cRegister_run(struct I2cRegister* this)
+void I2cRegister_update(struct I2cRegister* this)
 {
   cli();
   swapped_recv_flag = recv_flag;
