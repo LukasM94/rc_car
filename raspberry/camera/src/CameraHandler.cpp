@@ -17,8 +17,15 @@ CameraHandler::~CameraHandler()
 void CameraHandler::run()
 {
   Camera* camera = Camera::instance();
-  camera->init();
-  debug(CAMERA, "run: Start\n");
+  if (camera->init() != 0)
+  {
+    sleep(10);
+    return;
+  }
+  else
+  {
+    debug(CAMERA, "run: Start\n");
+  }
   while (running_)
   {
     debug(CAMERA, "run: Sleep %d milli second\n", SLEEP / 1000);
