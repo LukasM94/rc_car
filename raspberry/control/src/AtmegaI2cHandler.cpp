@@ -80,6 +80,7 @@ void AtmegaI2cHandler::run()
       sleep(I2C_HANDLER_NOT_CONNECTED_TRY_AGAIN_SLEEP_TIME);
       continue;
     }
+    Peripherial::instance()->setResetPin();
     i2c_register_data_->refreshData(game_pad);
     game_pad->unlock();
 
