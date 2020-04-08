@@ -10,6 +10,10 @@
 #include <Atmega.h>
 #include <client_config.h>
 
+//--------------------------------------------------------------------
+ControlHandler* ControlHandler::instance_ = 0;
+
+//--------------------------------------------------------------------
 ControlHandler::ControlHandler() :
   WorkingThread("ControlHandler"),
   i2c_handler_(0),
@@ -22,6 +26,16 @@ ControlHandler::ControlHandler() :
 ControlHandler::~ControlHandler()
 {
   debug(CONTROL, "dtor\n");
+}
+
+//--------------------------------------------------------------------
+ControlHandler* ControlHandler::instance()
+{
+  if (instance_ == 0)
+  {
+    instance_ = new ControlHandler();
+  }
+  return instance_;
 }
 
 //--------------------------------------------------------------------

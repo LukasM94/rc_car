@@ -18,7 +18,7 @@
 
 ClientHandler*   client_handler;
 ControlHandler*  control_handler;
-GamePad*         game_pad;
+GamePadInstance* game_pad_instance;
 CameraHandler*   camera_handler;
 Camera*          camera;
 
@@ -35,11 +35,11 @@ int main(int argc, char* argv[])
 
   debug(MAIN, "main: Initialize the instances\n");
   ThreadHandler::init();
-  game_pad         = GamePadInstance::instance()->getGamePad();
-  camera           = Camera::instance();
-  control_handler  = new ControlHandler();
-  camera_handler   = new CameraHandler();
-  client_handler   = new ClientHandler(atoi(port_no), ip_addr);
+  game_pad_instance = GamePadInstance::instance();
+  camera            = Camera::instance();
+  control_handler   = ControlHandler::instance();
+  camera_handler    = CameraHandler::instance();
+  client_handler    = ClientHandler::instance(atoi(port_no), ip_addr);
 
   debug(MAIN, "main: Catch the sigint signal\n");
   signal(SIGINT, signalHandler);  
@@ -47,7 +47,6 @@ int main(int argc, char* argv[])
   ThreadHandler::lock();
   ThreadHandler::beginThread(client_handler);
   ThreadHandler::beginThread(control_handler);
-  // ThreadHandler::beginThread(camera_handler);
   ThreadHandler::startExternThread(camera_handler);
   ThreadHandler::unlock();
 
@@ -68,10 +67,6 @@ int main(int argc, char* argv[])
     {
       ThreadHandler::startThread(control_handler);
     }
-    // if (ThreadHandler::isThreadRunning(camera_handler) == false)
-    // {
-    //   ThreadHandler::startThread(camera_handler);
-    // }
     ThreadHandler::printThreads();
     ThreadHandler::unlock();
   }

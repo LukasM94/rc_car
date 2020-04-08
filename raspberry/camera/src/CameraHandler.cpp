@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <Camera.h>
 
+CameraHandler* CameraHandler::instance_ = 0;
+
 CameraHandler::CameraHandler() :
   WorkingThread("CameraHandler")
 {
@@ -12,6 +14,15 @@ CameraHandler::CameraHandler() :
 CameraHandler::~CameraHandler()
 {
   debug(CAMERA, "dtor\n");
+}
+
+CameraHandler* CameraHandler::instance()
+{
+  if (instance_ == 0)
+  {
+    instance_ = new CameraHandler();
+  }
+  return instance_;
 }
 
 void CameraHandler::run()

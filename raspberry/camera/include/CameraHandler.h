@@ -6,13 +6,17 @@
 class CameraHandler : public WorkingThread
 {
   public:
-    CameraHandler();
     ~CameraHandler();
+
+    static CameraHandler* instance();
 
     virtual void run();
 
   private:
+    CameraHandler();
     CameraHandler(const CameraHandler&);
+
+    static CameraHandler* instance_;
 
     static const int SLEEP = 40000;
 };

@@ -14,6 +14,7 @@
 #include <client_config.h>
 
 const char ClientHandler::HELLO[] = "Hello from client";
+ClientHandler* ClientHandler::instance_ = 0;
 
 //-------------------------------------------------
 ClientHandler::ClientHandler(unsigned int server_port, const char* server_ip) :
@@ -29,6 +30,28 @@ ClientHandler::ClientHandler(unsigned int server_port, const char* server_ip) :
 ClientHandler::~ClientHandler()
 {
   debug(CLIENT_HAND, "dtor:\n");
+}
+
+
+//-------------------------------------------------
+ClientHandler* ClientHandler::instance(unsigned int server_port, const char* server_ip)
+{
+  if (instance_ == 0)
+  {
+    instance_ = new ClientHandler(server_port, server_ip);
+  }
+  return instance_;
+}
+
+//-------------------------------------------------
+ClientHandler* ClientHandler::instance()
+{
+  if (instance_ == 0)
+  {
+    debug(ERROR, "ClientHandler::instance: Instance is not initialized\n");
+    exit(-1);
+  }
+  return instance_;
 }
 
 //-------------------------------------------------

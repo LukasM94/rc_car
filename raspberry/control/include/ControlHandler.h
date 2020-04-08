@@ -12,7 +12,7 @@ class UController;
 class ControlHandler : public WorkingThread
 {
   public:
-    ControlHandler();
+    static ControlHandler* instance();
     ~ControlHandler();
 
     virtual void run();
@@ -22,6 +22,9 @@ class ControlHandler : public WorkingThread
   private:
     friend GpioHandler;
     friend I2cHandler;
+
+    ControlHandler();
+    static ControlHandler* instance_;
     
     ControlHandler(const ControlHandler&);
 

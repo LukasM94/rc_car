@@ -10,8 +10,10 @@ class GamePadClient;
 class ClientHandler : public WorkingThread, public Socket 
 {
   public:
-    ClientHandler(unsigned int server_port, const char* server_ip);
     ~ClientHandler();
+
+    static ClientHandler* instance(unsigned int server_port, const char* server_ip);
+    static ClientHandler* instance();
 
     virtual void run();
 
@@ -26,8 +28,11 @@ class ClientHandler : public WorkingThread, public Socket
     friend class GamePadClient;
     friend class CameraClient;
 
+    ClientHandler(unsigned int server_port, const char* server_ip);
     ClientHandler();
     ClientHandler(const ClientHandler&);
+
+    static ClientHandler* instance_;
 
     int server_socket_;
 
