@@ -34,9 +34,9 @@ int main(int argc, char* argv[])
   game_pad_inst   = GamePadInstance::instance();
   trans_data_inst = TransceivedDataInstance::instance();
 
-  xc       = new XboxController(XboxController::DEFAULT_PATH);
-  server   = new ServerHandler(SERVER_PORT_INT);
-  graphics = new Graphics();
+  xc       = XboxController::instance(XboxController::DEFAULT_PATH);
+  server   = ServerHandler::instance(SERVER_PORT_INT);
+  graphics = Graphics::instance();
 
   debug(MAIN, "main: Catch the sigint signal\n");
   signal(SIGINT, signalHandler);  

@@ -6,13 +6,17 @@
 class Graphics: public WorkingThread
 {
   public:
-    Graphics();
     ~Graphics();
+
+    static Graphics* instance();
 
     virtual void run();
 
   private:
+    Graphics();
     Graphics(const Graphics&);
+
+    static Graphics* instance_;
 };
 
 #endif

@@ -10,9 +10,10 @@ class XboxController : public WorkingThread
   public:
     static const char DEFAULT_PATH[];
 
-    XboxController();
-    XboxController(const char* path);
     ~XboxController();
+
+    static XboxController* instance(const char* path);
+    static XboxController* instance();
 
     virtual void run();
 
@@ -26,6 +27,10 @@ class XboxController : public WorkingThread
 
   private:
     XboxController(XboxController& c);
+    XboxController();
+    XboxController(const char* path);
+
+    static XboxController* instance_;
 
     inline bool isButton()
     {

@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <MainWindow.h>
 
+Graphics* Graphics::instance_ = 0;
+
 Graphics::Graphics() :
   WorkingThread("Graphics")
 {
@@ -16,6 +18,15 @@ Graphics::Graphics() :
 Graphics::~Graphics()
 {
   debug(GRAPHICS, "dtor\n");
+}
+
+Graphics* Graphics::instance()
+{
+  if (instance_ == 0)
+  {
+    instance_ = new Graphics();
+  }
+  return instance_;
 }
 
 void Graphics::run()

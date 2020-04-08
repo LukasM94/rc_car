@@ -3,6 +3,7 @@
 #include <Image.h>
 #include <ImageRGB.h>
 #include <debug.h>
+#include <ServerHandler.h>
 
 ImageInstance* ImageInstance::instance_ = 0;
 
@@ -53,9 +54,16 @@ Image* ImageInstance::loadImage(bool sleep)
   cond_.lock();
   while (image_ == 0)
   {
+    ServerHandler* server_handler = ServerHandler::instance();
+    if (server_handler->isConnected() == false)
+    {
+      cond_.unlock();
+      return 0;
+    }
+
     if (sleep)
     {
-      cond_.sleep();
+      cond_.sleep(1);
     }
     else
     {

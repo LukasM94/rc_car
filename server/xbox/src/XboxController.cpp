@@ -9,6 +9,8 @@
 
 const char XboxController::DEFAULT_PATH[] = "/dev/input/js0";
 
+XboxController* XboxController::instance_ = 0;
+
 //-------------------------------------------------
 XboxController::XboxController() :
   WorkingThread("XboxController"),
@@ -33,6 +35,26 @@ XboxController::XboxController(const char* path) :
 XboxController::~XboxController()
 {
   debug(XBOX_CONTR, "dtor\n");
+}
+
+//-------------------------------------------------
+XboxController* XboxController::instance(const char* path)
+{
+  if (instance_ == 0)
+  {
+    instance_ = new XboxController(path);
+  }
+  return instance_;
+}
+
+//-------------------------------------------------
+XboxController* XboxController::instance()
+{
+  if (instance_ == 0)
+  {
+    instance_ = new XboxController();
+  }
+  return instance_;
 }
 
 //-------------------------------------------------

@@ -17,6 +17,8 @@
 
 #define HELLO "Hello from server"
 
+ServerHandler* ServerHandler::instance_ = 0;
+
 //-------------------------------------------------
 ServerHandler::ServerHandler(unsigned int port) : 
   WorkingThread("ServerHandler"),
@@ -31,6 +33,27 @@ ServerHandler::ServerHandler(unsigned int port) :
 ServerHandler::~ServerHandler()
 {
   debug(SERVER_HAND, "dtor:\n");
+}
+
+//-------------------------------------------------
+ServerHandler* ServerHandler::instance(unsigned int port)
+{
+  if (instance_ == 0)
+  {
+    instance_ = new ServerHandler(port);
+  }
+  return instance_;
+}
+
+//-------------------------------------------------
+ServerHandler* ServerHandler::instance()
+{
+  if (instance_ == 0)
+  {
+    debug(ERROR, "ServerHandler::instance: Instance is not initialized\n");
+    _exit(-1);
+  }
+  return instance_;
 }
 
 //-------------------------------------------------

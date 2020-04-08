@@ -11,8 +11,10 @@ class CameraService;
 class ServerHandler : public WorkingThread, public Socket
 {
   public:
-    ServerHandler(unsigned int port);
     ~ServerHandler();
+
+    static ServerHandler* instance(unsigned int port);
+    static ServerHandler* instance();
 
     virtual void run();
 
@@ -28,8 +30,11 @@ class ServerHandler : public WorkingThread, public Socket
     friend class XboxControllerService;
     friend class CameraService;
 
+    ServerHandler(unsigned int port);
     ServerHandler();
     ServerHandler(const ServerHandler&);
+
+    static ServerHandler* instance_;
 
     int socket_;
     int client_socket_;
