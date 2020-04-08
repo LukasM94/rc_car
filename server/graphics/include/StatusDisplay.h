@@ -1,21 +1,28 @@
 #ifndef STATUS_DISPLAY_H
 #define STATUS_DISPLAY_H
 
-#include <WorkingThread.h>
+#include <QtCore>
+#include <atomic>
 
 class MainWindow;
 
-class StatusDisplay : public WorkingThread
+class StatusDisplay : public QThread
 {
   public:
     StatusDisplay(MainWindow* main_window);
     ~StatusDisplay();
 
-    virtual void run();
+    void run();
+    inline void cancel()
+    {
+      running_ = 0;
+    }
 
   private:
     StatusDisplay();
     MainWindow* main_window_;
+    std::atomic_bool running_;
 };
+
 
 #endif 

@@ -78,8 +78,19 @@ void MainWindow::stop()
   debug(MAIN_WINDOW, "stop\n");
   status_display_->cancel();
   video_display_->cancel();
-  ThreadHandler::waitTillThreadFinished(status_display_);
-  ThreadHandler::waitTillThreadFinished(video_display_);
+  int timeout = 10;
+  while (--timeout && status_display_->isFinished() && video_display_->isFinished())
+  {
+    sched_yield();
+  }
+  if (timeout == 0)
+  {
+    debug(WARNING, "MainWindow::stop: Won't finish: %s %s\n", status_display_->isFinished() ? "" : "status_display_", video_display_->isFinished() ? "" : "video_display_");
+    status_display_->terminate();
+    video_display_->terminate();
+    status_display_->wait();
+    video_display_->wait();
+  }
 }
 
 void MainWindow::start()
@@ -90,8 +101,8 @@ void MainWindow::start()
   lock_.unlock();
 
   debug(MAIN_WINDOW, "start\n");
-  ThreadHandler::startExternThread(status_display_);
-  ThreadHandler::startExternThread(video_display_);
+  status_display_->start();
+  video_display_->start();
 }
 
 void MainWindow::setStatusLeft(std::string& left)

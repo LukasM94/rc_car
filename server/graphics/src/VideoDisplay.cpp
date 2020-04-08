@@ -8,7 +8,6 @@
 #include <ImageInstance.h>
 
 VideoDisplay::VideoDisplay(MainWindow* main_window) :
-  WorkingThread("VideoDisplay", 1),
   main_window_(main_window)
 {
   debug(GRAPHICS, "VideoDisplay::ctor: main_window <%p>\n", main_window);

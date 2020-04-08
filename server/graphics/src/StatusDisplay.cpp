@@ -9,7 +9,6 @@
 #include <TransceivedDataInstance.h>
 
 StatusDisplay::StatusDisplay(MainWindow* main_window) :
-  WorkingThread("StatusDisplay", 1),
   main_window_(main_window)
 {
   debug(GRAPHICS, "StatusDisplay::ctor: main_window <%p>\n", main_window);
