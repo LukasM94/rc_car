@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
   ThreadHandler::beginThread(client_handler);
   ThreadHandler::beginThread(control_handler);
   // ThreadHandler::beginThread(camera_handler);
-  ThreadHandler::startThread(camera_handler);
+  ThreadHandler::startExternThread(camera_handler);
   ThreadHandler::unlock();
 
   while (1)
@@ -72,6 +72,7 @@ int main(int argc, char* argv[])
     // {
     //   ThreadHandler::startThread(camera_handler);
     // }
+    ThreadHandler::printThreads();
     ThreadHandler::unlock();
   }
   debug(MAIN, "main: Exits\n");

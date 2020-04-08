@@ -59,10 +59,8 @@ class Camera
     {
       cond_.wake();
     }
-    inline bool isConnected()
-    {
-      return connected_;
-    }
+
+    bool isConnected();
     void deleteImage();
 
   private:
@@ -78,7 +76,14 @@ class Camera
     Lock lock_;
     Cond cond_;
 
-    bool connected_;
+    enum CONNECT_STATE
+    {
+      NOT_INIT,
+      CONNECTED,
+      NOT_CONNECTED
+    };
+    enum CONNECT_STATE connected_;
+    Cond cond_connected_;
 
     static const unsigned int QVGA_WIDTH  = 320;
     static const unsigned int QVGA_HEIGHT = 240;

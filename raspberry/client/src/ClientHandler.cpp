@@ -134,8 +134,11 @@ void ClientHandler::run()
     connected_ = 1;
 
     ThreadHandler::lock();
+    // game pad client is essential
     ThreadHandler::beginThread(gp_client_, 0);
-    ThreadHandler::beginThread(cam_client_, 0);
+    // camera client is not
+    // raspberry has to reboot if you plug and unplug the camera!!!
+    ThreadHandler::startExternThread(cam_client_);
     ThreadHandler::unlock();
 
     while (connected_)
@@ -151,7 +154,7 @@ void ClientHandler::run()
     ThreadHandler::waitTillThreadFinished(gp_client_);
     ThreadHandler::waitTillThreadFinished(cam_client_);
     ThreadHandler::exitThread(gp_client_);
-    ThreadHandler::exitThread(cam_client_);
+    // ThreadHandler::exitThread(cam_client_);
   }
 
   delete gp_client_;

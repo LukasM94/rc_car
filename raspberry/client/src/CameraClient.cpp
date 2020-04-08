@@ -40,10 +40,8 @@ void CameraClient::run()
     debug(CAM_CLIENT, "run: Sleep\n");
     if (camera->isConnected() == false)
     {
-      // bad busy wait :-(
       camera->condUnlock();
-      sleep(2);
-      continue;
+      return;
     }
     camera->sleep();
     camera->lock();

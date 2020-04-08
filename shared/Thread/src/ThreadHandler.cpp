@@ -53,6 +53,7 @@ void ThreadHandler::gotoSleep()
 int ThreadHandler::beginThread(WorkingThread* thread, bool detached)
 {
   assert(heldByCurrentThread() == true);
+  debug(THREAD_LIST, "beginThread: name_ <%s>\n", thread->getName());
   threads_count_++;
   return startThread(thread, detached);
 }
@@ -61,6 +62,7 @@ int ThreadHandler::exitThread(__attribute__((unused))WorkingThread* thread)
 {
   assert(heldByCurrentThread() == false);
   lock();
+  debug(THREAD_LIST, "exitThread: name_ <%s>\n", thread->getName());
   threads_count_--;
   broadCast();
   unlock();
@@ -82,6 +84,7 @@ int ThreadHandler::startThread(WorkingThread* thread, bool detached)
 int ThreadHandler::startExternThread(WorkingThread* thread)
 {
   debug(THREAD_LIST, "startThread: name_ <%s>\n", thread->getName());
+  thread->external_ = 1;
   pthread_create(&thread->tid_, 0, WorkingThread::runWrapper, thread);
   return 0;
 }
@@ -122,7 +125,7 @@ int ThreadHandler::removeThread(WorkingThread* thread)
   lock();
   if (isThreadRunning(thread) == false)
   {
-    debug(WARNING, "ThreadHandler::addThread: thread <%p>, name_ <%s> not in threads_\n", thread, thread->getName());
+    debug(WARNING, "ThreadHandler::removeThread: thread <%p>, name_ <%s> not in threads_\n", thread, thread->getName());
     unlock();
     return -1;
   }
@@ -132,4 +135,16 @@ int ThreadHandler::removeThread(WorkingThread* thread)
   broadCast();
   unlock();
   return 0;
+}
+
+void ThreadHandler::printThreads()
+{
+  assert(heldByCurrentThread() == true);
+  std::string s;
+  debug(THREAD_LIST, "printThreads: Expecting threads %d\n", threads_count_);
+  for (WorkingThread* t : threads_)
+  {
+    s += "id <" + std::to_string(t->getId()) + ">, name <" + t->getName() + ">\n";
+  }
+  debug(THREAD_LIST, "printThreads: Thread list: \n%s\n", s.c_str());
 }

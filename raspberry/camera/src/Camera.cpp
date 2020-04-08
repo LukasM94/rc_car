@@ -14,9 +14,10 @@ Camera* Camera::instance_ = 0;
 Camera::Camera() :
   image_(0),
   raspi_cam_(0),
-  connected_(0),
   lock_("Camera::lock_"),
-  cond_("Camera::cond_")
+  cond_("Camera::cond_"),
+  connected_(NOT_INIT),
+  cond_connected_("Camera::cond_connected_")
 {
   debug(CAMERA, "ctor\n");
 }
@@ -39,6 +40,18 @@ Camera* Camera::instance()
     instance_ = new Camera();
   }
   return instance_;
+}
+
+bool Camera::isConnected()
+{
+  cond_connected_.lock();
+  while (connected_ == NOT_INIT)
+  {
+    cond_connected_.sleep();
+  }
+  bool is_connected = connected_ == CONNECTED;
+  cond_connected_.unlock();
+  return is_connected;
 }
 
 void Camera::deleteImage()
@@ -124,11 +137,14 @@ int Camera::init()
   if (!raspi_cam_->open())
   {
     debug(WARNING, "Camera::run: Cannot open the camera_handler.\n");
-    connected_ = 0;
     lock_.unlock();
+
+    cond_connected_.lock();
+    connected_ = NOT_CONNECTED;
+    cond_connected_.wakeAll();
+    cond_connected_.unlock();
     return -1;
   }
-  connected_ = 1;
 
   struct CameraInfo info;
   info.width_       = VGA_WIDTH;
@@ -139,9 +155,19 @@ int Camera::init()
   {
     debug(WARNING, "Camera::run: Something seems to be wrong %d\n", ret);
     lock_.unlock(); 
+
+    cond_connected_.lock();
+    connected_ = NOT_CONNECTED;
+    cond_connected_.wakeAll();
+    cond_connected_.unlock();
     return -1;
   }
   lock_.unlock(); 
+
+  cond_connected_.lock();
+  connected_ = CONNECTED;
+  cond_connected_.wakeAll();
+  cond_connected_.unlock();
 #endif
   return 0;
 }

@@ -20,6 +20,7 @@ class ThreadHandler
     static int  waitTillThreadFinished(WorkingThread* thread, void** ret = 0);
     static void gotoSleep();
     static int  startExternThread(WorkingThread* thread);
+    static void printThreads();
 
   private:
     static bool heldByCurrentThread();
