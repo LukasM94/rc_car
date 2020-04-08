@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
 
   debug(MAIN, "main: Catch the sigint signal\n");
   signal(SIGINT, signalHandler);  
+  signal(SIGSEGV, signalHandler);  
 
   ThreadHandler::lock();
 
