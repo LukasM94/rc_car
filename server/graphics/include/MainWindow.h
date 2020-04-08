@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <atomic>
 #include <string>
+#include <Lock.h>
 
 class QLabel;
 class QImage;
@@ -34,10 +35,15 @@ class MainWindow : public QMainWindow
     void setFont(QLabel* label, int size);
 
     Ui::MainWindow* ui_;
+    Lock            lock_;
+
     std::atomic_bool running_;
+
     QImage* graph_;
+
     StatusDisplay* status_display_;
     VideoDisplay*  video_display_;
+
 
   public slots:
     void start();

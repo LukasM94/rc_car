@@ -13,6 +13,7 @@
 MainWindow::MainWindow(QWidget *parent) : 
   QMainWindow(parent), 
   ui_(new Ui::MainWindow),
+  lock_("MainWindow::lock_"),
   graph_(0),
   status_display_(0),
   video_display_(0)
@@ -29,9 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
   setFont(ui_->left_status, 16);
   setFont(ui_->right_status, 14);
 
-  status_display_ = new StatusDisplay(this);
-  video_display_ = new VideoDisplay(this);
-
   ui_->button_start->show();
   ui_->button_stop->hide();
 
@@ -42,6 +40,9 @@ MainWindow::MainWindow(QWidget *parent) :
   ui_->right_status->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
   connect(ui_->button_start, SIGNAL(clicked()), SLOT(start()));
   connect(ui_->button_stop, SIGNAL(clicked()), SLOT(stop()));
+
+  status_display_ = new StatusDisplay(this);
+  video_display_ = new VideoDisplay(this);
 }
 
 MainWindow::~MainWindow()
@@ -69,8 +70,11 @@ void MainWindow::setFont(QLabel* label, int size)
 
 void MainWindow::stop()
 {
+  lock_.lock();
   ui_->button_stop->hide();
   ui_->button_start->show();
+  lock_.unlock();
+
   debug(MAIN_WINDOW, "stop\n");
   status_display_->cancel();
   video_display_->cancel();
@@ -80,8 +84,11 @@ void MainWindow::stop()
 
 void MainWindow::start()
 {
+  lock_.lock();
   ui_->button_start->hide();
   ui_->button_stop->show();
+  lock_.unlock();
+
   debug(MAIN_WINDOW, "start\n");
   ThreadHandler::startExternThread(status_display_);
   ThreadHandler::startExternThread(video_display_);
@@ -89,16 +96,21 @@ void MainWindow::start()
 
 void MainWindow::setStatusLeft(std::string& left)
 {
+  lock_.lock();
   ui_->left_status->setText(left.c_str());
+  lock_.unlock();
 }
 
 void MainWindow::setStatusRight(std::string& right)
 {
+  lock_.lock();
   ui_->right_status->setText(right.c_str());
+  lock_.unlock();
 }
 
 void MainWindow::setImage(Image* image)
 {
+  lock_.lock();
   QImage* temp = new QImage((const uchar *)image->getData(), 
       image->getWidth(), image->getHeight(), QImage::Format_RGB888);
   ui_->label->setPixmap(QPixmap::fromImage(*temp));
@@ -108,4 +120,5 @@ void MainWindow::setImage(Image* image)
     delete graph_;
   }
   graph_ = temp;
+  lock_.unlock();
 }
