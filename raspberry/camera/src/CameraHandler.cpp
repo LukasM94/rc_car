@@ -2,6 +2,7 @@
 #include <CameraHandler.h>
 #include <unistd.h>
 #include <Camera.h>
+#include <ClientHandler.h>
 
 CameraHandler* CameraHandler::instance_ = 0;
 
@@ -27,7 +28,9 @@ CameraHandler* CameraHandler::instance()
 
 void CameraHandler::run()
 {
-  Camera* camera = Camera::instance();
+  Camera*        camera         = Camera::instance();
+  ClientHandler* client_handler = ClientHandler::instance();
+
   if (camera->init() != 0)
   {
     debug(CAMERA, "run: Exit camera not connected?\n");
@@ -43,7 +46,7 @@ void CameraHandler::run()
     usleep(SLEEP);
 
     int ret;
-    if ((ret = camera->grab()) != 0)
+    if (client_handler->isConnected() && (ret = camera->grab()) != 0)
     {
       debug(WARNING, "camera_handler::run: grab returned %d\n", ret);
     }

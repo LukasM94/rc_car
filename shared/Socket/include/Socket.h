@@ -16,6 +16,11 @@ class Socket
     virtual int receive() = 0;;
     virtual int closeSocket() = 0;
 
+    inline bool isConnected()
+    {
+      return connected_.load();
+    }
+
   protected:
     Socket();
     Socket(const Socket&);
