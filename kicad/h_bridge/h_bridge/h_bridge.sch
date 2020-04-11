@@ -185,17 +185,6 @@ F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 2350 3850 50  0001 C CNN
 	7    2350 3850
 	1    0    0    -1  
 $EndComp
-$Comp
-L 74xx:74HC14 U3
-U 4 1 5E92CBC5
-P 3500 2550
-F 0 "U3" H 3500 2867 50  0000 C CNN
-F 1 "74HC14" H 3500 2776 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_LongPads" H 3500 2550 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 3500 2550 50  0001 C CNN
-	4    3500 2550
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	3200 1950 2600 1950
 Connection ~ 2600 1950
@@ -794,7 +783,7 @@ U 1 1 5EAD0241
 P 6800 1500
 F 0 "C13" H 6915 1546 50  0000 L CNN
 F 1 "220u" H 6915 1455 50  0000 L CNN
-F 2 "Capacitor_THT:CP_Radial_D10.0mm_P5.00mm_P7.50mm" H 6800 1500 50  0001 C CNN
+F 2 "Capacitor_THT:CP_Radial_D10.0mm_P5.00mm" H 6800 1500 50  0001 C CNN
 F 3 "~" H 6800 1500 50  0001 C CNN
 	1    6800 1500
 	1    0    0    -1  
@@ -848,7 +837,7 @@ U 1 1 5EB1060A
 P 10200 1500
 F 0 "C14" H 10450 1550 50  0000 R CNN
 F 1 "220u" H 10500 1450 50  0000 R CNN
-F 2 "Capacitor_THT:CP_Radial_D10.0mm_P5.00mm_P7.50mm" H 10200 1500 50  0001 C CNN
+F 2 "Capacitor_THT:CP_Radial_D10.0mm_P5.00mm" H 10200 1500 50  0001 C CNN
 F 3 "~" H 10200 1500 50  0001 C CNN
 	1    10200 1500
 	-1   0    0    -1  
@@ -1499,4 +1488,15 @@ Wire Wire Line
 Connection ~ 4300 5600
 Wire Wire Line
 	4300 5600 4300 5650
+$Comp
+L 74xx:74HC14 U3
+U 3 1 5EEFAB55
+P 3500 2550
+F 0 "U3" H 3500 2867 50  0000 C CNN
+F 1 "74HC14" H 3500 2776 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_LongPads" H 3500 2550 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 3500 2550 50  0001 C CNN
+	3    3500 2550
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
