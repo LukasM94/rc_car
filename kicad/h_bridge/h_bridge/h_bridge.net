@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/lukas/Documents/projects/rc_car/kicad/h_bridge/h_bridge/h_bridge.sch)
-    (date "Sat 11 Apr 2020 12:41:58 PM CEST")
+    (date "Sun 12 Apr 2020 12:12:04 PM CEST")
     (tool "Eeschema 5.1.5")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
