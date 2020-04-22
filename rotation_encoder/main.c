@@ -1,32 +1,24 @@
 
 #include <config.h>
-#include <Usart.h>
-#include <Printf.h>
 
 //---------------------------------------------------------------------
-struct Usart       usart;
+void initLed();
 
 //---------------------------------------------------------------------
-void initUsart();
 
 //---------------------------------------------------------------------
 int main()
 {
-  cli();
-  initUsart();
-  sei();
-
-  Printf_print("main: Start\n");
-
+  initLed();
   while (1)
   {
-
+    _delay_ms(500);
+    LED_TOOGLE;
   }
 }
 
 //---------------------------------------------------------------------
-void initUsart()
+void initLed()
 {
-  Usart_ctor(&usart, 0, 9600);
-  Printf_init(&usart);
+  LED_DDR |= (1 << LED_PIN);
 }

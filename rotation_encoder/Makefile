@@ -3,7 +3,7 @@ CC     = avr-gcc
 CC_HEX = avr-objcopy
 SIZE   = avr-size
 
-UCONTROLLER = atmega328p
+UCONTROLLER = attiny13
 
 TARGET = main
 
@@ -15,7 +15,7 @@ RELEASE_DIR = release
 
 OBJECTS = $(patsubst $(SOURCE_DIR)/%.c,$(OBJECT_DIR)/%.o,$(wildcard $(SOURCE_DIR)/*.c)) 
 
-FREQUENCY = 16000000
+FREQUENCY = 2000000
 
 OPTIMIZATION = 3
 
@@ -36,9 +36,6 @@ CFLAGS += -funsigned-bitfields
 CFLAGS += -fshort-enums
 
 all: begin sizebefore compiling linking hex sizeafter end
-
-debug: CFLAGS += -DDEBUG=1 -g
-debug: begin sizebefore compiling linking hex sizeafter end
 
 $(OBJECT_DIR)/$(TARGET).o: $(TARGET).c
 	$(CC) -c $(CFLAGS) $< -o $@

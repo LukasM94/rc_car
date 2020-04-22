@@ -1,0 +1,2 @@
+#!/bin/bash
+make && avrdude -v -pattiny13 -cavrispv2 -P /dev/ttyACM0 -b57600 -Uflash:w:release/main.hex:i
