@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import serial
 import sys
 
@@ -11,4 +11,4 @@ ser = serial.Serial(
 while 1:
   c = ser.readline()
   if c != '':
-    sys.stdout.write(c)
+    print(c)

@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <util/delay.h>
 #include <avr/io.h>
+#include <avr/interrupt.h>
 
 typedef uint8_t boolean;
 #define false 0
