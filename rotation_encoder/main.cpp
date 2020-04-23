@@ -11,11 +11,16 @@ Encoder encoder;
 //---------------------------------------------------------------------
 int main()
 {
+  cli();
   initLed();
+  encoder.init();
+  encoder.startTimer();
+  sei();
+  
   while (1)
   {
-    _delay_ms(500);
-    LED_TOOGLE;
+    // _delay_ms(500);
+    // LED_TOOGLE;
   }
 }
 

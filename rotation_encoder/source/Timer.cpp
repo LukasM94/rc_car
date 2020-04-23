@@ -1,18 +1,15 @@
 
-#include "Timer.h"
+#include <Timer.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
-
-#define PRESCALE  8
-#define ONE_TICK ((1000000 * PRESCALE) / F_CPU) // us
-#define TIME     10000 // us
+#include <config.h>
 
 static void (*callbackFunction)(void*);
 static void* callbackArgument;
 static volatile uint16_t counter  = 0;
 
 //---------------------------------------------------------------------
-void timerInit()
+void Timer::init()
 {
   // set timer0 counter initial value to 0
   TCNT0 = 0x00;
@@ -21,19 +18,19 @@ void timerInit()
   switch (PRESCALE)
   {
     case 1:
-      TCCR0B |= (1<<CS00);
+      TCCR0B = (1<<CS00);
       break;
     case 8:
-      TCCR0B |= (1<<CS01);
+      TCCR0B = (1<<CS01);
       break;
     case 64:
-      TCCR0B |= (1<<CS01) | (1<<CS00);
+      TCCR0B = (1<<CS01) | (1<<CS00);
       break;
     case 256:
-      TCCR0B |= (1<<CS02);
+      TCCR0B = (1<<CS02);
       break;
     case 1024:
-      TCCR0B |= (1<<CS02) | (1<<CS00);
+      TCCR0B = (1<<CS02) | (1<<CS00);
       break;
     default:
       TCCR0B = 0;
@@ -41,21 +38,21 @@ void timerInit()
 }
 
 //---------------------------------------------------------------------
-void timerStart()
+void Timer::start()
 {
   // enable timer overflow interrupt for Timer0
   TIMSK |= (1<<TOIE0);
 }
 
 //---------------------------------------------------------------------
-void timerStop()
+void Timer::stop()
 {
   // enable timer overflow interrupt for Timer0
   TIMSK &= ~(1<<TOIE0);
 }
 
 //---------------------------------------------------------------------
-void timerSetCallbacks(void (*recv)(void*), void* arg)
+void Timer::setCallbacks(void (*recv)(void*), void* arg)
 {
   callbackFunction = recv;
   callbackArgument = arg;
@@ -64,9 +61,10 @@ void timerSetCallbacks(void (*recv)(void*), void* arg)
 //---------------------------------------------------------------------
 ISR(TIMER0_OVF_vect)
 {
-  if (counter++ > (TIME / ONE_TICK))
-  {
-    counter = 0;
-    callbackFunction(callbackArgument);
-  }
+  LED_TOOGLE;
+  // if (counter++ > (TIME / ONE_TICK))
+  // {
+  //   counter = 0;
+  //   callbackFunction(callbackArgument);
+  // }
 }

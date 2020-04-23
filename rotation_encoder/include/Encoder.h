@@ -11,10 +11,16 @@ class Encoder
     Encoder();
     ~Encoder();
     void init();
+    void startTimer();
+    void stopTimer();
 
   private:
     static void callbackTimer(void* arg);
+
     float speed_;
+
+    volatile unsigned long time_;
+    volatile unsigned long last_time_;
 };
 
 #endif

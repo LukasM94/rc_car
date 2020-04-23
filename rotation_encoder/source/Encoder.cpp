@@ -15,10 +15,23 @@ Encoder::~Encoder()
 
 void Encoder::init()
 {
-  timerInit();
-  timerSetCallbacks(callbackTimer, 0);
+  Timer::init();
+  Timer::setCallbacks(callbackTimer, this);
+}
+
+void Encoder::startTimer()
+{
+  Timer::start();
+}
+
+void Encoder::stopTimer()
+{
+  Timer::stop();
 }
 
 void Encoder::callbackTimer(void* arg)
 {
+  Encoder* encoder = reinterpret_cast<Encoder*>(arg);
+  encoder->last_time_ = encoder->time_;
+  encoder->time_ += TIME;
 }
