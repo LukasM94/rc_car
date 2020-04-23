@@ -1,9 +1,9 @@
 
-CC     = avr-gcc
+CC     = avr-g++
 CC_HEX = avr-objcopy
 SIZE   = avr-size
 
-UCONTROLLER = attiny13
+UCONTROLLER = attiny85
 
 TARGET = main
 
@@ -13,13 +13,13 @@ INCLUDE_DIR = include
 SHARED_DIR  = ../shared
 RELEASE_DIR = release
 
-OBJECTS = $(patsubst $(SOURCE_DIR)/%.c,$(OBJECT_DIR)/%.o,$(wildcard $(SOURCE_DIR)/*.c)) 
+OBJECTS = $(patsubst $(SOURCE_DIR)/%.cpp,$(OBJECT_DIR)/%.o,$(wildcard $(SOURCE_DIR)/*.cpp)) 
 
 FREQUENCY = 2000000
 
 OPTIMIZATION = 3
 
-GNU = 11
+GNU = 17
 
 CFLAGS  = -mmcu=$(UCONTROLLER)
 CFLAGS += -I./$(INCLUDE_DIR)
@@ -29,7 +29,7 @@ CFLAGS += -O$(OPTIMIZATION)
 CFLAGS += -Wall
 # CFLAGS += -Werror
 CFLAGS += -Wundef
-CFLAGS += -std=gnu$(GNU)
+CFLAGS += -std=gnu++$(GNU)
 CFLAGS += -funsigned-char
 CFLAGS += -funsigned-bitfields
 # CFLAGS += -fpack-struct
@@ -37,10 +37,10 @@ CFLAGS += -fshort-enums
 
 all: begin sizebefore compiling linking hex sizeafter end
 
-$(OBJECT_DIR)/$(TARGET).o: $(TARGET).c
+$(OBJECT_DIR)/$(TARGET).o: $(TARGET).cpp
 	$(CC) -c $(CFLAGS) $< -o $@
 
-$(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.c $(INCLUDE_DIR)/%.h
+$(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp $(INCLUDE_DIR)/%.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 begin:
