@@ -13,14 +13,17 @@ class Encoder
     void init();
     void startTimer();
     void stopTimer();
+    void run();
 
   private:
     static void callbackTimer(void* arg);
 
     float speed_;
 
-    volatile unsigned long time_;
-    volatile unsigned long last_time_;
+    volatile unsigned long long time_;
+    volatile unsigned long long last_time_;
+    volatile bool flag_;
+    volatile bool running_;
 };
 
 #endif
