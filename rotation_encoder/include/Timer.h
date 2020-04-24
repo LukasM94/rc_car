@@ -6,8 +6,8 @@
 #include <avr/interrupt.h>
 
 #define PRESCALE 8
-#define ONE_TICK ((1000000 * PRESCALE) / F_CPU) // us
-#define TIME     10000 // us
+#define ONE_TICK ((1000 * PRESCALE) / (F_CPU / 1000000)) // ms
+#define TIME     1 // ms
 
 namespace Timer
 {

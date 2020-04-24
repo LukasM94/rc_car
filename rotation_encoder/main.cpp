@@ -3,7 +3,7 @@
 #include <Encoder.h>
 
 //---------------------------------------------------------------------
-void initLed();
+void initPeripherial();
 void initEncoder();
 
 //---------------------------------------------------------------------
@@ -13,7 +13,7 @@ Encoder encoder;
 int main()
 {
   cli();
-  initLed();
+  initPeripherial();
   initEncoder();
   sei();
 
@@ -27,9 +27,11 @@ int main()
 }
 
 //---------------------------------------------------------------------
-void initLed()
+void initPeripherial()
 {
-  LED_DDR |= (1 << LED_PIN);
+  LED_DDR           |= (1 << LED_PIN);
+  LIGHT_BARRIER_DDR &= ~(1 << LIGHT_BARRIER0_PIN);
+  LIGHT_BARRIER_DDR &= ~(1 << LIGHT_BARRIER1_PIN);
 }
 
 //---------------------------------------------------------------------
