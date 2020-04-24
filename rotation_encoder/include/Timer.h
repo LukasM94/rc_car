@@ -9,13 +9,10 @@
 #define ONE_TICK ((1000000 * PRESCALE) / F_CPU) // us
 #define TIME     10000 // us
 
-namespace Timer
-{
-  void init();
-  void start();
-  void stop();
-  void setCallbacks(void (*recv)(void*), void* arg);
-}
+void timerInit();
+void timerStart();
+void timerStop();
+void timerSetCallbacks(void (*recv)(void*), void* arg);
 
 ISR(TIMER0_OVF_vect);
 

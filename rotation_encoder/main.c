@@ -7,7 +7,7 @@ void initLed();
 void initEncoder();
 
 //---------------------------------------------------------------------
-Encoder encoder;
+struct Encoder encoder;
 
 //---------------------------------------------------------------------
 int main()
@@ -17,7 +17,7 @@ int main()
   initEncoder();
   sei();
 
-  encoder.run();
+  encoder.run(&encoder);
   
   while (1)
   {
@@ -35,6 +35,7 @@ void initLed()
 //---------------------------------------------------------------------
 void initEncoder()
 {
-  encoder.init();
-  encoder.startTimer();
+  Encoder_ctor(&encoder);
+  encoder.init(&encoder);
+  encoder.startTimer(&encoder);
 }

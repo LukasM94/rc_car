@@ -9,7 +9,7 @@ static void* callbackArgument;
 static volatile uint16_t counter  = 0;
 
 //---------------------------------------------------------------------
-void Timer::init()
+void timerInit()
 {
   // set timer0 counter initial value to 0
   TCNT0 = 0x00;
@@ -38,21 +38,21 @@ void Timer::init()
 }
 
 //---------------------------------------------------------------------
-void Timer::start()
+void timerStart()
 {
   // enable timer overflow interrupt for Timer0
   TIMSK |= (1<<TOIE0);
 }
 
 //---------------------------------------------------------------------
-void Timer::stop()
+void timerStop()
 {
   // enable timer overflow interrupt for Timer0
   TIMSK &= ~(1<<TOIE0);
 }
 
 //---------------------------------------------------------------------
-void Timer::setCallbacks(void (*recv)(void*), void* arg)
+void timerSetCallbacks(void (*recv)(void*), void* arg)
 {
   callbackFunction = recv;
   callbackArgument = arg;
