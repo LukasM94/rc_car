@@ -9,7 +9,7 @@
 
 #define LED_PORT    PORTB
 #define LED_DDR     DDRB
-#define LED_PIN     PB2
+#define LED_PIN     PB1
 #define LED_ON      LED_PORT |= (1 << LED_PIN)
 #define LED_OFF     LED_PORT &= ~(1 << LED_PIN)
 #define LED_TOOGLE  LED_PORT ^= (1 << LED_PIN)
