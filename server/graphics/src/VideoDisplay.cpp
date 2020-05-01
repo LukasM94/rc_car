@@ -34,6 +34,10 @@ void VideoDisplay::run()
       }
       image_ = temp;
     }
+    else
+    {
+      sleep(2);
+    }
   }
   debug(GRAPHICS, "VideoDisplay::run: Exit\n");
 }

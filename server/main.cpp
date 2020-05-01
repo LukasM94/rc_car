@@ -52,11 +52,10 @@ int main(int argc, char* argv[])
 
   while (1)
   {
+    ThreadHandler::lock();
     debug(MAIN, "main: Goes to sleep\n");
     ThreadHandler::gotoSleep();
     debug(MAIN, "main: Got up\n");
-
-    ThreadHandler::lock();
     if (ThreadHandler::isThreadRunning(xc) == false)
     {
       ThreadHandler::startThread(xc);

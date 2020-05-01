@@ -95,7 +95,9 @@ void ServerHandler::run()
     {
       sleep(5);
       debug(SERVER_HAND, "run: Go to sleep\n");
+      ThreadHandler::lock();
       ThreadHandler::gotoSleep();
+      ThreadHandler::unlock();
       debug(SERVER_HAND, "run: Got up\n");
     }
 
