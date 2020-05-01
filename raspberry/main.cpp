@@ -54,11 +54,10 @@ int main(int argc, char* argv[])
   {
     sleep(CLIENT_SLEEP_TIME);
 
+    ThreadHandler::lock();
     debug(MAIN, "main: Goes to sleep\n");
     ThreadHandler::gotoSleep();
     debug(MAIN, "main: Got up\n");
-
-    ThreadHandler::lock();
     if (ThreadHandler::isThreadRunning(client_handler) == false)
     {
       ThreadHandler::startThread(client_handler);

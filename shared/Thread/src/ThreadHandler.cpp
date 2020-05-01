@@ -41,13 +41,12 @@ void ThreadHandler::sleep()
 
 void ThreadHandler::gotoSleep()
 {
-  assert(heldByCurrentThread() == false);
-  lock();
+  assert(heldByCurrentThread() == true);
   while (threads_count_ == threads_.size())
   {
+    debug(THREAD_LIST, "gotoSleep\n");
     sleep();
   }
-  unlock();
 }
 
 int ThreadHandler::beginThread(WorkingThread* thread, bool detached)

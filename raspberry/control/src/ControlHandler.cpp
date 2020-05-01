@@ -58,11 +58,10 @@ void ControlHandler::run()
   {
     sleep(CLIENT_SLEEP_TIME);
 
+    ThreadHandler::lock();
     debug(CTL_HANDLER, "run: Goes to sleep\n");
     ThreadHandler::gotoSleep();
     debug(CTL_HANDLER, "run: Got up\n");
-
-    ThreadHandler::lock();
     if (ThreadHandler::isThreadRunning(i2c_handler_) == false)
     {
       ThreadHandler::startThread(i2c_handler_);

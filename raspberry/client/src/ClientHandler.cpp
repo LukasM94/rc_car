@@ -167,7 +167,9 @@ void ClientHandler::run()
     while (connected_)
     {
       debug(CLIENT_HAND, "run: Go to sleep\n");
+      ThreadHandler::lock();
       ThreadHandler::gotoSleep();
+      ThreadHandler::unlock();
       debug(CLIENT_HAND, "run: Got up\n");
       sleep(CLIENT_SLEEP_TIME);
     }
