@@ -2,8 +2,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define SERVER_PORT "8080"
-#define SERVER_PORT_INT 8080
+#define SERVER_PORT "64213"
+#define SERVER_PORT_INT 64213
 
 #if defined(__local)
 #define SERVER_IP   "127.0.0.1"
