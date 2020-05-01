@@ -63,7 +63,7 @@ Image* ImageInstance::loadImage(bool sleep)
 
     if (sleep)
     {
-      cond_.sleep(1);
+      cond_.sleep(1000);
     }
     else
     {

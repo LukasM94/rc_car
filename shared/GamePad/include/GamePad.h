@@ -129,7 +129,7 @@ class GamePad
       return connected_;
     }
 
-    void waitTillNewData(unsigned int timed = 2); //second
+    void timedWaitTillNewData(unsigned int timed = 200); // millisecond
 
     static const unsigned int BUTTON_A      = 0;
     static const unsigned int BUTTON_B      = 1;
