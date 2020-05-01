@@ -64,10 +64,13 @@ void AtmegaI2cHandler::run()
   bool game_pad_connected_prev = 1;
 
   debug(A_I2C_HANDL, "run: Start with communcation\n");
+
+  sleep(I2C_HANDLER_WAIT_TILL_ATMEGA_RESETED);
+
   while (running_)
   {
     game_pad->lock();
-    game_pad->waitTillNewData();
+    game_pad->timedWaitTillNewData();
 
     game_pad_connected_prev = game_pad_connected;
     game_pad_connected = game_pad->isConnected();
@@ -86,9 +89,9 @@ void AtmegaI2cHandler::run()
 
     i2c_register_data_->nextState();
 
-    I2cNewData* new_data = i2c_register_data_->getNewData();
+    I2cNewData* data = i2c_register_data_->getNewData();
     
-    writeNewData(new_data);
+    writeNewData(data);
   }
 
   debug(A_I2C_HANDL, "run: Exit\n");
@@ -96,6 +99,10 @@ void AtmegaI2cHandler::run()
 
 void AtmegaI2cHandler::writeNewData(I2cNewData* new_data)
 {
+  if (new_data->size() == 0)
+  {
+    writeI2c(I2C_CONTROL_REGISTER, I2C_CONTROL_REGISTER_SYNC);
+  }
   for (auto it = new_data->begin(); it != new_data->end(); ++it)
   {
     writeI2c(it->first, it->second);
@@ -134,6 +141,9 @@ void AtmegaI2cHandler::writeI2c(uint8_t reg, uint8_t data)
   if (i2c_error_ > I2C_ERROR_THRESHOLD)
   {
     debug(WARNING, "I2cHandler::writeI2c: %d errors on the i2c line\n", i2c_error_.load());
-    // running_ = false;
+    Peripherial::instance()->resetResetPin();
+    usleep(100);
+    Peripherial::instance()->setResetPin();
+    sleep(I2C_HANDLER_NOT_CONNECTED_TRY_AGAIN_SLEEP_TIME);
   }
 }

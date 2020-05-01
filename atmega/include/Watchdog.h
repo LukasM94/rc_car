@@ -3,17 +3,17 @@
 
 #include <avr/wdt.h>
 
-inline void watchdogEnable()
+static inline void watchdogEnable()
 {
-  wdt_enable(WDTO_1S);
+  wdt_enable(WDTO_500MS);
 }
 
-inline void watchdogDisable()
+static inline void watchdogDisable()
 {
   wdt_disable();
 }
 
-inline void watchdogReset()
+static inline void watchdogReset()
 {
   wdt_reset();
 }

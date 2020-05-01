@@ -9,13 +9,13 @@
 struct I2cRegister
 {
   // Public
-  void (*update)(struct I2cRegister* this);
+  int8_t  (*update)(struct I2cRegister* this);
   uint8_t (*readControlRegister)(struct I2cRegister* this);
   uint8_t (*isMotorsRunning)(struct I2cRegister* this);
-  int8_t (*readServo)(struct I2cRegister* this);
-  int8_t (*readMotor)(struct I2cRegister* this);
-  int8_t (*readMotorOffset)(struct I2cRegister* this);
-  int8_t (*readServoOffset)(struct I2cRegister* this);
+  int8_t  (*readServo)(struct I2cRegister* this);
+  int8_t  (*readMotor)(struct I2cRegister* this);
+  int8_t  (*readMotorOffset)(struct I2cRegister* this);
+  int8_t  (*readServoOffset)(struct I2cRegister* this);
 
   // Private
   void (*writeToEEPROM)(struct I2cRegister* this);
@@ -36,7 +36,7 @@ struct I2cRegister
 struct I2cRegister* I2cRegister_ctor(struct I2cRegister* this);
 struct I2cRegister* I2cRegister_dtor(struct I2cRegister* this);
 
-void I2cRegister_update(struct I2cRegister* this);
+int8_t I2cRegister_update(struct I2cRegister* this);
 uint8_t I2cRegister_readControlRegister(struct I2cRegister* this);
 uint8_t I2cRegister_isMotorsRunning(struct I2cRegister* this);
 int8_t I2cRegister_readMotor(struct I2cRegister* this);

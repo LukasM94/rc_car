@@ -22,6 +22,7 @@ class AtmegaI2cHandler : public I2cHandler
     I2cRegisterData* i2c_register_data_;
     
     static const unsigned int I2C_HANDLER_NOT_CONNECTED_TRY_AGAIN_SLEEP_TIME = 2;
+    static const unsigned int I2C_HANDLER_WAIT_TILL_ATMEGA_RESETED           = 2;
 };
 
 #endif

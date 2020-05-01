@@ -240,7 +240,7 @@ void GamePad::reset()
   }
 }
 
-void GamePad::waitTillNewData(unsigned int timed)
+void GamePad::timedWaitTillNewData(unsigned int timed)
 {
   assert(cond_.heldByCurrentThread() == true);
   sleep(timed);

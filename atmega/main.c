@@ -36,9 +36,11 @@ int main()
 
   while (1)
   {
-    i2c_register.update(&i2c_register);
+    if (i2c_register.update(&i2c_register) == 0)
+    {
+      watchdogReset();
+    }
     pwm.update(&pwm);
-    watchdogReset();
   }
 }
 

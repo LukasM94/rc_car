@@ -33,7 +33,7 @@ struct I2cRegister* I2cRegister_dtor(struct I2cRegister* this)
   return this;
 }
 
-void I2cRegister_update(struct I2cRegister* this)
+int8_t I2cRegister_update(struct I2cRegister* this)
 {
   cli();
   swapped_recv_flag = recv_flag;
@@ -48,7 +48,9 @@ void I2cRegister_update(struct I2cRegister* this)
 
     Printf_print("%s\n", register_name);
     Printf_print("data <%d>\n", single_data);
+    return 0;
   }
+  return 1;
 }
 
 void I2cRegister_writeToEEPROM(struct I2cRegister* this)

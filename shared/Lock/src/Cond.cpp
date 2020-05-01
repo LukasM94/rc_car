@@ -20,11 +20,12 @@ void Cond::sleep()
   pthread_cond_wait(&cond_, &lock_);
 }
 
-void Cond::sleep(unsigned int timed)
+void Cond::sleep(unsigned int timed) // in milliseconds
 {
   struct timespec ts;
   clock_gettime(CLOCK_REALTIME, &ts);
-  ts.tv_sec += timed;
+  ts.tv_nsec += (long long)timed * 1000000;
+  ts.tv_sec  += timed / 1000;
   pthread_cond_timedwait(&cond_, &lock_, &ts);
 }
 
