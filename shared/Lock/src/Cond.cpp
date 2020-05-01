@@ -18,6 +18,7 @@ Cond::~Cond()
 void Cond::sleep()
 {
   pthread_cond_wait(&cond_, &lock_);
+  held_by_ = pthread_self();
 }
 
 void Cond::sleep(unsigned int timed) // in milliseconds
@@ -27,6 +28,7 @@ void Cond::sleep(unsigned int timed) // in milliseconds
   ts.tv_nsec += (long long)(timed % 1000) * 1000000;
   ts.tv_sec += timed / 1000;
   pthread_cond_timedwait(&cond_, &lock_, &ts);
+  held_by_ = pthread_self();
 }
 
 void Cond::wake()

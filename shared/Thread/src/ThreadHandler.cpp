@@ -114,6 +114,7 @@ int ThreadHandler::addThread(WorkingThread* thread)
 
 bool ThreadHandler::isThreadRunning(WorkingThread* thread)
 {
+  assert(heldByCurrentThread() == true);
   auto it = std::find(threads_.begin(), threads_.end(), thread);
   return it != threads_.end();
 }

@@ -75,6 +75,7 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
       // {
       //   printf("%c", str[i]);
       // }
+      game_pad->connected_ = 0;
       goto GET_FROM_STRING_ERROR;
     }
 
