@@ -1,6 +1,7 @@
 
 #include <Pwm.h>
 #include <I2cRegister.h>
+#include <Printf.h>
 
 extern struct I2cRegister i2c_register;
 

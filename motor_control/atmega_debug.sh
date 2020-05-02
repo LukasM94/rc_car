@@ -1,2 +1,2 @@
 #!/bin/bash
-make debug && avrdude -v -patmega328p -carduino -P /dev/ttyUSB0 -b57600 -D -Uflash:w:release/main.hex:i && python communicate.py /dev/ttyUSB0 
+gpio write 22 1 && make debug && avrdude -v -patmega328p -carduino -P /dev/ttyUSB0 -b57600 -D -Uflash:w:release/main.hex:i && gpio write 22 0 && python communicate.py /dev/ttyUSB0

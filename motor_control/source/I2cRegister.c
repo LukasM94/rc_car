@@ -44,10 +44,17 @@ int8_t I2cRegister_update(struct I2cRegister* this)
     const char* register_name = this->getNameOfRegister(recv_reg_number);
     uint8_t     single_data   = buffer[0];
 
-    this->write(this, single_data, recv_reg_number);
+    if (recv_reg_number == I2C_CONTROL_REGISTER && single_data == I2C_CONTROL_REGISTER_SYNC)
+    {
+      // Printf_print("sync\n");
+      return 0;
+    }
 
     Printf_print("%s\n", register_name);
     Printf_print("data <%d>\n", single_data);
+
+    this->write(this, single_data, recv_reg_number);
+
     return 0;
   }
   return 1;
