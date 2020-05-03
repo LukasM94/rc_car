@@ -47,8 +47,8 @@ struct Ocr* Ocr_dtor(struct Ocr* this)
   return this;
 }
 
-static const char MOTOR[] = "motor";
-static const char SERVO[] = "servo";
+static const char SERVOA[] = "ServoA";
+static const char SERVOB[] = "servoB";
 
 struct Pwm* Pwm_ctor(struct Pwm* this)
 {
@@ -60,8 +60,8 @@ struct Pwm* Pwm_ctor(struct Pwm* this)
   ICR1H = (PWM_TOP >> 8) & 0xff;
   ICR1L = PWM_TOP & 0xff;
   
-  Ocr_ctorOCRA(&this->ocra_, MOTOR);
-  Ocr_ctorOCRB(&this->ocrb_, SERVO);
+  Ocr_ctorOCRA(&this->ocra_, SERVOA);
+  Ocr_ctorOCRB(&this->ocrb_, SERVOB);
 
   this->ocra_.set(PWM_MIDDLE);
   this->ocrb_.set(PWM_MIDDLE);
@@ -79,13 +79,13 @@ struct Pwm* Pwm_dtor(struct Pwm* this)
 
 void Pwm_update(struct Pwm* this)
 {
-  int8_t motor_register = i2c_register.readMotor(&i2c_register);
-  int8_t servo_register = i2c_register.readServo(&i2c_register);
+  int8_t ServoA_register = i2c_register.readServoA(&i2c_register);
+  int8_t servoB_register = i2c_register.readServoB(&i2c_register);
 
-  int8_t motor_offset_register = i2c_register.readMotorOffset(&i2c_register);
-  int8_t servo_offset_register = i2c_register.readServoOffset(&i2c_register);
+  int8_t ServoA_offset_register = i2c_register.readServoAOffset(&i2c_register);
+  int8_t servoB_offset_register = i2c_register.readServoBOffset(&i2c_register);
 
-  if (i2c_register.isMotorsRunning(&i2c_register))
+  if (i2c_register.isServosRunning(&i2c_register))
   {
     this->start(this);
   }
@@ -94,10 +94,10 @@ void Pwm_update(struct Pwm* this)
     this->stop(this);
   }
 
-  this->setMotor(this, motor_register);
-  this->setServo(this, servo_register);
-  this->setMotorOffset(this, motor_offset_register);
-  this->setServoOffset(this, servo_offset_register);
+  this->setServoA(this, ServoA_register);
+  this->setServoB(this, servoB_register);
+  this->setServoAOffset(this, ServoA_offset_register);
+  this->setServoBOffset(this, servoB_offset_register);
 }
 
 void Pwm_start(struct Pwm* this)
@@ -112,24 +112,24 @@ void Pwm_stop(struct Pwm* this)
   this->ocrb_.resetRunning();
 }
 
-void Pwm_setMotor(struct Pwm* this, int8_t data)
+void Pwm_setServoA(struct Pwm* this, int8_t data)
 {
   uint16_t ocr = (uint16_t)this->ocra_.offset_ + PWM_MIDDLE + (int16_t)data;
   this->ocra_.set(ocr);
 }
 
-void Pwm_setServo(struct Pwm* this, int8_t data)
+void Pwm_setServoB(struct Pwm* this, int8_t data)
 {
   uint16_t ocr = (uint16_t)this->ocra_.offset_ + PWM_MIDDLE + (int16_t)data;
   this->ocrb_.set(ocr);
 }
 
-void Pwm_setMotorOffset(struct Pwm* this, int8_t data)
+void Pwm_setServoAOffset(struct Pwm* this, int8_t data)
 {
   this->ocra_.offset_ = data;
 }
 
-void Pwm_setServoOffset(struct Pwm* this, int8_t data)
+void Pwm_setServoBOffset(struct Pwm* this, int8_t data)
 {
   this->ocrb_.offset_ = data;
 }

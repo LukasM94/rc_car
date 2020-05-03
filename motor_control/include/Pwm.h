@@ -30,10 +30,10 @@ struct Pwm
   // Private
   void (*start)(struct Pwm* this);
   void (*stop)(struct Pwm* this);
-  void (*setMotor)(struct Pwm* this, int8_t data);
-  void (*setServo)(struct Pwm* this, int8_t data);
-  void (*setMotorOffset)(struct Pwm* this, int8_t data);
-  void (*setServoOffset)(struct Pwm* this, int8_t data);
+  void (*setServoA)(struct Pwm* this, int8_t data);
+  void (*setServoB)(struct Pwm* this, int8_t data);
+  void (*setServoAOffset)(struct Pwm* this, int8_t data);
+  void (*setServoBOffset)(struct Pwm* this, int8_t data);
 
   // Members
   struct Ocr ocra_;
@@ -47,10 +47,10 @@ void Pwm_update(struct Pwm* this);
 
 void Pwm_start(struct Pwm* this);
 void Pwm_stop(struct Pwm* this);
-void Pwm_setMotor(struct Pwm* this, int8_t data);
-void Pwm_setServo(struct Pwm* this, int8_t data);
-void Pwm_setMotorOffset(struct Pwm* this, int8_t data);
-void Pwm_setServoOffset(struct Pwm* this, int8_t data);
+void Pwm_setServoA(struct Pwm* this, int8_t data);
+void Pwm_setServoB(struct Pwm* this, int8_t data);
+void Pwm_setServoAOffset(struct Pwm* this, int8_t data);
+void Pwm_setServoBOffset(struct Pwm* this, int8_t data);
 
 __attribute__((unused))static void Pwm_init(struct Pwm* pwm)
 {
@@ -58,10 +58,10 @@ __attribute__((unused))static void Pwm_init(struct Pwm* pwm)
 
   pwm->start    = &Pwm_start;
   pwm->stop     = &Pwm_stop;
-  pwm->setMotor = &Pwm_setMotor;
-  pwm->setServo = &Pwm_setServo;
-  pwm->setMotorOffset = &Pwm_setMotorOffset;
-  pwm->setServoOffset = &Pwm_setServoOffset;
+  pwm->setServoA = &Pwm_setServoA;
+  pwm->setServoB = &Pwm_setServoB;
+  pwm->setServoAOffset = &Pwm_setServoAOffset;
+  pwm->setServoBOffset = &Pwm_setServoBOffset;
 }
 
 #endif
