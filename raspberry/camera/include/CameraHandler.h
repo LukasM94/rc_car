@@ -18,7 +18,7 @@ class CameraHandler : public WorkingThread
 
     static CameraHandler* instance_;
 
-    static const int SLEEP = 40000;
+    static const int SLEEP = 80000;
 };
 
 #endif
