@@ -52,6 +52,7 @@ void GamePadClient::run()
     else
     {
       not_successful = 0;
+      debug(INFO, "GamePadClient::run: latency %zu\n", GamePadInstance::instance()->getGamePad()->getLatency())
     }
   }
   GamePadInstance::instance()->exitGamePadClient();

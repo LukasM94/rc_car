@@ -19,12 +19,15 @@
 #endif
 #include <iostream>
 #include <assert.h>
+#include <chrono>
 
 GamePad::GamePad() :
   lt_(0),
   rt_(0),
   buttons_count_(0),
   buttons_(0),
+  time_stamp_recv_(0),
+  time_stamp_send_(0),
   cond_("GamePad::cond_")
 {
   debug(GAME_PAD, "ctor\n");
@@ -46,13 +49,23 @@ GamePad::~GamePad()
   delete buttons_;
 }
 
-const char GamePad::STRING_LEFT[]  = "left";
-const char GamePad::STRING_RIGHT[] = "right";
-const char GamePad::STRING_LT[]    = "lt";
-const char GamePad::STRING_RT[]    = "rt";
-const char GamePad::STRING_BCNT[]  = "bcnt";
-const char GamePad::STRING_BTN[]   = "bnt";
-const char GamePad::STRING_CON[]   = "cnt";
+size_t GamePad::getTimeStamp()
+{
+  auto now = std::chrono::system_clock::now();
+  auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+  auto epoch = now_ms.time_since_epoch();
+  auto value = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
+  return value.count();
+}
+
+const char GamePad::STRING_LEFT[]       = "left";
+const char GamePad::STRING_RIGHT[]      = "right";
+const char GamePad::STRING_LT[]         = "lt";
+const char GamePad::STRING_RT[]         = "rt";
+const char GamePad::STRING_BCNT[]       = "bcnt";
+const char GamePad::STRING_BTN[]        = "bnt";
+const char GamePad::STRING_CON[]        = "cnt";
+const char GamePad::STRING_TIME_STAMP[] = "ms";
 
 int GamePad::getFromString(GamePad* game_pad, const char* str)
 {
@@ -99,6 +112,9 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
     game_pad->lt_ = root[STRING_LT].asBool();
 
     game_pad->connected_ = root[STRING_CON].asBool();
+
+    game_pad->time_stamp_send_ = root[STRING_TIME_STAMP].asUInt64();
+    game_pad->time_stamp_recv_ = getTimeStamp();
 
     for (int i = 0; i < button_cnt; ++i)
     {
@@ -188,11 +204,12 @@ int GamePad::getJson(Json::Value& root)
     right[0] = right_.x_.load();
     right[1] = right_.y_.load();
 
-    root[STRING_LEFT]  = left;
-    root[STRING_RIGHT] = right;
-    root[STRING_LT]    = lt_.load() ? 1 : 0;
-    root[STRING_RT]    = rt_.load() ? 1 : 0;
-    root[STRING_CON]   = connected_.load() ? 1 : 0;
+    root[STRING_LEFT]       = left;
+    root[STRING_RIGHT]      = right;
+    root[STRING_LT]         = lt_.load() ? 1 : 0;
+    root[STRING_RT]         = rt_.load() ? 1 : 0;
+    root[STRING_CON]        = connected_.load() ? 1 : 0;
+    root[STRING_TIME_STAMP] = getTimeStamp();
 
     for (int i = 0; i < buttons_count_; ++i)
     {

@@ -31,6 +31,12 @@ class GamePad
 
     int getPrintableString(std::string& string);
 
+    static size_t getTimeStamp();
+    size_t getLatency()
+    {
+      return time_stamp_recv_ - time_stamp_send_;
+    }
+
     int setButton(uint8_t button_no, bool state)
     {
       if (button_no < buttons_count_)
@@ -155,6 +161,9 @@ class GamePad
     std::atomic_bool*   buttons_;
     std::atomic_bool    connected_;
 
+    size_t time_stamp_recv_;
+    size_t time_stamp_send_;
+
     Cond cond_;
 
     static const char STRING_LEFT[];
@@ -164,6 +173,7 @@ class GamePad
     static const char STRING_BCNT[];
     static const char STRING_BTN[];
     static const char STRING_CON[];
+    static const char STRING_TIME_STAMP[];
 };
 
 #endif
