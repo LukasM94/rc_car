@@ -131,6 +131,7 @@ target_link_libraries(
   -pthread
   -lrt
   -ljsoncpp
+  -ljpeg
 )
 elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm.*|ARM.*)")
 target_link_libraries(
