@@ -15,8 +15,9 @@ struct Ocr
   int8_t     offset_;
 };
 
-struct Ocr* OCR_ctorOCRA(struct Ocr* this, const char* name);
-struct Ocr* OCR_ctorOCRB(struct Ocr* this, const char* name);
+struct Ocr* OCR_ctorOCR1A(struct Ocr* this, const char* name);
+struct Ocr* OCR_ctorOCR1B(struct Ocr* this, const char* name);
+struct Ocr* OCR_ctorOCR2(struct Ocr* this, const char* name);
 struct Ocr* OCR_dtor(struct Ocr* this);
 
 #define PWM_TOP    4999
@@ -30,14 +31,18 @@ struct Pwm
   // Private
   void (*start)(struct Pwm* this);
   void (*stop)(struct Pwm* this);
+  void (*setMotor)(struct Pwm* this, int8_t data);
   void (*setServoA)(struct Pwm* this, int8_t data);
   void (*setServoB)(struct Pwm* this, int8_t data);
+  void (*setMotorOffset)(struct Pwm* this, int8_t data);
   void (*setServoAOffset)(struct Pwm* this, int8_t data);
   void (*setServoBOffset)(struct Pwm* this, int8_t data);
 
   // Members
-  struct Ocr ocra_;
-  struct Ocr ocrb_;
+  struct Ocr ocr2_;
+  struct Ocr ocr1a_;
+  struct Ocr ocr1b_;
+  int8_t toleranz_for_ocr2_;
 };
 
 struct Pwm* Pwm_ctor(struct Pwm* this);
@@ -47,8 +52,10 @@ void Pwm_update(struct Pwm* this);
 
 void Pwm_start(struct Pwm* this);
 void Pwm_stop(struct Pwm* this);
+void Pwm_setMotor(struct Pwm* this, int8_t data);
 void Pwm_setServoA(struct Pwm* this, int8_t data);
 void Pwm_setServoB(struct Pwm* this, int8_t data);
+void Pwm_setMotorOffset(struct Pwm* this, int8_t data);
 void Pwm_setServoAOffset(struct Pwm* this, int8_t data);
 void Pwm_setServoBOffset(struct Pwm* this, int8_t data);
 
@@ -58,8 +65,10 @@ __attribute__((unused))static void Pwm_init(struct Pwm* pwm)
 
   pwm->start    = &Pwm_start;
   pwm->stop     = &Pwm_stop;
+  pwm->setMotor  = &Pwm_setMotor;
   pwm->setServoA = &Pwm_setServoA;
   pwm->setServoB = &Pwm_setServoB;
+  pwm->setMotorOffset  = &Pwm_setMotorOffset;
   pwm->setServoAOffset = &Pwm_setServoAOffset;
   pwm->setServoBOffset = &Pwm_setServoBOffset;
 }

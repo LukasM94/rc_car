@@ -114,9 +114,14 @@ uint8_t I2cRegister_isServosRunning(struct I2cRegister* this)
   return (int8_t)this->read(this, I2C_CONTROL_REGISTER) & I2C_CONTROL_REGISTER_RUNNING;
 }
 
-int8_t I2cRegister_readServoAOffset(struct I2cRegister* this)
+int8_t I2cRegister_readMotorOffset(struct I2cRegister* this)
 {
   return (int8_t)this->read(this, I2C_MOTOR0_OFFSET_REGISTER);
+}
+
+int8_t I2cRegister_readServoAOffset(struct I2cRegister* this)
+{
+  return 0;//(int8_t)this->read(this, I2C_MOTOR0_OFFSET_REGISTER);
 }
 
 int8_t I2cRegister_readServoBOffset(struct I2cRegister* this)
@@ -124,9 +129,14 @@ int8_t I2cRegister_readServoBOffset(struct I2cRegister* this)
   return (int8_t)this->read(this, I2C_MOTOR1_OFFSET_REGISTER);
 }
 
-int8_t I2cRegister_readServoA(struct I2cRegister* this)
+int8_t I2cRegister_readMotor(struct I2cRegister* this)
 {
   return (int8_t)this->read(this, I2C_MOTOR0_REGISTER);
+}
+
+int8_t I2cRegister_readServoA(struct I2cRegister* this)
+{
+  return 0;//(int8_t)this->read(this, I2C_MOTOR0_REGISTER);
 }
 
 int8_t I2cRegister_readServoB(struct I2cRegister* this)

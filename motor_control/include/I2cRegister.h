@@ -12,8 +12,10 @@ struct I2cRegister
   int8_t  (*update)(struct I2cRegister* this);
   uint8_t (*readControlRegister)(struct I2cRegister* this);
   uint8_t (*isServosRunning)(struct I2cRegister* this);
-  int8_t  (*readServoB)(struct I2cRegister* this);
+  int8_t  (*readMotor)(struct I2cRegister* this);
   int8_t  (*readServoA)(struct I2cRegister* this);
+  int8_t  (*readServoB)(struct I2cRegister* this);
+  int8_t  (*readMotorOffset)(struct I2cRegister* this);
   int8_t  (*readServoAOffset)(struct I2cRegister* this);
   int8_t  (*readServoBOffset)(struct I2cRegister* this);
 
@@ -39,8 +41,10 @@ struct I2cRegister* I2cRegister_dtor(struct I2cRegister* this);
 int8_t I2cRegister_update(struct I2cRegister* this);
 uint8_t I2cRegister_readControlRegister(struct I2cRegister* this);
 uint8_t I2cRegister_isServosRunning(struct I2cRegister* this);
+int8_t I2cRegister_readMotor(struct I2cRegister* this);
 int8_t I2cRegister_readServoA(struct I2cRegister* this);
 int8_t I2cRegister_readServoB(struct I2cRegister* this);
+int8_t I2cRegister_readMotorOffset(struct I2cRegister* this);
 int8_t I2cRegister_readServoAOffset(struct I2cRegister* this);
 int8_t I2cRegister_readServoBOffset(struct I2cRegister* this);
 
@@ -57,8 +61,10 @@ __attribute__((unused))static void I2cRegister_init(struct I2cRegister* i2c_regi
   i2c_register->update = &I2cRegister_update;
   i2c_register->readControlRegister = &I2cRegister_readControlRegister;
   i2c_register->isServosRunning     = &I2cRegister_isServosRunning;
+  i2c_register->readMotor  = &I2cRegister_readMotor ;
   i2c_register->readServoA = &I2cRegister_readServoA;
   i2c_register->readServoB = &I2cRegister_readServoB;
+  i2c_register->readMotorOffset  = &I2cRegister_readMotorOffset;
   i2c_register->readServoAOffset = &I2cRegister_readServoAOffset;
   i2c_register->readServoBOffset = &I2cRegister_readServoBOffset;
 
