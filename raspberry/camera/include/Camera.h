@@ -89,7 +89,7 @@ class Camera
     static const unsigned int QVGA_HEIGHT = 240;
     static const unsigned int VGA_WIDTH   = 640;
     static const unsigned int VGA_HEIGHT  = 480;
-    static const unsigned int FRAME_RATE  = 1;
+    static const unsigned int FRAME_RATE  = 10;
 };
 
 #endif
