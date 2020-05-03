@@ -113,15 +113,16 @@ int Camera::grab()
   return -1;
 }
 
-int Camera::initCamera(raspicam::RaspiCam* camera_handler, struct CameraInfo& info)
+int Camera::initCamera(raspicam::RaspiCam* cam, struct CameraInfo& info)
 {
   debug(CAMERA, "initCamera: width <%d>, heigth <%d>, frame rage <%d>\n", 
     info.width_, info.height_, info.frame_rate_);
 
 #if defined(__arm__)
-  camera_handler->setWidth(info.width_);
-  camera_handler->setHeight(info.height_);
-  camera_handler->setFrameRate(info.frame_rate_);
+  cam->setWidth(info.width_);
+  cam->setHeight(info.height_);
+  cam->setFrameRate(info.frame_rate_);
+  cam->setCaptureSize(2560, 1920);
   return 0;
 #endif
   return -1;
