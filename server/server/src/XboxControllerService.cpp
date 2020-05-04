@@ -30,6 +30,7 @@ void XboxControllerService::run()
     unsigned int length;
     usleep(SERVER_SEND_DATA);
     memset(server_handler_->output_buffer_, 0, server_handler_->BUFFER_SIZE);
+    game_pad->setTimeStampUpdate();
     game_pad->getMsg(server_handler_->output_buffer_, server_handler_->BUFFER_SIZE, &length);
     TransceivedDataInstance::instance()->addTransmittedBytes(length);
     server_handler_->transmit();

@@ -27,7 +27,7 @@ GamePad::GamePad() :
   buttons_count_(0),
   buttons_(0),
   time_stamp_recv_(0),
-  time_stamp_send_(0),
+  time_stamp_update_(0),
   cond_("GamePad::cond_")
 {
   debug(GAME_PAD, "ctor\n");
@@ -113,8 +113,8 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
 
     game_pad->connected_ = root[STRING_CON].asBool();
 
-    game_pad->time_stamp_send_ = root[STRING_TIME_STAMP].asUInt64();
-    game_pad->time_stamp_recv_ = getTimeStamp();
+    game_pad->time_stamp_update_ = root[STRING_TIME_STAMP].asUInt64();
+    game_pad->time_stamp_recv_   = getTimeStamp();
 
     for (int i = 0; i < button_cnt; ++i)
     {
@@ -209,7 +209,8 @@ int GamePad::getJson(Json::Value& root)
     root[STRING_LT]         = lt_.load() ? 1 : 0;
     root[STRING_RT]         = rt_.load() ? 1 : 0;
     root[STRING_CON]        = connected_.load() ? 1 : 0;
-    root[STRING_TIME_STAMP] = getTimeStamp();
+    root[STRING_TIME_STAMP] = time_stamp_update_;
+    debug(GAME_PAD, "getFromString: update <%zu>\n", time_stamp_update_);
 
     for (int i = 0; i < buttons_count_; ++i)
     {
@@ -239,6 +240,11 @@ void GamePad::allocateButtons(unsigned int button_ctn)
   }
   buttons_ = new std::atomic_bool[button_ctn]; 
   buttons_count_ = button_ctn;
+}
+
+void GamePad::setTimeStampUpdate()
+{
+  time_stamp_update_ = getTimeStamp();
 }
 
 void GamePad::reset()

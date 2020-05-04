@@ -34,7 +34,7 @@ class GamePad
     static size_t getTimeStamp();
     size_t getLatency()
     {
-      return time_stamp_recv_ - time_stamp_send_;
+      return time_stamp_recv_ - time_stamp_update_;
     }
 
     int setButton(uint8_t button_no, bool state)
@@ -70,6 +70,7 @@ class GamePad
     {
       right_.y_ = y;
     }
+    void setTimeStampUpdate();
 
     inline bool getButton(uint8_t button_no)
     {
@@ -162,7 +163,7 @@ class GamePad
     std::atomic_bool    connected_;
 
     size_t time_stamp_recv_;
-    size_t time_stamp_send_;
+    size_t time_stamp_update_;
 
     Cond cond_;
 
