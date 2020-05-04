@@ -15,6 +15,8 @@ struct CameraInfo
 {
   unsigned int width_;
   unsigned int height_;
+  unsigned int capture_width_;
+  unsigned int capture_height_;
   unsigned int frame_rate_;
 };
 
@@ -85,11 +87,15 @@ class Camera
     enum CONNECT_STATE connected_;
     Cond cond_connected_;
 
+    struct CameraInfo info_;
+
     static const unsigned int QVGA_WIDTH  = 320;
     static const unsigned int QVGA_HEIGHT = 240;
     static const unsigned int VGA_WIDTH   = 640;
     static const unsigned int VGA_HEIGHT  = 480;
-    static const unsigned int FRAME_RATE  = 10;
+    static const unsigned int HD_WIDTH    = 1280;
+    static const unsigned int HD_HEIGHT   = 960;
+    static const unsigned int FRAME_RATE  = 1;
 };
 
 #endif

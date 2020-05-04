@@ -35,6 +35,7 @@ class Image
     static int getSizeOfBody(const char* header, int* size);
     int getMsg(struct ImageJsonData* data);
     int freeSpace(struct ImageJsonData* data);
+    int convert(unsigned int width, unsigned int height);
 
     int set(unsigned int size,
             unsigned int width,

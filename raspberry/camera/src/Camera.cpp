@@ -90,6 +90,9 @@ int Camera::grab()
              raspi_cam_->getHeight());
   raspi_cam_->retrieve(image->getData());
 
+  image->convert(info_.width_, info_.height_);
+
+  debug(INFO, "Camera::grab: image <%d> <%d>\n", raspi_cam_->getWidth(), raspi_cam_->getHeight());
   debug(CAMERA, "grab: Create now a jpeg\n");
   // image->print();
   ImageRGB* rgb = (ImageRGB*)image;
@@ -119,10 +122,9 @@ int Camera::initCamera(raspicam::RaspiCam* cam, struct CameraInfo& info)
     info.width_, info.height_, info.frame_rate_);
 
 #if defined(__arm__)
-  cam->setWidth(info.width_);
-  cam->setHeight(info.height_);
+  cam->setWidth(info.capture_width_);
+  cam->setHeight(info.capture_height_);
   cam->setFrameRate(info.frame_rate_);
-  cam->setCaptureSize(2560, 1920);
   return 0;
 #endif
   return -1;
@@ -147,12 +149,13 @@ int Camera::init()
     return -1;
   }
 
-  struct CameraInfo info;
-  info.width_       = VGA_WIDTH;
-  info.height_      = VGA_HEIGHT;
-  info.frame_rate_  = FRAME_RATE;
+  info_.width_          = VGA_WIDTH;
+  info_.height_         = VGA_HEIGHT;
+  info_.frame_rate_     = FRAME_RATE;
+  info_.capture_width_  = HD_WIDTH;
+  info_.capture_height_ = HD_HEIGHT;
   int ret;
-  if ((ret = initCamera(raspi_cam_, info)) != 0)
+  if ((ret = initCamera(raspi_cam_, info_)) != 0)
   {
     debug(WARNING, "Camera::run: Something seems to be wrong %d\n", ret);
     lock_.unlock(); 
