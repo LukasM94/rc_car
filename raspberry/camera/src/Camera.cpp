@@ -92,7 +92,7 @@ int Camera::grab()
 
   image->convert(info_.width_, info_.height_);
 
-  debug(INFO, "Camera::grab: image <%d> <%d>\n", raspi_cam_->getWidth(), raspi_cam_->getHeight());
+  debug(CAMERA, "grab: image <%d> <%d>\n", raspi_cam_->getWidth(), raspi_cam_->getHeight());
   debug(CAMERA, "grab: Create now a jpeg\n");
   // image->print();
   ImageRGB* rgb = (ImageRGB*)image;
