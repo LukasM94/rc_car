@@ -170,7 +170,7 @@ int Image::freeSpace(struct ImageJsonData* data)
 int Image::convert(unsigned int width, unsigned int height)
 {
   lock();
-  debug(INFO, "Image::convert: width_ <%d>, height_ <%d>, width <%d>, height <%d>\n", width_, height_, width, height);
+  debug(IMAGE, "convert: width_ <%d>, height_ <%d>, width <%d>, height <%d>\n", width_, height_, width, height);
   unsigned int scale_width  = width_ / width;
   unsigned int scale_height = height_ / height;
   if (width_ % width != 0 || height_ % height != 0 || scale_width != scale_height)
@@ -181,7 +181,7 @@ int Image::convert(unsigned int width, unsigned int height)
   }
 
   unsigned int new_size = size_ / scale_width / scale_height;
-  debug(INFO, "Image::convert: from <%d> to <%d>\n", size_, new_size);
+  debug(IMAGE, "convert: from <%d> to <%d>\n", size_, new_size);
   unsigned char* data     = new unsigned char[new_size];
   unsigned char* old_data = data_;
 

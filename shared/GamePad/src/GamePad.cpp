@@ -115,6 +115,7 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
 
     game_pad->time_stamp_send_ = root[STRING_TIME_STAMP].asUInt64();
     game_pad->time_stamp_recv_ = getTimeStamp();
+    debug(INFO, "GamePad::getFromString: update <%zu>, recv <%zu>\n", game_pad->time_stamp_send_, game_pad->time_stamp_recv_);
 
     for (int i = 0; i < button_cnt; ++i)
     {
