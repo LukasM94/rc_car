@@ -3,6 +3,8 @@
 
 #include <WorkingThread.h>
 
+class ClientHandler;
+
 class CameraHandler : public WorkingThread
 {
   public:
@@ -15,6 +17,8 @@ class CameraHandler : public WorkingThread
   private:
     CameraHandler();
     CameraHandler(const CameraHandler&);
+
+    unsigned int calculateSleep(ClientHandler* client_handler);
 
     static CameraHandler* instance_;
 

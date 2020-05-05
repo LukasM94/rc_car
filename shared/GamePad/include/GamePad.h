@@ -32,9 +32,9 @@ class GamePad
     int getPrintableString(std::string& string);
 
     static size_t getTimeStamp();
-    size_t getLatency()
+    ssize_t getLatency()
     {
-      return time_stamp_recv_ - time_stamp_update_;
+      return (ssize_t)time_stamp_recv_ - (ssize_t)time_stamp_update_;
     }
 
     int setButton(uint8_t button_no, bool state)

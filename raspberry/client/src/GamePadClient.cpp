@@ -30,6 +30,8 @@ void GamePadClient::run()
   debug(GP_CLIENT, "run: Start\n");
 
   GamePadInstance::instance()->startGamePadClient();
+  GamePad* game_pad = GamePadInstance::instance()->getGamePad();
+
   while (client_handler_->connected_)
   {
     ret = client_handler_->receive();
@@ -39,22 +41,35 @@ void GamePadClient::run()
     str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
     str.erase(std::remove(str.begin(), str.end(), 0), str.end());
     debug(GP_CLIENT_D, "run: string is %s\n", str.c_str());
-
-    if (GamePad::getFromString(GamePadInstance::instance()->getGamePad(), str.c_str()) != 0)
+    
+    game_pad->lock();
+    if (GamePad::getFromString(game_pad, str.c_str()) != 0)
     {
-      not_successful++;
       if (not_successful == 10)
       {
         debug(WARNING, "GamePadClient::run: 10 times in a row not successful\n");
         client_handler_->connected_ = 0;
       }
+      else
+      {
+        not_successful++;
+      }
     }
     else
     {
+      game_pad->wakeAll();
       not_successful = 0;
-      debug(INFO, "GamePadClient::run: latency %zu\n", GamePadInstance::instance()->getGamePad()->getLatency());
+      ssize_t latency = game_pad->getLatency();
+      client_handler_->lockLatency();
+      client_handler_->addLatency(latency);
+      debug(INFO, "GamePadClient::run: latency %zd\n", latency);
+      debug(INFO, "GamePadClient::run: mean latency %zd\n", client_handler_->meanOfLatency());
+      debug(INFO, "GamePadClient::run: diff latency %zd\n", client_handler_->diffOfLastLatency());
+      client_handler_->unlockLatency();
     }
+    game_pad->unlock();
   }
+
   GamePadInstance::instance()->exitGamePadClient();
 
   debug(GP_CLIENT, "run: Exit\n");

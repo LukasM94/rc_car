@@ -26,6 +26,11 @@ CameraHandler* CameraHandler::instance()
   return instance_;
 }
 
+unsigned int CameraHandler::calculateSleep(ClientHandler* client_handler)
+{
+  return SLEEP;
+}
+
 void CameraHandler::run()
 {
   Camera*        camera         = Camera::instance();
@@ -42,8 +47,9 @@ void CameraHandler::run()
   }
   while (running_)
   {
-    debug(CAMERA, "run: Sleep %d milli second\n", SLEEP / 1000);
-    usleep(SLEEP);
+    unsigned int sleep = calculateSleep(client_handler);
+    debug(CAMERA, "run: Sleep %d milli second\n", sleep / 1000);
+    usleep(sleep);
 
     int ret;
     if (client_handler->isConnected() && (ret = camera->grab()) != 0)

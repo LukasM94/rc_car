@@ -12,6 +12,7 @@
 #include <CameraClient.h>
 #include <ThreadHandler.h>
 #include <client_config.h>
+#include <assert.h>
 
 const char ClientHandler::HELLO[] = "Hello from client";
 ClientHandler* ClientHandler::instance_ = 0;
@@ -20,15 +21,24 @@ ClientHandler* ClientHandler::instance_ = 0;
 ClientHandler::ClientHandler(unsigned int server_port, const char* server_ip) :
   Socket(server_port, server_ip),
   WorkingThread("ClientHandler"),
+  latency_lock_("ClientHandler::latency_lock_"),
+  latency_index_(0),
+  latencies_(0),
   gp_client_(0),
   cam_client_(0)
 {
+  latencies_ = new ssize_t[COUNT_LATENCIES];
+  for (int i = 0; i < COUNT_LATENCIES; ++i)
+  {
+    latencies_[i] = 0;
+  }
   debug(CLIENT_HAND, "ctor: %d, %s\n", server_port, server_ip);
 }
 
 //-------------------------------------------------
 ClientHandler::~ClientHandler()
 {
+  delete latencies_;
   debug(CLIENT_HAND, "dtor:\n");
 }
 
@@ -41,6 +51,45 @@ ClientHandler* ClientHandler::instance(unsigned int server_port, const char* ser
     instance_ = new ClientHandler(server_port, server_ip);
   }
   return instance_;
+}
+
+//-------------------------------------------------
+void ClientHandler::addLatency(size_t latency)
+{
+  assert(latency_lock_.heldByCurrentThread());
+  latencies_[latency_index_] = latency;
+  latency_index_ = (latency_index_ + 1) % COUNT_LATENCIES;
+}
+
+//-------------------------------------------------
+size_t ClientHandler::meanOfLatency()
+{
+  assert(latency_lock_.heldByCurrentThread());
+  size_t mean = 0;
+  for (int i = 0; i < COUNT_LATENCIES; ++i)
+  {
+    mean += latencies_[i];
+  }
+  return mean / COUNT_LATENCIES;
+}
+
+//-------------------------------------------------
+ssize_t ClientHandler::diffOfLastLatency()
+{
+  assert(latency_lock_.heldByCurrentThread());
+  int prev_latency_index = (latency_index_ - 1) % COUNT_LATENCIES;
+  return (ssize_t)latencies_[latency_index_] - (ssize_t)latencies_[prev_latency_index];
+}
+
+//-------------------------------------------------
+void ClientHandler::lockLatency()
+{
+  latency_lock_.lock();
+}
+//-------------------------------------------------
+void ClientHandler::unlockLatency()
+{
+  latency_lock_.unlock();
 }
 
 //-------------------------------------------------

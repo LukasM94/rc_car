@@ -71,7 +71,6 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
 {
   debug(GAME_PAD, "getFromString\n");
 
-  game_pad->lock();
   try
   {
     Json::Value  root;
@@ -89,7 +88,7 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
       //   printf("%c", str[i]);
       // }
       game_pad->connected_ = 0;
-      goto GET_FROM_STRING_ERROR;
+      return -1;
     }
 
     buttons = root[STRING_BTN];
@@ -115,7 +114,7 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
 
     game_pad->time_stamp_update_ = root[STRING_TIME_STAMP].asUInt64();
     game_pad->time_stamp_recv_   = getTimeStamp();
-    debug(INFO, "GamePad::getFromString: update <%zu>, recv <%zu>\n", game_pad->time_stamp_update_, game_pad->time_stamp_recv_);
+    debug(GAME_PAD, "getFromString: update <%zu>, recv <%zu>\n", game_pad->time_stamp_update_, game_pad->time_stamp_recv_);
 
     for (int i = 0; i < button_cnt; ++i)
     {
@@ -125,17 +124,9 @@ int GamePad::getFromString(GamePad* game_pad, const char* str)
   catch (Json::Exception& e)
   {
     debug(WARNING, "GamePad::getFromString: %s\n", e.what());
-    goto GET_FROM_STRING_ERROR;
+    return -1;
   }
-
-  game_pad->wakeAll();
-
-  game_pad->unlock();
   return 0;
-
-GET_FROM_STRING_ERROR:
-  game_pad->unlock();
-  return -1;
 }
 
 int GamePad::getMsg(char* msg, unsigned int max_length, unsigned int* length)

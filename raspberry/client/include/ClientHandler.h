@@ -3,6 +3,8 @@
 
 #include <Socket.h>
 #include <WorkingThread.h>
+#include <stdint.h>
+#include <Lock.h>
 
 class CameraClient;
 class GamePadClient;
@@ -24,6 +26,12 @@ class ClientHandler : public WorkingThread, public Socket
 
     int connectToServer();
 
+    void addLatency(size_t latency);
+    size_t meanOfLatency();
+    ssize_t diffOfLastLatency();
+    void lockLatency();
+    void unlockLatency();
+
   private:
     friend class GamePadClient;
     friend class CameraClient;
@@ -38,8 +46,14 @@ class ClientHandler : public WorkingThread, public Socket
 
     static const char HELLO[];
 
+    Lock latency_lock_;
+    int latency_index_;
+    ssize_t* latencies_;
+
     GamePadClient* gp_client_;
     CameraClient*  cam_client_;
+
+    static const unsigned int COUNT_LATENCIES = 1024;
 };
 
 #endif
